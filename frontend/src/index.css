@@ -1,0 +1,43 @@
+:root {
+  --primary-green: #2e8b57; /* основно медицинско зелено */
+  --light-green: #e8f5e9;
+  --text-dark: #1b1b1b;
+  --white: #ffffff;
+}
+
+body {
+  background-color: var(--light-green);
+  color: var(--text-dark);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: var(--primary-green) !important;
+}
+
+.navbar-brand,
+.nav-link {
+  color: var(--white) !important;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #c8e6c9 !important;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.btn-primary:hover {
+  background-color: #256d45;
+}
