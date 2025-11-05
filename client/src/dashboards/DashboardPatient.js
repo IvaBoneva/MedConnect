@@ -1,0 +1,94 @@
+import React from "react";
+import { Container, Row, Col, Nav } from "react-bootstrap";
+import { Routes, Route, NavLink, Navigate } from "react-router-dom";
+import Home from "../modules/Patient/Home";
+import PersonalInformation from "../modules/Patient/PersonalInformation";
+import Subscriptions from "../modules/Patient/Subscriptions";
+import Prescriptions from "../modules/Patient/Prescriptions";
+import Appointments from "../modules/Patient/Appointments";
+import Storage from "../modules/Patient/Storage";
+import SymptomCheck from "../modules/Patient/SymptomCheck";
+import "../App.css";
+
+const DashboardPatient = () => {
+  return (
+    <Container fluid className="mt-3">
+      <Row>
+        {/* Sidebar */}
+        <Col
+          xs={12}
+          md={3}
+          lg={2}
+          className="mb-3 sidebar"
+          style={{
+            backgroundColor: "#2e8b57",
+            borderRadius: "10px",
+            padding: "15px",
+            minHeight: "90vh",
+          }}
+        >
+          <Nav className="flex-column">
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/home" end>
+                🏠 Начало
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                as={NavLink}
+                to="/dashboard/patient/personal_information"
+              >
+                Лични данни
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/subscriptions">
+                Абонамент
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/prescriptions">
+                Предписания
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/appointments">
+                Записване на часове
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/storage">
+                Хранилище
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to="/dashboard/patient/symptom_check">
+                Проверка на симптоми
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Col>
+
+        {/* Main content */}
+        <Col xs={12} md={9} lg={10}>
+          <Routes>
+            <Route index element={<Navigate to="home" />} />
+            <Route path="home" element={<Home />} />
+            <Route
+              path="personal_information"
+              element={<PersonalInformation />}
+            />
+            <Route path="subscriptions" element={<Subscriptions />} />
+            <Route path="prescriptions" element={<Prescriptions />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="storage" element={<Storage />} />
+            <Route path="symptom_check" element={<SymptomCheck />} />
+            <Route path="*" element={<Navigate to="home" />} />
+          </Routes>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default DashboardPatient;

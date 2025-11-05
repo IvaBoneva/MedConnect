@@ -6,6 +6,28 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import DashboardPatient from "./dashboards/DashboardPatient";
+
+/*function App() {
+  return (
+    <Router>
+      <NavigationBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route
+          path="/dashboard/*"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}*/
 
 function App() {
   return (
@@ -15,14 +37,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard/patient/*" element={<DashboardPatient />} />
       </Routes>
     </Router>
   );

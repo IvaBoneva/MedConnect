@@ -58,3 +58,25 @@ body {
 .card-hover:hover p {
   color: #ffffff !important;
 }
+
+.sidebar .nav-link {
+  color: white !important;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  padding: 10px 15px;
+}
+
+/* Hover ефект */
+.sidebar .nav-link:hover {
+  background-color: white !important;
+  color: #2e8b57 !important;
+}
+
+/* Активен линк (NavLink автоматично добавя .active) */
+.sidebar .nav-link.active {
+  background-color: white !important;
+  color: #2e8b57 !important;
+  font-weight: 600;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
