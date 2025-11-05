@@ -13,13 +13,13 @@ const Home = () => {
           <h1 className="fw-bold" style={{ color: "#2E8B57" }}>
             Добре дошли в MedConnect+
           </h1>
-          <p className="lead mt-3">
+          <p className="lead mt-4">
             Вашият личен здравен асистент — управлявайте прегледи, лекарства и
             медицински досиета на едно сигурно място.
           </p>
           <Button
             variant="primary"
-            className="mt-3 px-4 py-2 rounded-pill"
+            className="mt-5 px-4 py-2 rounded-pill"
             onClick={() => navigate("/register")}
           >
             Да започваме!
@@ -30,7 +30,20 @@ const Home = () => {
             src={doctorImage}
             alt="Лекар"
             className="img-fluid"
-            style={{ maxHeight: "400px" }}
+            style={{ maxHeight: "430px" }}
+          />
+        </Col>
+      </Row>
+
+      <Row className="my-0">
+        <Col>
+          <div
+            style={{
+              height: "4px",
+              backgroundColor: "#2E8B57",
+              borderRadius: "2px",
+              width: "100%",
+            }}
           />
         </Col>
       </Row>
