@@ -2,9 +2,14 @@ import React from "react";
 import { Container, Card, Row, Col, Image, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import profileImage from "../../images/profile.png";
+import { useLocation } from "react-router-dom";
 
 const PersonalInformation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/test")
+    ? "/test/patient"
+    : "/dashboard/patient";
 
   // Примерни данни – по-късно ще идват от backend
   const userData = {
@@ -83,9 +88,7 @@ const PersonalInformation = () => {
           <Button
             variant="success"
             className="px-4"
-            onClick={() =>
-              navigate("/dashboard/patient/personal_information/edit")
-            }
+            onClick={() => navigate(`${basePath}/personal_information/edit`)}
           >
             Редактирай
           </Button>

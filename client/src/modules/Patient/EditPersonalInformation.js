@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import profileImage from "../../images/profile.png";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const EditPersonalInformation = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,10 @@ const EditPersonalInformation = () => {
     conditions: "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/test")
+    ? "/test/patient"
+    : "/dashboard/patient";
 
   // Грешки
   const [ageError, setAgeError] = useState("");
@@ -267,9 +272,7 @@ const EditPersonalInformation = () => {
               variant="success"
               type="submit"
               className="px-4 me-2"
-              onClick={() =>
-                navigate("/dashboard/patient/personal_information")
-              }
+              onClick={() => navigate(`${basePath}/personal_information`)}
             >
               Запази
             </Button>

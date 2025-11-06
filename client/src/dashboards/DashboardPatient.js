@@ -1,6 +1,8 @@
 import React from "react";
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import Home from "../modules/Patient/Home";
 import PersonalInformation from "../modules/Patient/PersonalInformation";
 import EditPersonalInformation from "../modules/Patient/EditPersonalInformation";
@@ -12,6 +14,11 @@ import SymptomCheck from "../modules/Patient/SymptomCheck";
 import "../App.css";
 
 const DashboardPatient = () => {
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/test")
+    ? "/test/patient"
+    : "/dashboard/patient";
+
   return (
     <Container fluid className="mt-3">
       <Row>
@@ -30,40 +37,37 @@ const DashboardPatient = () => {
         >
           <Nav className="flex-column">
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/home" end>
+              <Nav.Link as={NavLink} to={`${basePath}/home`} end>
                 🏠 Начало
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link
-                as={NavLink}
-                to="/dashboard/patient/personal_information"
-              >
+              <Nav.Link as={NavLink} to={`${basePath}/personal_information`}>
                 Лични данни
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/subscriptions">
+              <Nav.Link as={NavLink} to={`${basePath}/subscriptions`}>
                 Абонамент
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/prescriptions">
+              <Nav.Link as={NavLink} to={`${basePath}/prescriptions`}>
                 Предписания
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/appointments">
+              <Nav.Link as={NavLink} to={`${basePath}/appointments`}>
                 Записване на часове
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/storage">
+              <Nav.Link as={NavLink} to={`${basePath}/storage`}>
                 Хранилище
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to="/dashboard/patient/symptom_check">
+              <Nav.Link as={NavLink} to={`${basePath}/symptom_check`}>
                 Проверка на симптоми
               </Nav.Link>
             </Nav.Item>
