@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     age: "",
     email: "",
     password: "",
@@ -127,13 +128,25 @@ const RegisterForm = () => {
       {message && <Alert variant="info">{message}</Alert>}
 
       <Form onSubmit={handleSubmit}>
-        {/* Имена */}
+        {/* Име */}
         <Form.Group className="mb-3">
-          <Form.Label>Имена</Form.Label>
+          <Form.Label>Име</Form.Label>
           <Form.Control
             type="text"
             name="name"
-            placeholder="Въведете вашите имена"
+            placeholder="Въведете Вашето име"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        {/* Име */}
+        <Form.Group className="mb-3">
+          <Form.Label>Фамилия</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            placeholder="Въведете Вашата фамилия"
             value={formData.name}
             onChange={handleChange}
             required
@@ -146,7 +159,7 @@ const RegisterForm = () => {
           <Form.Control
             type="number"
             name="age"
-            placeholder="Въведете вашата възраст"
+            placeholder="Въведете Вашата възраст"
             min="18"
             max="120"
             value={formData.age}
@@ -156,19 +169,6 @@ const RegisterForm = () => {
           {ageError && <p className="text-danger small mt-1">{ageError}</p>}
         </Form.Group>
 
-        {/* Имейл */}
-        <Form.Group className="mb-3">
-          <Form.Label>Имейл адрес</Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            placeholder="Въведете вашия имейл"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          {emailError && <p className="text-danger small mt-1">{emailError}</p>}
-        </Form.Group>
 
         {/* Телефон */}
         <Form.Group className="mb-3">
@@ -176,21 +176,34 @@ const RegisterForm = () => {
           <Form.Control
             type="text"
             name="phone"
-            placeholder="Въведете вашия телефонен номер"
+            placeholder="Въведете Вашия телефонен номер"
             value={formData.phone}
             onChange={handleChange}
             required
-          />
+            />
           {phoneError && <p className="text-danger small mt-1">{phoneError}</p>}
         </Form.Group>
 
+            {/* Имейл */}
+        <Form.Group className="mb-3">
+          <Form.Label>Имейл адрес</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            placeholder="Въведете Вашия имейл"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          {emailError && <p className="text-danger small mt-1">{emailError}</p>}
+        </Form.Group>
         {/* Парола */}
         <Form.Group className="mb-3">
           <Form.Label>Парола</Form.Label>
           <Form.Control
             type="password"
             name="password"
-            placeholder="Въведете вашата парола"
+            placeholder="Въведете Вашата парола"
             value={formData.password}
             onChange={handleChange}
             required
@@ -238,7 +251,18 @@ const RegisterForm = () => {
           <>
             <h6 className="mt-3 text-secondary">Детайли за пациента</h6>
             <Form.Group className="mb-3">
-              <Form.Label>Имена на пациента</Form.Label>
+              <Form.Label>Име на пациента</Form.Label>
+              <Form.Control
+                type="text"
+                name="patientName"
+                placeholder="Въведете името на пациента"
+                value={formData.patientName}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Фамилия на пациента</Form.Label>
               <Form.Control
                 type="text"
                 name="patientName"
