@@ -1,15 +1,97 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Container, Card, Row, Col, Image, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import profileImage from "../../images/profile.png";
 
 const PersonalInformation = () => {
+  const navigate = useNavigate();
+
+  // Примерни данни – по-късно ще идват от backend
+  const userData = {
+    photo: null,
+    name: "Иван Петров",
+    age: 32,
+    email: "ivan.petrov@example.com",
+    phone: "+359888123456",
+    allergies: "Прах, полени",
+    conditions: "Хипертония",
+  };
+
   return (
-    <Card className="p-4 shadow-sm">
-      <h3 className="text-success mb-3">Лични данни</h3>
-      <p>
-        Тук ще се показва информацията за пациента – име, имейл, алергии,
-        хронични заболявания и снимка.
-      </p>
-    </Card>
+    <Container className="mt-4">
+      <Card className="p-4 shadow-sm">
+        <h3 className="text-success text-left mb-4">Лична информация</h3>
+
+        <Row>
+          {/* Фото */}
+          <Col md={4} className="text-center mb-3 mt-4">
+            <div
+              style={{
+                width: "150px",
+                height: "150px",
+                borderRadius: "10px",
+                border: "3px solid #2E8B57",
+                backgroundColor: "#f8f9fa",
+                overflow: "hidden",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto",
+              }}
+            >
+              <Image
+                src={userData.photo || profileImage}
+                alt="Patient"
+                fluid
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  objectFit: "contain",
+                }}
+              />
+            </div>
+          </Col>
+
+          {/* Основни данни */}
+          <Col md={8}>
+            <p>
+              <strong>Имена:</strong> {userData.name || "—"}
+            </p>
+            <p>
+              <strong>Възраст:</strong> {userData.age || "—"}
+            </p>
+            <p>
+              <strong>Имейл:</strong> {userData.email || "—"}
+            </p>
+            <p>
+              <strong>Телефон:</strong> {userData.phone || "—"}
+            </p>
+          </Col>
+        </Row>
+
+        <hr />
+
+        {/* Медицински детайли */}
+        <p>
+          <strong>Алергии:</strong> {userData.allergies || "—"}
+        </p>
+        <p>
+          <strong>Заболявания:</strong> {userData.conditions || "—"}
+        </p>
+
+        <div className="text-center mt-4">
+          <Button
+            variant="success"
+            className="px-4"
+            onClick={() =>
+              navigate("/dashboard/patient/personal_information/edit")
+            }
+          >
+            Редактирай
+          </Button>
+        </div>
+      </Card>
+    </Container>
   );
 };
 

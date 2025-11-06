@@ -3,6 +3,7 @@ import { Container, Row, Col, Nav } from "react-bootstrap";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
 import Home from "../modules/Patient/Home";
 import PersonalInformation from "../modules/Patient/PersonalInformation";
+import EditPersonalInformation from "../modules/Patient/EditPersonalInformation";
 import Subscriptions from "../modules/Patient/Subscriptions";
 import Prescriptions from "../modules/Patient/Prescriptions";
 import Appointments from "../modules/Patient/Appointments";
@@ -77,6 +78,10 @@ const DashboardPatient = () => {
             <Route
               path="personal_information"
               element={<PersonalInformation />}
+            />
+            <Route
+              path="personal_information/edit"
+              element={<EditPersonalInformation />}
             />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="prescriptions" element={<Prescriptions />} />
