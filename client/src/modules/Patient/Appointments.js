@@ -1,15 +1,27 @@
-import React from "react";
-import { Card } from "react-bootstrap";
+// src/modules/Patient/Appointments.js
+import React, { useState } from "react";
+import DoctorSearch from "../../components/DoctorSearch";
+import DoctorDetails from "../../components/DoctorDetails";
 
 const Appointments = () => {
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  const handleSelectDoctor = (doctor) => {
+    setSelectedDoctor(doctor);
+  };
+
+  const handleBack = () => {
+    setSelectedDoctor(null);
+  };
+
   return (
-    <Card className="p-4 shadow-sm">
-      <h3 className="text-success mb-3">Записване на часове</h3>
-      <p>
-        Тук ще се търсят и филтрират лекари и ще може да се запише час при
-        конкретен специалист.
-      </p>
-    </Card>
+    <div className="container mt-4">
+      {!selectedDoctor ? (
+        <DoctorSearch onSelectDoctor={handleSelectDoctor} />
+      ) : (
+        <DoctorDetails doctor={selectedDoctor} onBack={handleBack} />
+      )}
+    </div>
   );
 };
 

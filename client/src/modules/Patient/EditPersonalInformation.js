@@ -99,6 +99,9 @@ const EditPersonalInformation = () => {
     }
 
     setMessage("✅ Информацията е успешно запазена!");
+
+    // Пренасочване след кратка пауза (примерно 2 секунди)
+    setTimeout(() => navigate(`${basePath}/personal_information`), 2000);
   };
 
   // Изчистване
@@ -268,21 +271,17 @@ const EditPersonalInformation = () => {
 
           {/* Бутони */}
           <div className="text-center">
-            <Button
-              variant="success"
-              type="submit"
-              className="px-4 me-2"
-              onClick={() => navigate(`${basePath}/personal_information`)}
-            >
-              Запази
+            <Button variant="success" type="submit" className="px-4 me-2">
+              💾 Запази
             </Button>
+
             <Button
-              variant="success"
+              variant="secondary"
               type="button"
               className="px-4 mx-4"
               onClick={handleClear}
             >
-              Изчисти
+              🗑️ Изчисти
             </Button>
           </div>
         </Form>

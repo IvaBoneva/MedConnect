@@ -29,7 +29,7 @@ const PersonalInformation = () => {
 
         <Row>
           {/* Фото */}
-          <Col md={4} className="text-center mb-3 mt-4">
+          <Col md={4} className="text-center mb-3 mt-0">
             <div
               style={{
                 width: "150px",
@@ -90,7 +90,7 @@ const PersonalInformation = () => {
             className="px-4"
             onClick={() => navigate(`${basePath}/personal_information/edit`)}
           >
-            Редактирай
+            ✏️ Редактирай
           </Button>
         </div>
       </Card>

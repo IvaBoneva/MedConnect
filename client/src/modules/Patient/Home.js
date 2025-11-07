@@ -3,19 +3,11 @@ import { Image, Card } from "react-bootstrap";
 import welcomeImage from "../../images/hello_img.png";
 
 const GoogleCalendar = () => (
-  <div
-    style={{
-      height: "400px",
-      border: "1px solid #ccc",
-      borderRadius: "10px",
-      marginTop: "20px",
-      padding: "10px",
-      textAlign: "center",
-      backgroundColor: "#ffffff",
-    }}
-  >
-    Google Calendar на пациента ще се покаже тук
-  </div>
+  <iframe
+    title="Google Calendar"
+    src="https://calendar.google.com/calendar/embed?src=bg.bulgarian%23holiday%40group.v.calendar.google.com"
+    style={{ border: 0, width: "100%", height: "400px" }}
+  />
 );
 
 const Home = () => {
