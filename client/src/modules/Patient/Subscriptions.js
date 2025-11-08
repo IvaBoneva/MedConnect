@@ -148,15 +148,18 @@ const Subscriptions = () => {
           </Col>
 
           {/* Изображение (само на lg+) */}
-          <Col xs={12} lg={4} className="text-center d-none d-lg-block">
+          <Col
+            xs={12}
+            lg={4}
+            className="text-center d-none d-lg-block"
+            style={{ marginLeft: "-80px", marginBottom: "-62px" }}
+          >
             <Image
               src={paymentImg}
               fluid
               style={{
                 maxHeight: "470px",
                 borderRadius: "15px",
-                marginLeft: "-175px",
-                marginBottom: "-62px",
               }}
             />
           </Col>
