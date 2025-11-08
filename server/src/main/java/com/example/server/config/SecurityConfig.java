@@ -1,0 +1,47 @@
+package com.example.server.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+
+//@EnableMethodSecurity(prePostEnabled = true)
+@Configuration
+public class SecurityConfig {
+
+    private final JwtFilter jwtFilter = new JwtFilter(); // or inject it if you make it a @Component
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+//        disable CSRF since we use fronted (any other port, not server side rendered app)
+        http.csrf(AbstractHttpConfigurer::disable);
+
+//        permit specific request (3), other authenticated (using our JWT filter)
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/user/**",
+                        "/api/blog/unrestricted").permitAll()
+                .anyRequest().authenticated()
+        );
+
+//        don't use sessions because again we use JWT
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+//        runs before the UsernamePassword filter
+//        but since we added the user to trusted/authenticated users in the aut local storage (see JwtFilter.java)
+//        the logic of UsernamePasswordAuthenticationFilter is skipped since user already trusted
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+
+        return http.build();
+    }
+}
