@@ -16,7 +16,8 @@ import { useLocation } from "react-router-dom";
 const EditPersonalInformation = () => {
   const [formData, setFormData] = useState({
     photo: null,
-    name: "",
+    fname: "",
+    lname: "",
     age: "",
     email: "",
     phone: "",
@@ -33,6 +34,8 @@ const EditPersonalInformation = () => {
   const [ageError, setAgeError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [fnameError, setFNameError] = useState("");
+  const [lnameError, setLNameError] = useState("");
   const [message, setMessage] = useState("");
 
   // Смяна на снимка
@@ -86,6 +89,32 @@ const EditPersonalInformation = () => {
       }
     }
 
+    // Проверка имена – само кирилица, без интервали, с възможно тире,
+    // започва с главна буква, следват малки
+    const namePattern = /^[А-Я][а-я]+(-[А-Я][а-я]+)?$/;
+
+    if (name === "fname") {
+      if (value && !namePattern.test(value)) {
+        setFNameError(
+          "Името трябва да започва с главна буква и да съдържа само кирилица. " +
+            "Позволено е едно тире (напр. 'Анна-Мария'). Без интервали и цифри."
+        );
+      } else {
+        setFNameError("");
+      }
+    }
+
+    if (name === "lname") {
+      if (value && !namePattern.test(value)) {
+        setLNameError(
+          "Фамилията трябва да започва с главна буква и да съдържа само кирилица. " +
+            "Позволено е едно тире (напр. 'Петров-Павлов'). Без интервали и цифри."
+        );
+      } else {
+        setLNameError("");
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
@@ -93,7 +122,7 @@ const EditPersonalInformation = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (ageError || emailError || phoneError) {
+    if (ageError || emailError || phoneError || fnameError || lnameError) {
       setMessage("Моля, коригирайте грешките във формата.");
       return;
     }
@@ -108,7 +137,8 @@ const EditPersonalInformation = () => {
   const handleClear = () => {
     setFormData({
       photo: null,
-      name: "",
+      fname: "",
+      lname: "",
       age: "",
       email: "",
       phone: "",
@@ -186,14 +216,31 @@ const EditPersonalInformation = () => {
             {/* Основни данни */}
             <Col md={8}>
               <Form.Group className="mb-3">
-                <Form.Label>Имена</Form.Label>
+                <Form.Label>Име</Form.Label>
                 <Form.Control
                   type="text"
-                  name="name"
-                  placeholder="Въведете вашите имена"
-                  value={formData.name}
+                  name="fname"
+                  placeholder="Въведете вашето име"
+                  value={formData.fname}
                   onChange={handleChange}
                 />
+                {fnameError && (
+                  <p className="text-danger small mt-1">{fnameError}</p>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Фамилия</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="lname"
+                  placeholder="Въведете вашата фамилия"
+                  value={formData.lname}
+                  onChange={handleChange}
+                />
+                {lnameError && (
+                  <p className="text-danger small mt-1">{lnameError}</p>
+                )}
               </Form.Group>
 
               <Form.Group className="mb-3">

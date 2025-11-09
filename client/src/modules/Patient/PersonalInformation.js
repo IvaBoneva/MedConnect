@@ -14,7 +14,8 @@ const PersonalInformation = () => {
   // Примерни данни – по-късно ще идват от backend
   const userData = {
     photo: null,
-    name: "Иван Петров",
+    fname: "Иван",
+    lname: "Петров",
     age: 32,
     email: "ivan.petrov@example.com",
     phone: "+359888123456",
@@ -60,7 +61,10 @@ const PersonalInformation = () => {
           {/* Основни данни */}
           <Col md={8}>
             <p>
-              <strong>Имена:</strong> {userData.name || "—"}
+              <strong>Име:</strong> {userData.fname || "—"}
+            </p>
+            <p>
+              <strong>Фамилия:</strong> {userData.lname || "—"}
             </p>
             <p>
               <strong>Възраст:</strong> {userData.age || "—"}

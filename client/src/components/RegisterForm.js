@@ -4,14 +4,17 @@ import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    fname: "",
+    lname: "",
     age: "",
     email: "",
     password: "",
+    confirmPassword: "",
     phone: "",
     role: "patient",
     specialization: "",
-    patientName: "",
+    patientFName: "",
+    patientLName: "",
     patientAge: "",
     hasDisability: "",
     disabilityDetails: "",
@@ -19,10 +22,17 @@ const RegisterForm = () => {
 
   const [showDoctorFields, setShowDoctorFields] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // за основната парола
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // за потвърждението
   const [ageError, setAgeError] = useState("");
   const [patientAgeError, setPatientAgeError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [fnameError, setFNameError] = useState("");
+  const [lnameError, setLNameError] = useState("");
+  const [patientfnameError, setPatientFNameError] = useState("");
+  const [patientlnameError, setPatientLNameError] = useState("");
   const [message, setMessage] = useState("");
 
   // Валидация на паролата
@@ -36,7 +46,6 @@ const RegisterForm = () => {
     return errors;
   };
 
-  // Обработка на промени
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
@@ -74,7 +83,7 @@ const RegisterForm = () => {
       else setEmailError("");
     }
 
-    // Проверка телефон — само мобилни номера в България
+    // Проверка телефон
     if (name === "phone") {
       const onlyDigitsOrPlus = /^[0-9+]+$/;
       const bgMobileRegex = /^(\+359|0)8[7-9][0-9]{7}$/;
@@ -90,24 +99,75 @@ const RegisterForm = () => {
       }
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    // Проверка потвърждение на паролата
+    if (name === "confirmPassword") {
+      if (value !== formData.password) {
+        setConfirmPasswordError("Паролите не съвпадат.");
+      } else {
+        setConfirmPasswordError("");
+      }
+    }
+
+    // Проверка имена
+    const namePattern = /^[А-Я][а-я]+(-[А-Я][а-я]+)?$/;
+
+    if (name === "patientFName") {
+      if (value && !namePattern.test(value)) {
+        setPatientFNameError(
+          "Името трябва да започва с главна буква и да съдържа само кирилица. Позволено е едно тире. Без интервали и цифри."
+        );
+      } else setPatientFNameError("");
+    }
+
+    if (name === "patientLName") {
+      if (value && !namePattern.test(value)) {
+        setPatientLNameError(
+          "Фамилията трябва да започва с главна буква и да съдържа само кирилица. Позволено е едно тире. Без интервали и цифри."
+        );
+      } else setPatientLNameError("");
+    }
+
+    if (name === "fname") {
+      if (value && !namePattern.test(value)) {
+        setFNameError(
+          "Името трябва да започва с главна буква и да съдържа само кирилица. Позволено е едно тире. Без интервали и цифри."
+        );
+      } else setFNameError("");
+    }
+
+    if (name === "lname") {
+      if (value && !namePattern.test(value)) {
+        setLNameError(
+          "Фамилията трябва да започва с главна буква и да съдържа само кирилица. Позволено е едно тире. Без интервали и цифри."
+        );
+      } else setLNameError("");
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
 
     if (name === "password") setPasswordErrors(validatePassword(value));
     if (name === "role") setShowDoctorFields(value === "doctor");
   };
 
-  // Изпращане
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (passwordErrors.length > 0)
       return setMessage("Моля, коригирайте изискванията за паролата.");
 
-    if (ageError || emailError || phoneError)
+    if (
+      ageError ||
+      emailError ||
+      phoneError ||
+      fnameError ||
+      lnameError ||
+      patientfnameError ||
+      patientlnameError
+    )
       return setMessage("Моля, проверете въведените данни за грешки.");
+
+    if (formData.password !== formData.confirmPassword)
+      return setMessage("Паролите не съвпадат.");
 
     if (formData.role === "doctor") {
       setMessage(
@@ -129,15 +189,29 @@ const RegisterForm = () => {
       <Form onSubmit={handleSubmit}>
         {/* Имена */}
         <Form.Group className="mb-3">
-          <Form.Label>Имена</Form.Label>
+          <Form.Label>Име</Form.Label>
           <Form.Control
             type="text"
-            name="name"
-            placeholder="Въведете вашите имена"
-            value={formData.name}
+            name="fname"
+            placeholder="Въведете вашето име"
+            value={formData.fname}
             onChange={handleChange}
             required
           />
+          {fnameError && <p className="text-danger small mt-1">{fnameError}</p>}
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Фамилия</Form.Label>
+          <Form.Control
+            type="text"
+            name="lname"
+            placeholder="Въведете вашата фамилия"
+            value={formData.lname}
+            onChange={handleChange}
+            required
+          />
+          {lnameError && <p className="text-danger small mt-1">{lnameError}</p>}
         </Form.Group>
 
         {/* Възраст */}
@@ -184,17 +258,27 @@ const RegisterForm = () => {
           {phoneError && <p className="text-danger small mt-1">{phoneError}</p>}
         </Form.Group>
 
-        {/* Парола */}
+        {/* Парола с око */}
         <Form.Group className="mb-3">
           <Form.Label>Парола</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            placeholder="Въведете вашата парола"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="d-flex">
+            <Form.Control
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Въведете вашата парола"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <Button
+              variant="outline-secondary"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ marginLeft: "5px" }}
+            >
+              {showPassword ? "Скрий" : "Покажи"}
+            </Button>
+          </div>
           <Form.Text muted>
             Паролата трябва да съдържа поне:
             <ul className="mb-1 mt-1">
@@ -219,6 +303,32 @@ const RegisterForm = () => {
           )}
         </Form.Group>
 
+        {/* Потвърждение на паролата с око */}
+        <Form.Group className="mb-3">
+          <Form.Label>Потвърдете паролата</Form.Label>
+          <div className="d-flex">
+            <Form.Control
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Повторете паролата"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+            <Button
+              variant="outline-secondary"
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{ marginLeft: "5px" }}
+            >
+              {showConfirmPassword ? "Скрий" : "Покажи"}
+            </Button>
+          </div>
+          {confirmPasswordError && (
+            <p className="text-danger small mt-1">{confirmPasswordError}</p>
+          )}
+        </Form.Group>
+
         {/* Роля */}
         <Form.Group className="mb-3">
           <Form.Label>Роля</Form.Label>
@@ -238,15 +348,33 @@ const RegisterForm = () => {
           <>
             <h6 className="mt-3 text-secondary">Детайли за пациента</h6>
             <Form.Group className="mb-3">
-              <Form.Label>Имена на пациента</Form.Label>
+              <Form.Label>Име на пациента</Form.Label>
               <Form.Control
                 type="text"
-                name="patientName"
-                placeholder="Въведете имената на пациента"
-                value={formData.patientName}
+                name="patientFName"
+                placeholder="Въведете име на пациента"
+                value={formData.patientFName}
                 onChange={handleChange}
                 required
               />
+              {patientfnameError && (
+                <p className="text-danger small mt-1">{patientfnameError}</p>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Фамилия на пациента</Form.Label>
+              <Form.Control
+                type="text"
+                name="patientLName"
+                placeholder="Въведете фамилия на пациента"
+                value={formData.patientLName}
+                onChange={handleChange}
+                required
+              />
+              {patientlnameError && (
+                <p className="text-danger small mt-1">{patientlnameError}</p>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
