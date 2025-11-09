@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -17,6 +19,10 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter = new JwtFilter(); // or inject it if you make it a @Component
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,6 +34,7 @@ public class SecurityConfig {
 //        permit specific request (3), other authenticated (using our JWT filter)
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/user/**",
+                        "/api/user/register",
                         "/api/blog/unrestricted").permitAll()
                 .anyRequest().authenticated()
         );

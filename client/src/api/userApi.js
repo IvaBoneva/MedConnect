@@ -7,8 +7,8 @@ let token;
 
 export const logIn = () => {
   const params = {
-    username: "murtveca",
-    password: "gooner",
+    username: "test_user_new",
+    password: "test123A!",
   };
   const options = {
     method: "POST",
@@ -26,6 +26,26 @@ export const logIn = () => {
       localStorage.setItem("jwt-token", data.token);
       testProtected();
     });
+};
+
+export const register = (formData) => {
+  const params = {
+    username: "murtveca",
+  };
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+    mode: "cors",
+  };
+  fetch(`${API_BASE}/register`, options)
+    .then((response) => console.log(response))
+    .then(() => console.log(formData));
+    // .then((data) => {
+    //   console.log(data);
+    // });
 };
 
 

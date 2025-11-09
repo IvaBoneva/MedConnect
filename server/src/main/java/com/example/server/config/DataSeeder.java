@@ -8,57 +8,63 @@ import com.example.server.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Set;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataSeeder {
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository) {
+    CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         return args -> {
 
-            // --- Seed roles ---
-            if (roleRepository.count() == 0) {
-                Role admin = new Role();
-                admin.setId(1);
-                admin.setRole(RolesEnum.Admin);
-
-                Role doctor = new Role();
-                doctor.setId(2);
-                doctor.setRole(RolesEnum.Doctor);
-
-                Role patient = new Role();
-                patient.setId(3);
-                patient.setRole(RolesEnum.Patient);
-
-                roleRepository.saveAll(Set.of(admin, doctor, patient));
-                System.out.println("✅ Roles seeded successfully!");
+            // --- Seed roles only if missing ---
+            for (RolesEnum r : RolesEnum.values()) {
+                roleRepository.findByRole(r).orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setRole(r);
+                    return roleRepository.save(newRole);
+                });
             }
 
-            // --- Seed users ---
+            System.out.println("✅ Roles seeded successfully!");
+
             if (userRepository.count() == 0) {
-                Role adminRole = roleRepository.findByRole(RolesEnum.Admin);
-                Role doctorRole = roleRepository.findByRole(RolesEnum.Doctor);
-                Role patientRole = roleRepository.findByRole(RolesEnum.Patient);
+                // ✅ Now roles are managed entities (no detached entity problem)
+                Role adminRole = roleRepository.findByRole(RolesEnum.Admin)
+                        .orElseThrow(() -> new RuntimeException("Admin role missing"));
+                Role patientRole = roleRepository.findByRole(RolesEnum.Patient)
+                        .orElseThrow(() -> new RuntimeException("Patient role missing"));
+                Role doctorRole = roleRepository.findByRole(RolesEnum.Doctor)
+                        .orElseThrow(() -> new RuntimeException("Doctor role missing"));
 
                 User user1 = new User();
-                user1.setUsername("murtveca");
-                user1.setPassword("gooner");
+                user1.setEmail("murtveca@example.com");
+                user1.setPassword(passwordEncoder.encode("gooner"));
                 user1.setName("Murt Veca");
                 user1.setAge(24);
                 user1.setPhoneNumber("123456789");
-                user1.setRoles(Set.of(adminRole, doctorRole));
+                user1.setRole(adminRole); // ✅ assign managed entity
 
                 User user2 = new User();
-                user2.setUsername("john_doe");
-                user2.setPassword("password123");
+                user2.setEmail("john_doe@example.com");
+                user2.setPassword(passwordEncoder.encode("password123"));
                 user2.setName("John Doe");
                 user2.setAge(30);
                 user2.setPhoneNumber("987654321");
-                user2.setRoles(Set.of(patientRole));
+                user2.setRole(patientRole);
 
-                userRepository.saveAll(Set.of(user1, user2));
+                User user3 = new User();
+                user3.setEmail("doctor@example.com");
+                user3.setPassword(passwordEncoder.encode("doc123"));
+                user3.setName("Dr. Strange");
+                user3.setAge(40);
+                user3.setPhoneNumber("1122334455");
+                user3.setRole(doctorRole);
+
+                userRepository.save(user1);
+                userRepository.save(user2);
+                userRepository.save(user3);
+
                 System.out.println("✅ Users seeded successfully!");
             }
         };

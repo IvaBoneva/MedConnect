@@ -9,9 +9,8 @@ import com.example.server.models.User;
 @Service
 public interface UserService {
 
+
+    public User getUserByEmail(String name) throws UsernameNotFoundException;
+
     public void saveUser(User user);
-
-    public User getUserByNameAndPassword(String name, String password) throws UsernameNotFoundException;
-
-
 }

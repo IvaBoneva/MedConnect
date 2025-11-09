@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { register } from "../api/userApi";
+
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -45,6 +47,17 @@ const RegisterForm = () => {
       errors.push("Поне един специален символ");
     return errors;
   };
+
+  const formData1 = {
+  username: "test_user_new",
+  password: "test123A!",
+  name: "Test User",
+  age: 28,
+  phoneNumber: "0888123456",
+  roles: [
+    { role: "Patient" } // could be "Admin", "Doctor", etc. from RolesEnum
+  ]
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -176,6 +189,7 @@ const RegisterForm = () => {
     } else {
       setMessage("Регистрацията беше успешна! Можете да влезете в профила си.");
     }
+
   };
 
   return (
@@ -452,7 +466,7 @@ const RegisterForm = () => {
           </>
         )}
 
-        <Button type="submit" variant="success" className="w-100">
+        <Button type="submit" variant="success" className="w-100" onClick={() => register(formData)}>
           Регистрация
         </Button>
 

@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
 
-    //    May put UserNotFoundException
-//    Maybe better approach searching for username only because password is encoded in the system
-    User findByUsernameAndPassword(String username, String password) throws UsernameNotFoundException;
+    User findByEmailAndPassword(String username, String password) throws UsernameNotFoundException;
 
+    User findByEmail(String email) throws UsernameNotFoundException;
 }

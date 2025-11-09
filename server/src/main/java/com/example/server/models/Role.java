@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
@@ -13,11 +11,12 @@ import java.util.Set;
 public class Role {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true, nullable = false)
     private RolesEnum role;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private Set<User> users;   ;
 }
+
