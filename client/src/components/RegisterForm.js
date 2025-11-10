@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+//import { Form, Button, Alert } from "react-bootstrap";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { register } from "../api/userApi";
 
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+//import { Link, useNavigate } from "react-router-dom";
 
 const transformFormToBackend = (form) => ({
   email: form.email,
@@ -479,11 +479,6 @@ const RegisterForm = () => {
           </>
         )}
 
-        <Button
-          type="submit"
-          variant="success"
-          className="w-100"
-        >
         <Button type="submit" variant="success" className="w-100">
           Регистрация
         </Button>
