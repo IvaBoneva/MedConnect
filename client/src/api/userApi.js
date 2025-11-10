@@ -3,7 +3,19 @@
 const API_BASE = "http://localhost:8080/api/user";
 const RESTRICTED_API = "http://localhost:8080/api/blog/restricted";
 
+const TEST_REGISTER_JSON = {
+  "email": "new_user@example.com",
+  "password": "mypassword123",
+  "name": "New User",
+  "age": 28,
+  "phoneNumber": "5551234567",
+  "role": {
+    "role": "Patient"
+  }
+}
+
 let token;
+
 
 export const logIn = () => {
   const params = {
@@ -29,9 +41,6 @@ export const logIn = () => {
 };
 
 export const register = (formData) => {
-  const params = {
-    username: "murtveca",
-  };
   const options = {
     method: "POST",
     headers: {
@@ -41,11 +50,14 @@ export const register = (formData) => {
     mode: "cors",
   };
   fetch(`${API_BASE}/register`, options)
-    .then((response) => console.log(response))
-    .then(() => console.log(formData));
-    // .then((data) => {
-    //   console.log(data);
-    // });
+    .then((response) => {
+        if (!response.code){
+            console.log("Error here broski")
+        } else {
+            goToHome();
+        }
+        // console.log(response)
+    })
 };
 
 

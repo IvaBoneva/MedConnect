@@ -40,6 +40,8 @@ const LoginForm = () => {
 
     setMessage("");
     alert(`Влезли сте като: ${email}`);
+
+    
   };
 
   return (
@@ -97,23 +99,7 @@ const LoginForm = () => {
             )}
           </Form.Group>
 
-          {/* <Form.Group className="mb-3">
-            <Form.Label>Парола</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Въведете вашата парола"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              isInvalid={!!errors.password}
-              required
-            />
-            {errors.password && (
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-
-            )}
-          </Form.Group> */}
+        
 
           <Button
             type="submit"

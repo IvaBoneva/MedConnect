@@ -1,10 +1,25 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { register } from "../api/userApi";
 
 
+const transformFormToBackend = (form) => ({
+  email: form.email,
+  password: form.password,
+  name: `${form.fname} ${form.lname}`, // join first & last name
+  age: Number(form.age),
+  phoneNumber: form.phone,
+  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) } // "patient" -> "Patient"
+});
+
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
+  const goToHome = () => {
+    navigate("/home"); // redirects to /home
+  };
+
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -47,17 +62,6 @@ const RegisterForm = () => {
       errors.push("Поне един специален символ");
     return errors;
   };
-
-  const formData1 = {
-  username: "test_user_new",
-  password: "test123A!",
-  name: "Test User",
-  age: 28,
-  phoneNumber: "0888123456",
-  roles: [
-    { role: "Patient" } // could be "Admin", "Doctor", etc. from RolesEnum
-  ]
-};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -190,6 +194,9 @@ const RegisterForm = () => {
       setMessage("Регистрацията беше успешна! Можете да влезете в профила си.");
     }
 
+    const backendPayload = transformFormToBackend(formData);
+
+    register(backendPayload);
   };
 
   return (
@@ -466,9 +473,15 @@ const RegisterForm = () => {
           </>
         )}
 
-        <Button type="submit" variant="success" className="w-100" onClick={() => register(formData)}>
+        <Button
+          type="submit"
+          variant="success"
+          className="w-100"
+        >
           Регистрация
         </Button>
+
+        <Button onClick={goToHome}>test button</Button>
 
         <div className="text-center mt-2">
           <p className="text-muted">
