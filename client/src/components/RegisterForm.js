@@ -328,7 +328,6 @@ const RegisterForm = () => {
             )
           )}
         </Form.Group>
-
         {/* Потвърждение на паролата */}
         <Form.Group className="mb-3">
           <Form.Label>Потвърдете паролата</Form.Label>
@@ -354,7 +353,6 @@ const RegisterForm = () => {
             <p className="text-danger small mt-1">{confirmPasswordError}</p>
           )}
         </Form.Group>
-
         {/* Роля */}
         <Form.Group className="mb-3">
           <Form.Label>Роля</Form.Label>
@@ -405,6 +403,7 @@ const RegisterForm = () => {
 
             <Form.Group className="mb-3">
               <Form.Label>Възраст на пациента</Form.Label>
+
               <Form.Control
                 type="number"
                 name="patientAge"
@@ -432,6 +431,7 @@ const RegisterForm = () => {
                   checked={formData.hasDisability === "yes"}
                   onChange={handleChange}
                 />
+
                 <Form.Check
                   inline
                   type="radio"
@@ -481,6 +481,8 @@ const RegisterForm = () => {
         <Button type="submit" variant="success" className="w-100">
           Регистрация
         </Button>
+
+        {/* <Button onClick={goToHome}>test button</Button> */}
 
         <div className="text-center mt-2">
           <p className="text-muted">

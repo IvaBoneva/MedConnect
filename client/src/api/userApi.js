@@ -18,10 +18,12 @@ const TEST_LOGIN_JSON = {
   password: "gooner",
 };
 
-let token;
-
-export const logIn = ({ email, password }) => {
-  return fetch(`${API_BASE}/login`, {
+export const logIn = () => {
+  const params = {
+    username: "test_user_new",
+    password: "test123A!",
+  };
+  const options = {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
@@ -47,4 +49,45 @@ export const register = (formData) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
   }).then((response) => response.json());
+    mode: "cors",
+  };
+  fetch(`${API_BASE}/register`, options)
+    .then((response) => {
+        if (!response.code){
+            console.log("Error here broski")
+        } 
+        // console.log(response)
+    })
+};*/
+
+export const register = (formData) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+    mode: "cors",
+  };
+  fetch(`${API_BASE}/register`, options).then((response) => {
+    if (!response.ok) {
+      console.log("Error during registration");
+    } else {
+      console.log("Registration successful");
+    }
+  });
+};
+
+export const testProtected = () => {
+  const options1 = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // ✅ send token
+    },
+    mode: "cors",
+  };
+  fetch(`${RESTRICTED_API}`, options1).then((response) =>
+    console.log(response)
+  );
 };

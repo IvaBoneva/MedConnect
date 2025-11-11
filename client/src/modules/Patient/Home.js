@@ -11,7 +11,7 @@ const GoogleCalendar = () => (
 );
 
 const Home = () => {
-  const userName = localStorage.getItem("userName") || "Пациент";
+  const userName = localStorage.getItem("userName") || "Име";
 
   return (
     <div>
@@ -34,7 +34,7 @@ const Home = () => {
             margin: 0,
           }}
         >
-          Здравей, {userName}!
+          Здравейте, {userName}!
         </h1>
       </Card>
 
