@@ -14,7 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DataSeeder {
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         return args -> {
 
             // --- Seed roles only if missing ---
@@ -39,7 +40,7 @@ public class DataSeeder {
 
                 User user1 = new User();
                 user1.setEmail("murtveca@example.com");
-                user1.setPassword(passwordEncoder.encode("gooner"));
+                user1.setPassword(passwordEncoder.encode("gooner123!"));
                 user1.setName("Murt Veca");
                 user1.setAge(24);
                 user1.setPhoneNumber("123456789");
@@ -55,7 +56,7 @@ public class DataSeeder {
 
                 User user3 = new User();
                 user3.setEmail("doctor@example.com");
-                user3.setPassword(passwordEncoder.encode("doc123"));
+                user3.setPassword(passwordEncoder.encode("doc123456"));
                 user3.setName("Dr. Strange");
                 user3.setAge(40);
                 user3.setPhoneNumber("1122334455");
