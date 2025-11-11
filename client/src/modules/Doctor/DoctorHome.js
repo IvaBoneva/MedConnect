@@ -1,7 +1,8 @@
 import React from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
+import welcomeImage from "../../images/hello_img.png";
 
 const DoctorHome = () => {
 const userName = localStorage.getItem("userName") || "Доктор";
@@ -15,15 +16,26 @@ const userName = localStorage.getItem("userName") || "Доктор";
 return(
      <Container fluid className="p-4">
       {/* Welcome Section */}
+      <Card className="d-flex flex-row align-items-center p-4 mb-4 shadow-sm">
+        <Image
+          src={welcomeImage}
+          style={{ width: "120px", height: "160px", marginRight: "20px" }}
+        />
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-4"
       >
-        <h2 className="fw-semibold mb-1">Здравей, {userName} 👋</h2>
+        <h1 className="fw-semibold mb-1" 
+        style={{
+            color: "#2e7d32",
+            fontSize: "30px",
+            fontWeight: "700",
+            margin: 0,
+          }}>Здравей, {userName} 👋</h1>
         <p className="text-muted">Ето какво се случва с вашият бизнес днес.</p>
       </motion.div>
-
+    </Card>
       {/* Summary Cards */}
       <Row className="g-4 mb-4">
         <Col xs={12} md={4}>

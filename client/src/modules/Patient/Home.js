@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, Card } from "react-bootstrap";
 import welcomeImage from "../../images/hello_img.png";
+import { motion } from "framer-motion";
 
 const GoogleCalendar = () => (
   <iframe
@@ -26,6 +27,10 @@ const Home = () => {
           src={welcomeImage}
           style={{ width: "120px", height: "160px", marginRight: "20px" }}
         />
+        <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        >
         <h1
           style={{
             color: "#2e7d32",
@@ -36,6 +41,7 @@ const Home = () => {
         >
           Здравей, {userName}!
         </h1>
+        </motion.div>
       </Card>
 
       <GoogleCalendar />
