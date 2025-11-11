@@ -197,7 +197,7 @@ const Subscriptions = () => {
             Отказ
           </Button>
           {modalContent.action && (
-            <Button variant="success" onClick={modalContent.action}>
+            <Button variants="success" onClick={modalContent.action}>
               Потвърди
             </Button>
           )}
