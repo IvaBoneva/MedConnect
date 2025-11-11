@@ -42,18 +42,14 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new EntityExistsException("Entity already registered");
         }
-
-        // Encode password
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        // Make sure a role is provided in the request
         if (user.getRole() == null || user.getRole().getRole() == null) {
             throw new IllegalArgumentException("User role must be specified");
         }
 
-        // Convert the provided role to the Role entity
-        RolesEnum roleEnum = user.getRole().getRole(); // <-- removed extra parenthesis
+        RolesEnum roleEnum = user.getRole().getRole();
 
         Role selectedRole = roleRepository.findByRole(roleEnum)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleEnum));
@@ -61,5 +57,6 @@ public class UserServiceImpl implements UserService {
         user.setRole(selectedRole);
 
         userRepository.save(user);
+
     }
 }
