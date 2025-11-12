@@ -3,10 +3,12 @@ package com.example.server.config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,19 +32,19 @@ public class JwtFilter extends GenericFilterBean {
                 HttpServletRequest request = (HttpServletRequest) servletRequest;
                 HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-                String path = request.getRequestURI();
+                String servletPath = request.getServletPath();
+                String method = request.getMethod();
 
-                // Skip JWT validation for these endpoints and goes ahead in the filter chain
-                // Skip JWT validation for these endpoints
-                if (path.startsWith("/api/user/login") ||
-                                path.startsWith("/api/user/register") ||
-                                path.startsWith("/api/blog/unrestricted") ||
-                                path.startsWith("/api/stripe/webhook")) {
+                if (servletPath.startsWith("/api/user/login") ||
+                                servletPath.startsWith("/api/user/register") ||
+                                servletPath.startsWith("/api/blog/unrestricted") ||
+                                servletPath.equals("/api/stripe/webhook") ||
+                                servletPath.startsWith("/api/stripe/")) {
+
                         filterChain.doFilter(request, response);
                         return;
                 }
 
-                // If restricted and no token passed or other than JWT
                 String authHeader = request.getHeader("Authorization");
                 if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
@@ -50,12 +52,9 @@ public class JwtFilter extends GenericFilterBean {
                         return;
                 }
 
-                // Cutting the info since it's sant as Bearer s7m3tOk6Nh3r3
                 String token = authHeader.substring(7);
 
                 try {
-                        // gets the secret keys that is used for creating the JWT
-                        // and use it to decrypt the token
                         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
                         Claims claims = Jwts.parser()
                                         .verifyWith(key)
@@ -63,19 +62,12 @@ public class JwtFilter extends GenericFilterBean {
                                         .parseSignedClaims(token)
                                         .getPayload();
 
-                        // Set authentication context manually
                         String username = claims.getSubject();
+
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                         new User(username, "", Collections.emptyList()),
                                         null,
                                         Collections.emptyList());
-
-                        // puts the user into local storage
-                        // At the end of the request, Spring Security clears the SecurityContextHolder,
-                        // so it doesn’t leak authentication info between users so that every time we
-                        // send request
-                        // is created a new user (maybe the current one) that is worked with
-                        // TL;DR our user is AUTHENTICATED for THIS request (ONLY)
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
 

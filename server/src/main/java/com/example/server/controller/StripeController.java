@@ -1,85 +1,78 @@
 package com.example.server.controller;
 
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.Event;
+import com.stripe.model.Subscription;
+import com.stripe.model.checkout.Session;
+import com.stripe.net.Webhook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.server.dto.SubscriptionRequest;
-import com.example.server.service.StripeService;
-import com.example.server.service.UserService;
-import com.stripe.exception.SignatureVerificationException;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Account;
-import com.stripe.model.Event;
-import com.stripe.model.checkout.Session;
-import com.stripe.net.Webhook;
 
-import java.util.HashMap;
-import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-@CrossOrigin(origins = "localhost:3000")
 @RestController
-@RequestMapping("/api/stripe")
+@RequestMapping("/stripe")
 public class StripeController {
 
-    private final StripeService stripeService;
-    private final UserService userService;
-
-    public StripeController(StripeService stripeService, UserService userService) {
-        this.stripeService = stripeService;
-        this.userService = userService;
-    }
-
-    @PostMapping("/create-checkout-session")
-    public ResponseEntity<Map<String, String>> createCheckoutSession(@RequestBody SubscriptionRequest request) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            Session session = stripeService.createCheckoutSession(request.getPlanId());
-            response.put("checkoutUrl", session.getUrl());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.put("error", e.getMessage());
-            return ResponseEntity.status(500).body(response);
-        }
-    }
-
-    @GetMapping("/stripe-test")
-    public ResponseEntity<String> stripeTest() {
-        try {
-            Account account = Account.retrieve();
-            return ResponseEntity.ok("Stripe connected! Account: " + account.getEmail());
-        } catch (StripeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Stripe connection failed: " + e.getMessage());
-        }
-    }
+    @Value("${stripe.webhook.secret}")
+    private String endpointSecret;
 
     @PostMapping("/webhook")
-    public ResponseEntity<String> handleStripeWebhook(@RequestBody String payload,
-            @RequestHeader("Stripe-Signature") String sigHeader) {
+    public ResponseEntity<String> handleStripeWebhook(HttpServletRequest request) throws IOException {
+        StringBuilder payload = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                payload.append(line);
+            }
+        }
 
-        String endpointSecret = "whsec_cfbc863d3fcf144520d1bd827463a337a0121a3f13a504875143879b6dff79df";
+        String sigHeader = request.getHeader("Stripe-Signature");
         Event event;
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+            event = Webhook.constructEvent(payload.toString(), sigHeader, endpointSecret);
         } catch (SignatureVerificationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         }
 
-        System.out.println("Webhook received for email: " + event.getType());
+        switch (event.getType()) {
+            case "checkout.session.completed":
+                Session session = (Session) event.getDataObjectDeserializer()
+                        .getObject()
+                        .orElse(null);
+                if (session != null) {
+                    System.out.println("Checkout completed: " + session.getId());
+                }
+                break;
 
-        if ("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer().getObject().get();
+            case "payment_intent.succeeded":
+                System.out.println("Payment succeeded: " + event.getDataObjectDeserializer().getObject().orElse(null));
+                break;
 
-            String email = session.getCustomerDetails().getEmail();
-            String planId = session.getMetadata().get("planId");
+            case "payment_intent.created":
+                System.out.println(
+                        "Payment intent created: " + event.getDataObjectDeserializer().getObject().orElse(null));
+                break;
 
-            System.out.println("Upgrading subscription for " + email + " to plan " + planId);
+            case "customer.subscription.updated":
+                Subscription subscription = (Subscription) event.getDataObjectDeserializer()
+                        .getObject()
+                        .orElse(null);
+                if (subscription != null) {
+                    System.out.println("Subscription updated: " + subscription.getId());
+                    // Update your database or internal state here
+                }
+                break;
 
-            userService.upgradeSubscription(email, planId);
-
+            default:
+                System.out.println("Received event: " + event.getType());
         }
 
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok("Webhook received");
     }
 }
