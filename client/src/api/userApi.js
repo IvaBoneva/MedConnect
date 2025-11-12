@@ -19,8 +19,8 @@ export const TEST_LOGIN_JSON = {
   password: "gooner",
 };
 
-export const logIn = () => {
-  const { email, password } = TEST_LOGIN_JSON;  
+export const logIn = ({ email, password }) => {
+  // const { email, password } = TEST_LOGIN_JSON;
 
   const options = {
     method: "POST",
@@ -29,7 +29,7 @@ export const logIn = () => {
     body: JSON.stringify({ email, password }),
   };
 
-  return fetch(`${API_BASE}/login`, options)  
+  return fetch(`${API_BASE}/login`, options)
     .then((res) => {
       if (!res.ok) {
         throw new Error("Login failed");
@@ -40,7 +40,7 @@ export const logIn = () => {
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
-      return data; 
+      return data;
     });
 };
 
@@ -58,7 +58,7 @@ export const register = (formData) => {
     .then((response) => response.json())
     .then((data) => {
       if (data.code) {
-        console.log("Error here broski", data); 
+        console.log("Error here broski", data);
       } else {
         console.log("Registration successful", data);
       }
@@ -69,12 +69,12 @@ export const register = (formData) => {
 };
 
 export const testProtected = () => {
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
   const options1 = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, 
+      Authorization: `Bearer ${token}`,
     },
     mode: "cors",
   };
