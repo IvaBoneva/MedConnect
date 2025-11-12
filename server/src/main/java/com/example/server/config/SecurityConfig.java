@@ -42,9 +42,8 @@ public class SecurityConfig {
                                                 "/api/user/**",
                                                 "/api/user/register",
                                                 "/api/blog/unrestricted",
-                                                "/api/stripe/**",
-                                                "/api/stripe/webhook" // Add Stripe endpoints here
-                                ).permitAll()
+                                                "/api/stripe/**")
+                                .permitAll()
                                 .anyRequest().authenticated());
 
                 // don't use sessions because again we use JWT

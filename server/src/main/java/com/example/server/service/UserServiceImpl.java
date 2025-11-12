@@ -8,7 +8,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.ManyToMany;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,27 +68,23 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Override
-    public void upgradeSubscription(String email, String planId) {
-        User user = getUserByEmail(email);
-        String planName;
-        LocalDate expiry = LocalDate.now();
-
-        switch (planId) {
-            case "price_1SSFR9RTNyC3ef1LQhZ0VACG":
-                planName = "premium_monthly";
-                expiry = expiry.plusMonths(1);
-                break;
-            case "price_1SSFR9RTNyC3ef1L5o89uciw":
-                planName = "premium_yearly";
-                expiry = expiry.plusYears(1);
-                break;
-            default:
-                planName = "free";
-                expiry = LocalDate.of(2099, 12, 31);
+    public void updateSubscription(String email, String status, Long currentPeriodEndTimestamp) {
+        // Find the user by email (or another identifier you store for Stripe customer)
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setSubscription(status); // e.g., "active", "canceled"
+            if (currentPeriodEndTimestamp != null) {
+                user.setSubscriptionExpiry(
+                        Instant.ofEpochSecond(currentPeriodEndTimestamp)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+            }
+            userRepository.save(user);
+            System.out.println("User subscription updated for " + email);
+        } else {
+            System.out.println("No user found with email: " + email);
         }
-
-        user.setSubscription(planName).setSubscriptionExpiry(expiry);
-        userRepository.save(user);
     }
+
 }
