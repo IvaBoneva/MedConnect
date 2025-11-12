@@ -4,13 +4,12 @@ import com.example.server.models.Role;
 import com.example.server.models.RolesEnum;
 import com.example.server.models.User;
 import com.example.server.repository.UserRepository;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.ManyToMany;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -68,9 +67,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void upgradeSubscription(String email, String planId) {
+        
+    }
+
+    @Override
     public void updateSubscription(String email, String status, Long currentPeriodEndTimestamp) {
         // Find the user by email (or another identifier you store for Stripe customer)
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = Optional.ofNullable(userRepository.findByEmail(email));
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setSubscription(status); // e.g., "active", "canceled"

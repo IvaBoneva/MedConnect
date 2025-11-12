@@ -4,8 +4,9 @@ import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
 const NavigationBar = () => {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem("authToken");
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
   const role = localStorage.getItem("role");
+  const token = localStorage.getItem("token");
 
   // Определяме към кой dashboard да води бутона
   const getDashboardPath = () => {
@@ -40,12 +41,15 @@ const NavigationBar = () => {
             <Nav.Link as={Link} to="/">
               Начало
             </Nav.Link>
-            <Nav.Link as={Link} to="/login">
+            {!token && <Nav.Link as={Link} to="/login">
               Вход
-            </Nav.Link>
-            <Nav.Link as={Link} to="/register">
+            </Nav.Link>}
+            {!token && <Nav.Link as={Link} to="/register">
               Регистрация
-            </Nav.Link>
+            </Nav.Link> }
+            {token && <Nav.Link as={Link} to="/logout">
+              Излизане
+            </Nav.Link> }
             <Button
               onClick={handleDashboardClick}
               variant="light"

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Card, Alert, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { logIn } from "../api/userApi";
-import LoginInput from "./LoginComponents/LoginInput";
-import LoginButton from "./LoginComponents/LoginButton";
-import RegisterRedirect from "./LoginComponents/RegisterRedirect";
-import LoadingSpinner from "./LoginComponents/LoadingSpinner";
-import { useAuth } from "../context/AuthContext";
+import { logIn } from "../../api/userApi";
+import LoginInput from "./LoginInput";
+import LoginButton from "./LoginButton";
+import RegisterRedirect from "./RegisterRedirect";
+import LoadingSpinner from "./LoadingSpinner";
+import { useAuth } from "../../context/AuthContext";
 
 
 const LoginForm = () => {

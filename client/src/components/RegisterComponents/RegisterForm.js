@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { logIn, register } from "../api/userApi";
-import RegisterInput from "./RegisterComponents/RegisterInput";
-import { useAuth } from "../context/AuthContext";
-import PasswordInput from "./RegisterComponents/PasswordInput";
+import { logIn, register } from "../../api/userApi";
+import RegisterInput from "./RegisterInput";
+import { useAuth } from "../../context/AuthContext";
+import PasswordInput from "./PasswordInput";
 
 const transformFormToBackend = (form) => ({
   email: form.email,
@@ -14,6 +14,47 @@ const transformFormToBackend = (form) => ({
   phoneNumber: form.phone,
   role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
 });
+
+// DO NOT DELETE - WILL BE USED LATER
+
+// const transformFormToBackend = (form) => {
+//   const baseUser = {
+//     email: form.email,
+//     password: form.password,
+//     name: `${form.fname} ${form.lname}`,
+//     age: Number(form.age),
+//     phoneNumber: form.phone,
+//     role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
+//   };
+
+//   switch (form.role) {
+//     case "doctor":
+//       return {
+//         ...baseUser,
+//         doctorProfile: {
+//           specialization: form.specialization,
+//         },
+//       };
+
+//     case "guardian":
+//       return {
+//         ...baseUser,
+//         guardianProfile: {
+//           patientFirstName: form.patientFName,
+//           patientLastName: form.patientLName,
+//           patientAge: Number(form.patientAge),
+//           hasDisability: form.hasDisability === "yes",
+//           disabilityDetails: form.hasDisability === "yes"
+//             ? form.disabilityDetails
+//             : null,
+//         },
+//       };
+
+//     case "patient":
+//     default:
+//       return baseUser;
+//   }
+// };
 
 const RegisterForm = () => {
   const navigate = useNavigate();
