@@ -42,7 +42,8 @@ public class SecurityConfig {
                                                 "/api/user/**",
                                                 "/api/user/register",
                                                 "/api/blog/unrestricted",
-                                                "/api/stripe/**" // Add Stripe endpoints here
+                                                "/api/stripe/**",
+                                                "/api/stripe/webhook" // Add Stripe endpoints here
                                 ).permitAll()
                                 .anyRequest().authenticated());
 

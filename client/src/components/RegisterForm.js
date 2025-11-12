@@ -8,10 +8,10 @@ import { useAuth } from "../context/AuthContext";
 const transformFormToBackend = (form) => ({
   email: form.email,
   password: form.password,
-  name: `${form.fname} ${form.lname}`, // join first & last name
+  name: `${form.fname} ${form.lname}`, 
   age: Number(form.age),
   phoneNumber: form.phone,
-  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) }, // "patient" -> "Patient"
+  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) }, 
 });
 
 const RegisterForm = () => {

@@ -19,16 +19,16 @@ const TEST_LOGIN_JSON = {
 };
 
 export const logIn = () => {
-  const params = {
-    username: "test_user_new",
-    password: "test123A!",
-  };
+  const { email, password } = TEST_LOGIN_JSON;  
+
   const options = {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-  })
+  };
+
+  return fetch(`${API_BASE}/login`, options)  
     .then((res) => {
       if (!res.ok) {
         throw new Error("Login failed");
@@ -39,26 +39,9 @@ export const logIn = () => {
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
-      return data; // ✅ return data so the caller can use it
+      return data; 
     });
 };
-
-export const register = (formData) => {
-  return fetch(`${API_BASE}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  }).then((response) => response.json());
-    mode: "cors",
-  };
-  fetch(`${API_BASE}/register`, options)
-    .then((response) => {
-        if (!response.code){
-            console.log("Error here broski")
-        } 
-        // console.log(response)
-    })
-};*/
 
 export const register = (formData) => {
   const options = {
@@ -69,25 +52,38 @@ export const register = (formData) => {
     body: JSON.stringify(formData),
     mode: "cors",
   };
-  fetch(`${API_BASE}/register`, options).then((response) => {
-    if (!response.ok) {
-      console.log("Error during registration");
-    } else {
-      console.log("Registration successful");
-    }
-  });
+
+  return fetch(`${API_BASE}/register`, options)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.code) {
+        console.log("Error here broski", data); 
+      } else {
+        console.log("Registration successful", data);
+      }
+    })
+    .catch((error) => {
+      console.error("Error during registration:", error);
+    });
 };
 
 export const testProtected = () => {
+  const token = localStorage.getItem("token"); 
   const options1 = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // ✅ send token
+      Authorization: `Bearer ${token}`, 
     },
     mode: "cors",
   };
-  fetch(`${RESTRICTED_API}`, options1).then((response) =>
-    console.log(response)
-  );
+
+  fetch(`${RESTRICTED_API}`, options1)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Protected data:", data);
+    })
+    .catch((error) => {
+      console.error("Error fetching protected data:", error);
+    });
 };

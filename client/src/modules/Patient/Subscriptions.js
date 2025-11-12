@@ -1,16 +1,12 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Col,
-  Row,
-  Button,
-  Image,
-  Container,
-  Modal,
-} from "react-bootstrap";
+import { Container, Row, Col, Image } from "react-bootstrap";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import paymentImg from "../../images/payment.png";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+
+import SubscriptionCard from "../../components/SubscriptionComponents/SubscriptionCard.js";
+import SubscriptionModal from "../../components/SubscriptionComponents/SubscriptionModal.js";
+import SubscriptionPromo from "../../components/SubscriptionComponents/SubscriptionPromo.js";
 
 const Subscriptions = () => {
   const location = useLocation();
@@ -19,29 +15,25 @@ const Subscriptions = () => {
     : "/dashboard/patient";
   const navigate = useNavigate();
 
-  // Симулираме текущия абонамент
-  const [subscriptionStatus, setSubscriptionStatus] = useState(() => {
-    // Винаги започваме с Premium за теста
-    return "premium"; // игнорирай localStorage за сега
-  });
-
+  const [subscriptionStatus, setSubscriptionStatus] = useState("free");
   const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({
-    title: "",
-    body: "",
-    action: null,
-  });
+  const [modalContent, setModalContent] = useState({ title: "", body: "", action: null });
+
+  const PRICE_IDS = {
+    monthly: "price_1SSFR9RTNyC3ef1LQhZ0VACG",
+    yearly: "price_1SSFR9RTNyC3ef1L5o89uciw",
+  };
+
+  const confirmCancelPremium = () => {
+    setSubscriptionStatus("free");
+    localStorage.setItem("subscriptionStatus", "free");
+    setShowModal(false);
+  };
 
   const handleFreePlanClick = () => {
     if (subscriptionStatus === "free") {
-      // Ако сме вече Free
-      setModalContent({
-        title: "Информация",
-        body: "В момента вече сте на безплатния план.",
-        action: null,
-      });
+      setModalContent({ title: "Информация", body: "В момента вече сте на безплатния план.", action: null });
     } else if (subscriptionStatus === "premium") {
-      // Ако сме Premium
       setModalContent({
         title: "Потвърждение",
         body: "Имате активен Premium абонамент. Искате ли да го прекратите и да преминете на Free?",
@@ -51,158 +43,108 @@ const Subscriptions = () => {
     setShowModal(true);
   };
 
-  const handlePremiumPlanClick = () => {
+  const handlePremiumPlanClick = (planType) => {
+    const planLabel = planType === "yearly" ? "годишен" : "месечен";
+    const priceId = PRICE_IDS[planType];
+
     if (subscriptionStatus === "premium") {
-      // Вече сме Premium
-      setModalContent({
-        title: "Информация",
-        body: "Вече имате активен Premium абонамент.",
-        action: null,
-      });
+      setModalContent({ title: "Информация", body: "Вече имате активен Premium абонамент.", action: null });
     } else {
-      // Пренасочване към плащане
       setModalContent({
         title: "Потвърждение",
-        body: "Искате ли да преминете към Premium план и да платите абонамента?",
-        action: () => navigate(`${basePath}/subscriptions/payment`),
+        body: `Искате ли да преминете към ${planLabel} Premium план и да платите абонамента?`,
+        action: async () => {
+          try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              alert("Моля, влезте в профила си, за да платите.");
+              return;
+            }
+
+            const response = await fetch("http://localhost:8080/api/stripe/create-checkout-session", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ planId: priceId }),
+            });
+
+            if (!response.ok) {
+              const text = await response.text();
+              throw new Error(`HTTP ${response.status}: ${text}`);
+            }
+
+            const data = await response.json();
+            if (data.checkoutUrl) {
+              window.location.href = data.checkoutUrl;
+            } else {
+              alert("Грешка при създаване на Stripe сесия: " + (data.error || "Непозната грешка"));
+            }
+          } catch (error) {
+            console.error("Payment error:", error);
+            alert("Неуспешно създаване на Stripe сесия.");
+          }
+        },
       });
     }
     setShowModal(true);
   };
 
-  const confirmCancelPremium = () => {
-    // Прекратяване на Premium (симулирано)
-    setSubscriptionStatus("free");
-    localStorage.setItem("subscriptionStatus", "free");
-    setShowModal(false);
-  };
+  const subscriptionPlans = [
+    {
+      key: "free",
+      title: "🟢 MedConnect Free",
+      price: "0 лв / месец",
+      description: "Основна функционалност: записване на часове при лекари, напомняния и достъп до личен архив с ограничено място.",
+      buttonText: "Избери безплатен план",
+      buttonVariant: "outline-success",
+      onClick: handleFreePlanClick,
+    },
+    {
+      key: "monthly",
+      title: "💎 MedConnect Premium (Месечен)",
+      price: "19.99 лв / месец",
+      description: "Пълният пакет: неограничено хранилище, ваксинации и профилактични прегледи в календара.",
+      buttonText: "Избери месечен план",
+      buttonVariant: "success",
+      backgroundColor: "#000000",
+      textColor: "#ffffff",
+      onClick: () => handlePremiumPlanClick("monthly"),
+    },
+    {
+      key: "yearly",
+      title: "💎 MedConnect Premium (Годишен)",
+      price: "220.00 лв / година",
+      description: "Всички Premium функции плюс 1 безплатен месец.",
+      buttonText: "Избери годишен план",
+      buttonVariant: "success",
+      backgroundColor: "#111111",
+      textColor: "#ffffff",
+      onClick: () => handlePremiumPlanClick("yearly"),
+    },
+  ];
 
   return (
     <>
       <Container className="py-5">
-        <h3 className="text-success text-left mb-5">
-          Избор на абонаментен план
-        </h3>
+        <h3 className="text-success text-center mb-5">Избор на абонаментен план</h3>
+        <Row className="justify-content-center g-4">
+          {subscriptionPlans.map((plan) => (
+            <Col key={plan.key} xs={12} md={6} lg={3} className="d-flex">
+              <SubscriptionCard {...plan} className="flex-fill" />
+            </Col>
+          ))}
 
-        <Row className="justify-content-center align-items-start g-4">
-          {/* Free Plan */}
-          <Col xs={12} md={6} lg={4}>
-            <Card
-              className="p-4 shadow-sm border-0"
-              style={{
-                backgroundColor: "#ffffff",
-                borderRadius: "15px",
-                color: "#2E8B57",
-                width: "100%",
-              }}
-            >
-              <h4 className="fw-bold mb-3">🟢 MedConnect Free</h4>
-              <h2 className="fw-bold mb-4" style={{ color: "#2E8B57" }}>
-                0 лв / месец
-              </h2>
-              <p className="text-muted mb-4">
-                Идеален за потребители, които искат основна функционалност:
-                записване на часове при лекари, напомняния за посещения и достъп
-                до личен архив с ограничено пространство за документи.
-              </p>
-              <Button
-                variant="outline-success"
-                className="px-4 rounded-pill w-100"
-                onClick={handleFreePlanClick}
-              >
-                Избери безплатен план
-              </Button>
-            </Card>
-          </Col>
-
-          {/* Premium Plan */}
-          <Col xs={12} md={6} lg={4}>
-            <Card
-              className="p-4 shadow-sm border-0"
-              style={{
-                backgroundColor: "#000000",
-                borderRadius: "15px",
-                color: "#ffffff",
-                width: "100%",
-              }}
-            >
-              <h4 className="fw-bold mb-3" style={{ color: "#2E8B57" }}>
-                💎 MedConnect Premium
-              </h4>
-              <h2 className="fw-bold mb-4" style={{ color: "#7CFC00" }}>
-                19.99 лв / месец
-              </h2>
-              <p className="text-light mb-4">
-                Пълният пакет: всички функционалности от безплатната версия плюс
-                неограничено пространство в хранилището и включени в календара
-                предстоящи ваксини и профилактични прегледи.
-              </p>
-              <Button
-                variant="success"
-                className="px-4 rounded-pill w-100"
-                onClick={handlePremiumPlanClick}
-              >
-                Избери Premium план
-              </Button>
-            </Card>
-          </Col>
-
-          {/* Изображение (само на lg+) */}
-          <Col
-            xs={12}
-            lg={4}
-            className="text-center d-none d-lg-block"
-            style={{ marginLeft: "-80px", marginBottom: "-62px" }}
-          >
-            <Image
-              src={paymentImg}
-              fluid
-              style={{
-                maxHeight: "470px",
-                borderRadius: "15px",
-              }}
-            />
+          <Col xs={12} lg={3} className="text-center d-none d-lg-block" style={{ marginLeft: "-80px", marginBottom: "-62px" }}>
+            <Image src={paymentImg} fluid style={{ maxHeight: "470px", borderRadius: "15px" }} />
           </Col>
         </Row>
       </Container>
 
-      {/* Зелената секция под всичко */}
-      <div
-        style={{
-          backgroundColor: "#2E8B57",
-          borderRadius: "15px",
-          minHeight: "300px",
-          width: "100%",
-        }}
-      >
-        <Container className="py-5 text-white">
-          <h2 className="mb-3">
-            Започни да се грижиш за здравето си още днес!
-          </h2>
-          <p className="mb-4" style={{ fontSize: "1.2rem" }}>
-            Избери своя абонаментен план и се възползвай от всички функции на
-            MedConnect.
-          </p>
-        </Container>
-      </div>
+      <SubscriptionPromo />
 
-      {/* Модален прозорец */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{modalContent.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalContent.body}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Отказ
-          </Button>
-          {modalContent.action && (
-            <Button variants="success" onClick={modalContent.action}>
-              Потвърди
-            </Button>
-          )}
-        </Modal.Footer>
-      </Modal>
+      <SubscriptionModal show={showModal} onHide={() => setShowModal(false)} modalContent={modalContent} />
     </>
   );
 };

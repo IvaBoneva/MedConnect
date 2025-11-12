@@ -7,6 +7,9 @@ import com.example.server.repository.UserRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.ManyToMany;
+
+import java.time.LocalDate;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new EntityExistsException("Entity already registered");
         }
+
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
@@ -56,7 +60,33 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(selectedRole);
 
-        userRepository.save(user);
+        user.setSubscription("free");
+        user.setSubscriptionExpiry(LocalDate.now().plusYears(100));
 
+        userRepository.save(user);
+    }
+
+    @Override
+    public void upgradeSubscription(String email, String planId) {
+        User user = getUserByEmail(email);
+        String planName;
+        LocalDate expiry = LocalDate.now();
+
+        switch (planId) {
+            case "price_1SSFR9RTNyC3ef1LQhZ0VACG":
+                planName = "premium_monthly";
+                expiry = expiry.plusMonths(1);
+                break;
+            case "price_1SSFR9RTNyC3ef1L5o89uciw":
+                planName = "premium_yearly";
+                expiry = expiry.plusYears(1);
+                break;
+            default:
+                planName = "free";
+                expiry = LocalDate.of(2099, 12, 31);
+        }
+
+        user.setSubscription(planName).setSubscriptionExpiry(expiry);
+        userRepository.save(user);
     }
 }
