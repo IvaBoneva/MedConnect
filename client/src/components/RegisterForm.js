@@ -4,19 +4,20 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { logIn, register } from "../api/userApi";
 import RegisterInput from "./RegisterComponents/RegisterInput";
 import { useAuth } from "../context/AuthContext";
+import PasswordInput from "./RegisterComponents/PasswordInput";
 
 const transformFormToBackend = (form) => ({
   email: form.email,
   password: form.password,
-  name: `${form.fname} ${form.lname}`, 
+  name: `${form.fname} ${form.lname}`,
   age: Number(form.age),
   phoneNumber: form.phone,
-  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) }, 
+  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
 });
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const {setToken} = useAuth();
+  const { setToken } = useAuth();
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -202,7 +203,6 @@ const RegisterForm = () => {
       } else {
         setMessage("Login failed after registration.");
       }
-
     } catch (err) {
       setMessage("Възникна грешка. Моля, опитайте отново.");
     }
@@ -291,68 +291,32 @@ const RegisterForm = () => {
           error={phoneError}
         />
 
-        {/* Парола */}
-        <Form.Group className="mb-3">
-          <Form.Label>Парола</Form.Label>
-          <div className="d-flex">
-            <Form.Control
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Въведете вашата парола"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+        {/* PASSWORD */}
 
-            <Button
-              variant="outline-secondary"
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ marginLeft: "5px" }}
-            >
-              {showPassword ? "Скрий" : "Покажи"}
-            </Button>
-          </div>
-          
-          {passwordErrors.length > 0 ? (
-            <ul className="text-danger small mt-1">
-              {passwordErrors.map((err, idx) => (
-                <li key={idx}>{err}</li>
-              ))}
-            </ul>
-          ) : (
-            formData.password && (
-              <p className="text-success small mt-1">
-                ✅ Паролата отговаря на всички изисквания.
-              </p>
-            )
-          )}
-        </Form.Group>
-        {/* Потвърждение на паролата */}
-        <Form.Group className="mb-3">
-          <Form.Label>Потвърдете паролата</Form.Label>
-          <div className="d-flex">
-            <Form.Control
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              placeholder="Повторете паролата"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-            <Button
-              variant="outline-secondary"
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              style={{ marginLeft: "5px" }}
-            >
-              {showConfirmPassword ? "Скрий" : "Покажи"}
-            </Button>
-          </div>
-          {confirmPasswordError && (
-            <p className="text-danger small mt-1">{confirmPasswordError}</p>
-          )}
-        </Form.Group>
+        <PasswordInput
+          label="Парола"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          showPassword={showPassword}
+          toggleShowPassword={() => setShowPassword(!showPassword)}
+          passwordErrors={passwordErrors}
+        />
+
+        {/* CONFIRM PASSOWRD */}
+
+        <PasswordInput
+          label="Потвърдете паролата"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          showPassword={showConfirmPassword}
+          toggleShowPassword={() =>
+            setShowConfirmPassword(!showConfirmPassword)
+          }
+          passwordErrors={confirmPasswordError ? [confirmPasswordError] : []}
+        />
+
         {/* Роля */}
         <Form.Group className="mb-3">
           <Form.Label>Роля</Form.Label>

@@ -30,7 +30,6 @@ public class UserController {
     private final RoleRepository roleRepository;
 
 
-
     public UserController(UserService userService, JwtGeneratorInterface jwtGeneratorInterface,PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
         this.userService = userService;
         this.jwtGeneratorInterface = jwtGeneratorInterface;
@@ -40,10 +39,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
-
-
-//        "email": "test_user_new@example.com",
-//                "password": "Test1234!",
 
         try {
 
@@ -62,8 +57,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
 
-//        username : test_user_new, pass : test123A!
-
         try {
             if (user.getEmail() == null || user.getPassword() == null) {
                 throw new UsernameNotFoundException("UserName or Password is Empty");
@@ -81,12 +74,10 @@ public class UserController {
         }
     }
 
-    //    Just remove the token from the client
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // Just acknowledge logout
             return ResponseEntity.ok("User logged out — token discarded on client.");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No token provided.");
