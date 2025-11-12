@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,42 +28,33 @@ public class SecurityConfig {
                 return new BCryptPasswordEncoder();
         }
 
-        // --- DEFINITIVE BYPASS: Use web.ignoring() for the webhook path ---
-        // This exempts the path from ALL security filters, including your custom JWT
-        // filter.
-        @Bean
-        public WebSecurityCustomizer webSecurityCustomizer() {
-                return (web) -> web.ignoring()
-                                // Explicitly ignore POST to the webhook path from ALL security filters
-                                .requestMatchers(HttpMethod.POST, "/api/stripe/webhook");
-        }
-        // -----------------------------------------------------------------
-
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-                // disable CSRF since we use fronted
+                // disable CSRF since we use fronted (any other port, not server side rendered
+                // app)
                 http.csrf(AbstractHttpConfigurer::disable);
-                http.cors(Customizer.withDefaults());
+                http.cors(Customizer.withDefaults()); // ✅ Enable the CORS config you defined
 
+                // permit specific request (3), other authenticated (using our JWT filter)
                 http.authorizeHttpRequests(auth -> auth
-
-                                // Permit other general Stripe API calls (e.g., creating checkout sessions)
-                                .requestMatchers("/api/stripe/**").permitAll()
-
-                                // Permit other public API calls
                                 .requestMatchers(
                                                 "/api/user/**",
-                                                "/api/blog/unrestricted")
-                                .permitAll()
-
-                                // All other requests must be authenticated
+                                                "/api/user/register",
+                                                "/api/blog/unrestricted",
+                                                "/api/stripe/**",
+                                                "/api/stripe/webhook" // Add Stripe endpoints here
+                                ).permitAll()
                                 .anyRequest().authenticated());
 
                 // don't use sessions because again we use JWT
                 http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
                 // runs before the UsernamePassword filter
+                // but since we added the user to trusted/authenticated users in the aut local
+                // storage (see JwtFilter.java)
+                // the logic of UsernamePasswordAuthenticationFilter is skipped since user
+                // already trusted
                 http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();

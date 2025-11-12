@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SubscriptionRequest {
-    private String planId; // "monthly" or "yearly"
+    private String planId;
 
 }

@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -32,12 +33,11 @@ public class JwtFilter extends GenericFilterBean {
                 String path = request.getRequestURI();
 
                 // Skip JWT validation for these endpoints and goes ahead in the filter chain
+                // Skip JWT validation for these endpoints
                 if (path.startsWith("/api/user/login") ||
                                 path.startsWith("/api/user/register") ||
                                 path.startsWith("/api/blog/unrestricted") ||
-                                path.startsWith("/api/stripe/webhook")) { // <-- Robust webhook skip
-
-                        System.out.println("JWT Filter: Bypassing authentication for webhook path: " + path);
+                                path.startsWith("/api/stripe/webhook")) {
                         filterChain.doFilter(request, response);
                         return;
                 }
@@ -54,6 +54,8 @@ public class JwtFilter extends GenericFilterBean {
                 String token = authHeader.substring(7);
 
                 try {
+                        // gets the secret keys that is used for creating the JWT
+                        // and use it to decrypt the token
                         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
                         Claims claims = Jwts.parser()
                                         .verifyWith(key)
@@ -67,6 +69,13 @@ public class JwtFilter extends GenericFilterBean {
                                         new User(username, "", Collections.emptyList()),
                                         null,
                                         Collections.emptyList());
+
+                        // puts the user into local storage
+                        // At the end of the request, Spring Security clears the SecurityContextHolder,
+                        // so it doesn’t leak authentication info between users so that every time we
+                        // send request
+                        // is created a new user (maybe the current one) that is worked with
+                        // TL;DR our user is AUTHENTICATED for THIS request (ONLY)
 
                         SecurityContextHolder.getContext().setAuthentication(authentication);
 

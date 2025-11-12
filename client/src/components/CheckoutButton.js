@@ -7,14 +7,14 @@ export default function CheckoutButton() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          planId: "price_1QExampleABC123", // replace with your real Stripe Price ID
+          planId: "price_1QExampleABC123", 
         }),
       });
 
       const data = await res.json();
 
       if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl; // redirect to Stripe Checkout
+        window.location.href = data.checkoutUrl; 
       } else {
         alert("Something went wrong: " + (data.error || "Unknown error"));
       }

@@ -53,7 +53,7 @@ public class StripeController {
         }
     }
 
-    @PostMapping("/webhook") // <-- Correct mapping for /api/stripe/webhook
+    @PostMapping("/webhook")
     public ResponseEntity<String> handleStripeWebhook(@RequestBody String payload,
             @RequestHeader("Stripe-Signature") String sigHeader) {
 
@@ -63,11 +63,10 @@ public class StripeController {
         try {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
         } catch (SignatureVerificationException e) {
-            // This is the expected status code if the 401 is fixed!
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         }
 
-        System.out.println("Webhook received for event type: " + event.getType());
+        System.out.println("Webhook received for email: " + event.getType());
 
         if ("checkout.session.completed".equals(event.getType())) {
             Session session = (Session) event.getDataObjectDeserializer().getObject().get();
@@ -76,6 +75,8 @@ public class StripeController {
             String planId = session.getMetadata().get("planId");
 
             System.out.println("Upgrading subscription for " + email + " to plan " + planId);
+
+            userService.upgradeSubscription(email, planId);
 
         }
 
