@@ -12,6 +12,4 @@ public interface UserService {
     public void saveUser(User user);
 
     void upgradeSubscription(String email, String planId);
-
-    void updateSubscription(String email, String status, Long currentPeriodEndTimestamp);
 }

@@ -69,27 +69,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void upgradeSubscription(String email, String planId) {
-        
-    }
-
-    @Override
-    public void updateSubscription(String email, String status, Long currentPeriodEndTimestamp) {
-        // Find the user by email (or another identifier you store for Stripe customer)
+        // Find the user
         Optional<User> optionalUser = Optional.ofNullable(userRepository.findByEmail(email));
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setSubscription(status); // e.g., "active", "canceled"
-            if (currentPeriodEndTimestamp != null) {
-                user.setSubscriptionExpiry(
-                        Instant.ofEpochSecond(currentPeriodEndTimestamp)
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate());
-            }
-            userRepository.save(user);
-            System.out.println("User subscription updated for " + email);
-        } else {
+        if (optionalUser.isEmpty()) {
             System.out.println("No user found with email: " + email);
+            return;
         }
+
+        User user = optionalUser.get();
+
+        String subscriptionStatus;
+        LocalDate expiry;
+
+        switch (planId) {
+            case "price_1SSFR9RTNyC3ef1LQhZ0VACG": // monthly plan
+                subscriptionStatus = "premium";
+                expiry = LocalDate.now().plusMonths(1);
+                break;
+            case "price_1SSFR9RTNyC3ef1L5o89uciw": // yearly plan
+                subscriptionStatus = "premium";
+                expiry = LocalDate.now().plusYears(1);
+                break;
+            default:
+                subscriptionStatus = "free"; // fallback
+                expiry = LocalDate.now().plusYears(100);
+        }
+
+        // Update user subscription
+        user.setSubscription(subscriptionStatus);
+        user.setSubscriptionExpiry(expiry);
+
+        userRepository.save(user);
+        System.out.println("User " + email + " upgraded to " + subscriptionStatus + " plan until " + expiry);
     }
 
 }

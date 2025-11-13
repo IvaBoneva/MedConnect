@@ -1,5 +1,8 @@
 package com.example.server.controller;
 
+import com.example.server.dto.SubscriptionRequest;
+import com.example.server.service.StripeService;
+import com.example.server.service.UserService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.Subscription;
@@ -9,68 +12,69 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/stripe")
+@RequestMapping("/api/stripe")
+@CrossOrigin(origins = "http://localhost:3000")
 public class StripeController {
+
+    private final StripeService stripeService;
+    private final UserService userService;
 
     @Value("${stripe.webhook.secret}")
     private String endpointSecret;
 
-    @PostMapping("/webhook")
-    public ResponseEntity<String> handleStripeWebhook(HttpServletRequest request) throws IOException {
-        StringBuilder payload = new StringBuilder();
-        try (BufferedReader reader = request.getReader()) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                payload.append(line);
-            }
-        }
+    public StripeController(StripeService stripeService, UserService userService) {
+        this.stripeService = stripeService;
+        this.userService = userService;
+    }
 
-        String sigHeader = request.getHeader("Stripe-Signature");
-        Event event;
-
+    @PostMapping("/create-checkout-session")
+    public ResponseEntity<?> createCheckoutSession(@RequestBody SubscriptionRequest request) {
         try {
-            event = Webhook.constructEvent(payload.toString(), sigHeader, endpointSecret);
+            Session session = stripeService.createCheckoutSession(request.getPlanId());
+            return ResponseEntity.ok().body(
+                    Map.of("checkoutUrl", session.getUrl()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/webhook")
+    public ResponseEntity<String> handleStripeWebhook(
+            @RequestHeader("Stripe-Signature") String sigHeader,
+            @RequestBody String payload) {
+
+        Event event;
+        try {
+            event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
         } catch (SignatureVerificationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         }
 
         switch (event.getType()) {
             case "checkout.session.completed":
-                Session session = (Session) event.getDataObjectDeserializer()
-                        .getObject()
-                        .orElse(null);
+                Session session = (Session) event.getDataObjectDeserializer().getObject().orElse(null);
                 if (session != null) {
-                    System.out.println("Checkout completed: " + session.getId());
+                    String email = session.getCustomerDetails().getEmail();
+                    String planId = session.getMetadata().get("planId");
+                    System.out.println("✅ Checkout completed for " + email + ", plan: " + planId);
+
+                    userService.upgradeSubscription(email, planId);
                 }
                 break;
 
-            case "payment_intent.succeeded":
-                System.out.println("Payment succeeded: " + event.getDataObjectDeserializer().getObject().orElse(null));
-                break;
-
-            case "payment_intent.created":
-                System.out.println(
-                        "Payment intent created: " + event.getDataObjectDeserializer().getObject().orElse(null));
-                break;
-
             case "customer.subscription.updated":
-                Subscription subscription = (Subscription) event.getDataObjectDeserializer()
-                        .getObject()
-                        .orElse(null);
+                Subscription subscription = (Subscription) event.getDataObjectDeserializer().getObject().orElse(null);
                 if (subscription != null) {
                     System.out.println("Subscription updated: " + subscription.getId());
-                    // Update your database or internal state here
                 }
                 break;
 
             default:
-                System.out.println("Received event: " + event.getType());
+                System.out.println("Received unhandled event type: " + event.getType());
         }
 
         return ResponseEntity.ok("Webhook received");
