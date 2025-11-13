@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
@@ -41,15 +40,21 @@ const NavigationBar = () => {
             <Nav.Link as={Link} to="/">
               Начало
             </Nav.Link>
-            {!token && <Nav.Link as={Link} to="/login">
-              Вход
-            </Nav.Link>}
-            {!token && <Nav.Link as={Link} to="/register">
-              Регистрация
-            </Nav.Link> }
-            {token && <Nav.Link as={Link} to="/logout">
-              Излизане
-            </Nav.Link> }
+            {!token && (
+              <Nav.Link as={Link} to="/login">
+                Вход
+              </Nav.Link>
+            )}
+            {!token && (
+              <Nav.Link as={Link} to="/register">
+                Регистрация
+              </Nav.Link>
+            )}
+            {token && (
+              <Nav.Link as={Link} to="/logout">
+                Излизане
+              </Nav.Link>
+            )}
             <Button
               onClick={handleDashboardClick}
               variant="light"

@@ -1,21 +1,19 @@
-import React from "react";
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 import DoctorHome from "../modules/Doctor/DoctorHome";
 import DoctorPersonalInformation from "../modules/Doctor/DoctorPersonalInformation";
-import DoctorAppointments from "../modules/Doctor/DoctorAppointments";
 import DoctorPatients from "../modules/Doctor/DoctorPatients";
 import DoctorReviews from "../modules/Doctor/DoctorReviews";
 
 const DashboardDoctor = () => {
-const location = useLocation();
-const basePath = location.pathname.startsWith("/test")
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/test")
     ? "/test/Doctor"
     : "/dashboard/Doctor";
 
-return (
+  return (
     <Container fluid className="mt-3">
       <Row>
         {/* Sidebar */}
@@ -39,7 +37,7 @@ return (
             </Nav.Item>
             <Nav.Item>
               <Nav.Link as={NavLink} to={`${basePath}/personal_information`}>
-                Лични данни
+                Лична информация
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
@@ -48,18 +46,8 @@ return (
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link as={NavLink} to={`${basePath}/doctor_appointments`}>
-                Часове
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
               <Nav.Link as={NavLink} to={`${basePath}/doctor_reviews`}>
                 Отзиви
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link as={NavLink} to={`${basePath}/logout`}>
-                Изход
               </Nav.Link>
             </Nav.Item>
           </Nav>
@@ -70,9 +58,11 @@ return (
           <Routes>
             <Route index element={<Navigate to="home" />} />
             <Route path="home" element={<DoctorHome />} />
-            <Route path="personal_information" element={<DoctorPersonalInformation />} />
+            <Route
+              path="personal_information"
+              element={<DoctorPersonalInformation />}
+            />
             <Route path="patients" element={<DoctorPatients />} />
-            <Route path="doctor_appointments" element={<DoctorAppointments />} />
             <Route path="doctor_reviews" element={<DoctorReviews />} />
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>

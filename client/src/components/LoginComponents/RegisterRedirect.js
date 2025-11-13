@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const RegisterRedirect = ({ textBefore, linkText, to }) => {
@@ -6,10 +5,7 @@ const RegisterRedirect = ({ textBefore, linkText, to }) => {
     <div className="text-center mt-3">
       <p className="text-muted">
         {textBefore}{" "}
-        <Link
-          to={to}
-          className="text-success fw-semibold text-decoration-none"
-        >
+        <Link to={to} className="text-success fw-semibold text-decoration-none">
           {linkText}
         </Link>
       </p>

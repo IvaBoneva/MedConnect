@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logIn, register } from "../../api/userApi";
 import RegisterInput from "./RegisterInput";
 import { useAuth } from "../../context/AuthContext";
@@ -78,6 +78,7 @@ const RegisterForm = () => {
   });
 
   const [showDoctorFields, setShowDoctorFields] = useState(false);
+  const [showPatientFields, setShowPatientFields] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState([]);
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -205,6 +206,7 @@ const RegisterForm = () => {
 
     if (name === "password") setPasswordErrors(validatePassword(value));
     if (name === "role") setShowDoctorFields(value === "doctor");
+    if (name === "role") setShowPatientFields(value === "guardian");
   };
 
   const handleSubmit = async (e) => {
@@ -242,7 +244,7 @@ const RegisterForm = () => {
         setToken(loginRes.token);
         navigate("/");
       } else {
-        setMessage("Login failed after registration.");
+        setMessage("Неуспешен вход след регистрация.");
       }
     } catch (err) {
       setMessage("Възникна грешка. Моля, опитайте отново.");
@@ -373,7 +375,7 @@ const RegisterForm = () => {
         </Form.Group>
 
         {/* Настойник – Детайли за пациента */}
-        {formData.role === "guardian" && (
+        {showPatientFields && (
           <>
             <h6 className="mt-3 text-secondary">Детайли за пациента</h6>
             <Form.Group className="mb-3">

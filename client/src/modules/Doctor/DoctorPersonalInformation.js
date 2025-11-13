@@ -1,11 +1,5 @@
-import React from "react";
-
 const DoctorPersonalInformation = () => {
-
-    return(
-            <div></div>
-
-    );
+  return <div></div>;
 };
 
 export default DoctorPersonalInformation;

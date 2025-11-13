@@ -8,7 +8,7 @@ import { ProtectedRoute } from "./ProtectedRouteMine";
 import DashboardPatient from "../dashboards/DashboardPatient";
 import DashboardDoctor from "../dashboards/DashboardDoctor";
 import HomePage from "../pages/HomePage";
-import Logout from "../modules/Patient/Logout";
+import LogoutPage from "../pages/LogoutPage";
 import MainLayout from "../pages/MainLayout";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
@@ -46,7 +46,7 @@ const Routes = () => {
         },
         {
           path: "logout",
-          element: token ? <Logout /> : <Navigate to="/" replace />,
+          element: token ? <LogoutPage /> : <Navigate to="/" replace />,
         },
 
         // routes for only authenticated users

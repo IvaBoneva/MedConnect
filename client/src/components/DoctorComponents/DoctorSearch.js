@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Form, Row, Col, InputGroup, Container } from "react-bootstrap";
 import DoctorCard from "./DoctorCard";
-import doctor1 from "../images/doctor1.jpg";
-import doctor2 from "../images/doctor2.jpg";
-import doctor3 from "../images/doctor3.jpg";
+import doctor1 from "../../images/doctor1.jpg";
+import doctor2 from "../../images/doctor2.jpg";
+import doctor3 from "../../images/doctor3.jpg";
 
 const mockDoctors = [
   {

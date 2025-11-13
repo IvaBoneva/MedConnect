@@ -1,5 +1,4 @@
 // src/pages/Dashboard.js
-import React from "react";
 import { Navigate } from "react-router-dom";
 import DashboardPatient from "../dashboards/DashboardPatient";
 import DashboardDoctor from "../dashboards/DashboardDoctor";

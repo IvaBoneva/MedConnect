@@ -6,13 +6,15 @@ const LoginInput = ({ label, type, value, onChange, error }) => {
       <Form.Label>{label}</Form.Label>
       <Form.Control
         type={type}
-        placeholder={`Въведете вашата ${label.toLowerCase()}`}
+        placeholder={`Въведете ${label.toLowerCase()}`}
         value={value}
         onChange={onChange}
         isInvalid={!!error}
         required
       />
-      {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
+      {error && (
+        <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+      )}
     </Form.Group>
   );
 };

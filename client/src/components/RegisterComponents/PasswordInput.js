@@ -1,4 +1,5 @@
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import ShowPasswordButton from "./ShowPasswordButtons";
 
 const PasswordInput = ({
   label,
@@ -21,14 +22,10 @@ const PasswordInput = ({
           onChange={onChange}
           required
         />
-        <Button
-          variant="outline-secondary"
-          type="button"
-          onClick={toggleShowPassword}
-          style={{ marginLeft: "5px" }}
-        >
-          {showPassword ? "Скрий" : "Покажи"}
-        </Button>
+        <ShowPasswordButton
+          showPassword={showPassword}
+          toggleShowPassword={toggleShowPassword}
+        ></ShowPasswordButton>
       </div>
 
       {/* Password validation messages (optional) */}
@@ -39,7 +36,8 @@ const PasswordInput = ({
           ))}
         </ul>
       ) : (
-        value && name === "password" && (
+        value &&
+        name === "password" && (
           <p className="text-success small mt-1">
             ✅ Паролата отговаря на всички изисквания.
           </p>

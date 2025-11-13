@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Container, Button, Card, Spinner } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
-const Logout = () => {
+const LogoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-    const { setToken } = useAuth(); // 👈 use the same context function
+  const { setToken } = useAuth(); // 👈 use the same context function
 
   const basePath = location.pathname.startsWith("/test")
     ? "/test/patient"
@@ -16,8 +16,8 @@ const Logout = () => {
   const handleConfirmLogout = () => {
     setLoading(true); // показваме spinner
     // localStorage.removeItem("token"); // изчистваме токени
-        setToken(null); // This will clear localStorage and axios headers
-        navigate("/"); // пренасочваме към главната страница
+    setToken(null); // This will clear localStorage and axios headers
+    navigate("/"); // пренасочваме към главната страница
 
     // Симулираме кратка обработка (напр. API call)
     // setTimeout(() => {
@@ -26,15 +26,15 @@ const Logout = () => {
     // }, 2000);
   };
 
-//   const handleConfirmLogout = () => {
-//   setLoading(true);
-//   setToken(null); // this triggers re-render
-//   // Give React a tick to process the context update before navigating
-//   setTimeout(() => {
-//     setLoading(false);
-//     navigate("/", { replace: true });
-//   }, 500); // 0.5 s is plenty; don't use 2000
-// };
+  //   const handleConfirmLogout = () => {
+  //   setLoading(true);
+  //   setToken(null); // this triggers re-render
+  //   // Give React a tick to process the context update before navigating
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     navigate("/", { replace: true });
+  //   }, 500); // 0.5 s is plenty; don't use 2000
+  // };
 
   const handleCancelLogout = () => {
     navigate(`${basePath}/home`);
@@ -66,4 +66,4 @@ const Logout = () => {
   );
 };
 
-export default Logout;
+export default LogoutPage;

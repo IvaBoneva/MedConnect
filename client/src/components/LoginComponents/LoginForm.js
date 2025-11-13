@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Form, Button, Container, Card, Alert, Spinner } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Form, Container, Card, Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { logIn } from "../../api/userApi";
 import LoginInput from "./LoginInput";
 import LoginButton from "./LoginButton";
@@ -8,10 +8,9 @@ import RegisterRedirect from "./RegisterRedirect";
 import LoadingSpinner from "./LoadingSpinner";
 import { useAuth } from "../../context/AuthContext";
 
-
 const LoginForm = () => {
   const navigate = useNavigate();
-    const { setToken } = useAuth(); // 👈 get the setToken from context
+  const { setToken } = useAuth(); // get the setToken from context
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,24 +49,21 @@ const LoginForm = () => {
     setMessage("");
     setLoading(true);
 
-    // В момента можем да симулираме успешен вход
-    setMessage("Вход успешен! Пренасочване към Вашето табло...");
-
     try {
       const res = await logIn({ email, password });
-        console.log(res);
-        
+      console.log(res);
+
       if (res && res.token) {
         setToken(res.token);
         setMessage("Вход успешен! Пренасочване към таблото...");
         setTimeout(() => {
-          navigate("/"); 
+          navigate("/");
         }, 1500);
       } else {
         setMessage("Грешен имейл или парола.");
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Неуспешен вход:", error);
       setMessage("Възникна грешка при входа. Опитайте отново.");
     } finally {
       setLoading(false);

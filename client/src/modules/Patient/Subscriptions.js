@@ -17,7 +17,11 @@ const Subscriptions = () => {
 
   const [subscriptionStatus, setSubscriptionStatus] = useState("free");
   const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({ title: "", body: "", action: null });
+  const [modalContent, setModalContent] = useState({
+    title: "",
+    body: "",
+    action: null,
+  });
 
   const PRICE_IDS = {
     monthly: "price_1SSFR9RTNyC3ef1LQhZ0VACG",
@@ -32,7 +36,11 @@ const Subscriptions = () => {
 
   const handleFreePlanClick = () => {
     if (subscriptionStatus === "free") {
-      setModalContent({ title: "Информация", body: "В момента вече сте на безплатния план.", action: null });
+      setModalContent({
+        title: "Информация",
+        body: "В момента вече сте на безплатния план.",
+        action: null,
+      });
     } else if (subscriptionStatus === "premium") {
       setModalContent({
         title: "Потвърждение",
@@ -48,7 +56,11 @@ const Subscriptions = () => {
     const priceId = PRICE_IDS[planType];
 
     if (subscriptionStatus === "premium") {
-      setModalContent({ title: "Информация", body: "Вече имате активен Premium абонамент.", action: null });
+      setModalContent({
+        title: "Информация",
+        body: "Вече имате активен Premium абонамент.",
+        action: null,
+      });
     } else {
       setModalContent({
         title: "Потвърждение",
@@ -61,14 +73,17 @@ const Subscriptions = () => {
               return;
             }
 
-            const response = await fetch("http://localhost:8080/api/stripe/create-checkout-session", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({ planId: priceId }),
-            });
+            const response = await fetch(
+              "http://localhost:8080/api/stripe/create-checkout-session",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ planId: priceId }),
+              }
+            );
 
             if (!response.ok) {
               const text = await response.text();
@@ -79,7 +94,10 @@ const Subscriptions = () => {
             if (data.checkoutUrl) {
               window.location.href = data.checkoutUrl;
             } else {
-              alert("Грешка при създаване на Stripe сесия: " + (data.error || "Непозната грешка"));
+              alert(
+                "Грешка при създаване на Stripe сесия: " +
+                  (data.error || "Непозната грешка")
+              );
             }
           } catch (error) {
             console.error("Payment error:", error);
@@ -96,7 +114,8 @@ const Subscriptions = () => {
       key: "free",
       title: "🟢 MedConnect Free",
       price: "0 лв / месец",
-      description: "Основна функционалност: записване на часове при лекари, напомняния и достъп до личен архив с ограничено място.",
+      description:
+        "Основна функционалност: записване на часове при лекари, напомняния и достъп до личен архив с ограничено място.",
       buttonText: "Избери безплатен план",
       buttonVariant: "outline-success",
       onClick: handleFreePlanClick,
@@ -105,7 +124,8 @@ const Subscriptions = () => {
       key: "monthly",
       title: "💎 MedConnect Premium (Месечен)",
       price: "19.99 лв / месец",
-      description: "Пълният пакет: неограничено хранилище, ваксинации и профилактични прегледи в календара.",
+      description:
+        "Пълният пакет: неограничено хранилище, ваксинации и профилактични прегледи в календара.",
       buttonText: "Избери месечен план",
       buttonVariant: "success",
       backgroundColor: "#000000",
@@ -128,23 +148,42 @@ const Subscriptions = () => {
   return (
     <>
       <Container className="py-5">
-        <h3 className="text-success text-center mb-5">Избор на абонаментен план</h3>
-        <Row className="justify-content-center g-4">
+        <h3 className="text-success text-left mb-5">
+          Избор на абонаментен план
+        </h3>
+        <Row className="justify-content-left g-4">
           {subscriptionPlans.map((plan) => (
             <Col key={plan.key} xs={12} md={6} lg={3} className="d-flex">
               <SubscriptionCard {...plan} className="flex-fill" />
             </Col>
           ))}
 
-          <Col xs={12} lg={3} className="text-center d-none d-lg-block" style={{ marginLeft: "-80px", marginBottom: "-62px" }}>
-            <Image src={paymentImg} fluid style={{ maxHeight: "470px", borderRadius: "15px" }} />
+          <Col
+            xs={12}
+            lg={3}
+            className="text-left d-none d-lg-block"
+            style={{ marginLeft: "-80px", marginBottom: "-62px" }}
+          >
+            <Image
+              src={paymentImg}
+              fluid
+              style={{
+                marginLeft: "20px",
+                maxHeight: "470px",
+                borderRadius: "15px",
+              }}
+            />
           </Col>
         </Row>
       </Container>
 
       <SubscriptionPromo />
 
-      <SubscriptionModal show={showModal} onHide={() => setShowModal(false)} modalContent={modalContent} />
+      <SubscriptionModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        modalContent={modalContent}
+      />
     </>
   );
 };
