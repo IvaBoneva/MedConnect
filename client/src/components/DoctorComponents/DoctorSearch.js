@@ -65,7 +65,8 @@ const DoctorSearch = ({ onSelectDoctor }) => {
     .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
     .sort((a, b) => {
       if (sort === "rating") return b.rating - a.rating;
-      if (sort === "name") return a.name.localeCompare(b.name);
+      if (sort === "fname") return a.fname.localeCompare(b.fname);
+      if (sort === "lname") return a.lname.localeCompare(b.lname);
       return 0;
     });
 
@@ -122,8 +123,9 @@ const DoctorSearch = ({ onSelectDoctor }) => {
           <Col md={2}>
             <Form.Select value={sort} onChange={(e) => setSort(e.target.value)}>
               <option value="">Без сортиране</option>
-              <option value="rating">По рейтинг</option>
-              <option value="name">По име</option>
+              <option value="rating">По рейтинг (низх.)</option>
+              <option value="fname">По първо име (възх.)</option>
+              <option value="lname">По фамилия (възх.)</option>
             </Form.Select>
           </Col>
         </Row>

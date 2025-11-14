@@ -1,5 +1,5 @@
 // src/modules/Patient/Appointments.js
-import React, { useState } from "react";
+import { useState } from "react";
 import DoctorSearch from "../../components/DoctorComponents/DoctorSearch";
 import DoctorDetails from "../../components/DoctorComponents/DoctorDetails";
 
