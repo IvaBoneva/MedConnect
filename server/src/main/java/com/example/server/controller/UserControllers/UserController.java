@@ -1,40 +1,35 @@
-package com.example.server.controller;
+package com.example.server.controller.UserControllers;
 
 
 import com.example.server.config.JwtGeneratorInterface;
-import com.example.server.models.Role;
 import com.example.server.models.User;
-import com.example.server.repository.RoleRepository;
-import com.example.server.service.UserService;
+import com.example.server.service.UserService.BaseUserService;
+//import com.example.server.service.UserService.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.List;
 
 @RestController
 //@RequestMapping("api/v1/user")
 @RequestMapping("api/user")
 public class UserController {
 
-    private final UserService userService;
+//    CHANGED UserService -> BaseUserService
+
+    private final BaseUserService<User> baseUserService;
     private final JwtGeneratorInterface jwtGeneratorInterface;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
 
 
-    public UserController(UserService userService, JwtGeneratorInterface jwtGeneratorInterface,PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
-        this.userService = userService;
+    public UserController(BaseUserService<User> baseUserService, JwtGeneratorInterface jwtGeneratorInterface,PasswordEncoder passwordEncoder) {
+        this.baseUserService = baseUserService;
         this.jwtGeneratorInterface = jwtGeneratorInterface;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
     }
 
     @PostMapping("/register")
@@ -42,12 +37,7 @@ public class UserController {
 
         try {
 
-            Role existingRole = roleRepository.findByRole(user.getRole().getRole())
-                    .orElseThrow(() -> new RuntimeException("Role not found: " + user.getRole().getRole()));
-
-            user.setRole(existingRole);
-
-            userService.saveUser(user);
+            baseUserService.saveUser(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -61,7 +51,7 @@ public class UserController {
             if (user.getEmail() == null || user.getPassword() == null) {
                 throw new UsernameNotFoundException("UserName or Password is Empty");
             }
-            User userData = userService.getUserByEmail(user.getEmail());
+            User userData = baseUserService.getUserByEmail(user.getEmail());
             if (userData == null) {
                 throw new UsernameNotFoundException("User with this username not registered");
             }
@@ -82,6 +72,10 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No token provided.");
     }
-
+//
+    @GetMapping("/users")
+    public List<User> getTestData(){
+        return baseUserService.getAll();
+    }
 
 }

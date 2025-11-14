@@ -38,7 +38,19 @@ public class JwtFilter extends GenericFilterBean {
                 if (servletPath.startsWith("/api/user/login") ||
                                 servletPath.startsWith("/api/user/register") ||
                                 servletPath.startsWith("/api/blog/unrestricted") ||
-                                servletPath.equals("/api/stripe/webhook") ||
+                        servletPath.startsWith("/api/user/users") ||
+
+
+                        servletPath.startsWith("/api/user/guardians") ||
+                        servletPath.startsWith("/api/user/patients") ||
+                        servletPath.startsWith("/api/user/doctors") ||
+
+                        servletPath.startsWith("/api/user/doctor/register") ||
+                        servletPath.startsWith("/api/user/patient/register") ||
+                        servletPath.startsWith("/api/user/guardian/register") ||
+
+
+                        servletPath.equals("/api/stripe/webhook") ||
                                 servletPath.startsWith("/api/stripe/")) {
 
                         filterChain.doFilter(request, response);

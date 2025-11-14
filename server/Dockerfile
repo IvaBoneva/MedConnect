@@ -6,6 +6,11 @@ WORKDIR /app
 # Copy the compiled JAR from Maven target
 COPY target/*.jar app.jar
 
-EXPOSE 8080
+# Addedd 5005 port for debug
+EXPOSE 8080 5005
+
+# Enable remote debugging
+ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -17,24 +17,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-        private final JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
 
-        public SecurityConfig(JwtFilter jwtFilter) {
-                this.jwtFilter = jwtFilter;
-        }
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-                // disable CSRF since we use fronted (any other port, not server side rendered
-                // app)
-                http.csrf(AbstractHttpConfigurer::disable);
-                http.cors(Customizer.withDefaults()); // ✅ Enable the CORS config you defined
+        // disable CSRF since we use fronted (any other port, not server side rendered
+        // app)
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(Customizer.withDefaults()); // ✅ Enable the CORS config you defined
 
                 // permit specific request (3), other authenticated (using our JWT filter)
                 http.authorizeHttpRequests(auth -> auth
@@ -43,20 +43,35 @@ public class SecurityConfig {
                                                 "/api/user/register",
                                                 "/api/blog/unrestricted",
                                                 "/api/stripe/webhook",
-                                                "/api/stripe/**")
+                                                "/api/stripe/**","/api/user/guardians",
+                        "/api/user/patients",
+                        "/api/user/doctors",
+
+                        "/api/user/doctor/register",
+                        "/api/user/patient/register",
+                        "/api/user/guardian/register",
+
+
+                        "/guardians",
+                        "/api/user/doctor/register",
+                        "/api/stripe/**")
                                 .permitAll()
                                 .anyRequest().authenticated());
 
-                // don't use sessions because again we use JWT
-                http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        
+                // .permitAll()
+                // .anyRequest().authenticated());
 
-                // runs before the UsernamePassword filter
-                // but since we added the user to trusted/authenticated users in the aut local
-                // storage (see JwtFilter.java)
-                // the logic of UsernamePasswordAuthenticationFilter is skipped since user
-                // already trusted
-                http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        // don't use sessions because again we use JWT
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-                return http.build();
-        }
+        // runs before the UsernamePassword filter
+        // but since we added the user to trusted/authenticated users in the aut local
+        // storage (see JwtFilter.java)
+        // the logic of UsernamePasswordAuthenticationFilter is skipped since user
+        // already trusted
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 }
