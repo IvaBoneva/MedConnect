@@ -6,14 +6,14 @@ import RegisterInput from "./RegisterInput";
 import { useAuth } from "../../context/AuthContext";
 import PasswordInput from "./PasswordInput";
 
-const transformFormToBackend = (form) => ({
-  email: form.email,
-  password: form.password,
-  name: `${form.fname} ${form.lname}`,
-  age: Number(form.age),
-  phoneNumber: form.phone,
-  role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
-});
+// const transformFormToBackend = (form) => ({
+//   email: form.email,
+//   password: form.password,
+//   name: `${form.fname} ${form.lname}`,
+//   age: Number(form.age),
+//   phoneNumber: form.phone,
+//   role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
+// });
 
 // DO NOT DELETE - WILL BE USED LATER
 
@@ -55,6 +55,71 @@ const transformFormToBackend = (form) => ({
 //       return baseUser;
 //   }
 // };
+
+
+// const transformFormToBackend = (form) => {
+//   const base = {
+//     email: form.email,
+//     password: form.password,
+//     name: `${form.fname} ${form.lname}`,
+//     age: Number(form.age),
+//     phoneNumber: form.phone,
+//   };
+
+//   switch (form.role) {
+//     case "doctor":
+//       return { ...base, specialization: form.specialization };
+//     case "guardian":
+//       return {
+//         ...base,
+//         patientFirstName: form.patientFName,
+//         patientLastName: form.patientLName,
+//         patientAge: Number(form.patientAge),
+//         hasDisability: form.hasDisability === "yes",
+//         disabilityDetails:
+//           form.hasDisability === "yes" ? form.disabilityDetails : null,
+//       };
+//     default:
+//       return base;
+//   }
+// };
+
+const transformFormToBackend = (form) => {
+  const baseUser = {
+    email: form.email,
+    password: form.password,
+    firstName: form.fname,
+    lastName: form.lname,
+    age: Number(form.age),
+    phoneNumber: form.phone,
+    role: form.role,
+  };
+
+  switch (form.role) {
+    case "doctor":
+      return {
+        ...baseUser,
+        specialization: form.specialization,
+      };
+
+    case "guardian":
+      return {
+        ...baseUser,
+        wardFirstName: form.patientFName,
+        wardLastName: form.patientLName,
+        wardAge: Number(form.patientAge),
+        isWardDisabled: form.hasDisability === "yes",
+        wardDisabilityDescription:
+          form.hasDisability === "yes"
+            ? form.disabilityDetails
+            : null,
+      };
+
+    case "patient":
+    default:
+      return baseUser;
+  }
+};
 
 const RegisterForm = () => {
   const navigate = useNavigate();

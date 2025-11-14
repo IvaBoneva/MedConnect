@@ -9,8 +9,6 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 import java.util.Set;
-//import lombok.Getter;
-//import lombok.Setter;
 
 
 @Getter
@@ -20,27 +18,34 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String firstName;
+    private String lastName;
+
     @Column(unique = true, nullable = false)
     private String email;
-
     private String password;
+
     private int age;
     private String phoneNumber;
-    private String name;
+    private String role;
 
     @Column
     private String subscription = "free";
     @Column
     private LocalDate subscriptionExpiry;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    private LocalDate created_at = LocalDate.now();
+
+    @Column(nullable = true)
+    private String photoURL;
+
+
 
 }
