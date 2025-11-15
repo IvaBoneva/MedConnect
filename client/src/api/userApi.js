@@ -1,6 +1,7 @@
 const API_BASE = "http://localhost:8080/api/user";
 
-export const logIn = ({ email, password }) => {
+export const logIn = ({email,password}) => {
+
   const options = {
     method: "POST",
     mode: "cors",
@@ -23,30 +24,6 @@ export const logIn = ({ email, password }) => {
     });
 };
 
-// export const register = (formData) => {
-//   const options = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(formData),
-//     mode: "cors",
-//   };
-
-//   return fetch(`${API_BASE}/register`, options)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       if (data.code) {
-//         console.log("Error here broski", data);
-//       } else {
-//         console.log("Registration successful", data);
-//       }
-//     })
-//     .catch((error) => {
-//       console.error("Error during registration:", error);
-//     });
-// };
-
 
 export const register = (formData) => {
   let endpoint = `${API_BASE}/user/register`;
@@ -60,40 +37,6 @@ export const register = (formData) => {
       break;
     case "patient":
       endpoint = `${API_BASE}/patient/register`;
-      break;
-  }
-
-  const options = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    mode: "cors",
-  };
-
-  // FIXED 🔥🔥🔥
-  return fetch(endpoint, options)
-    .then(res => {
-      if (!res.ok) throw new Error("Registration failed");
-      return res.json();
-    });
-};*/
-
-export const register = (formData) => {
-  // choose the right endpoint based on the role
-  let endpoint = `${API_BASE}/user/register`;
-
-  switch (formData.role) {
-    case "doctor":
-      endpoint = `${API_BASE}/doctor/register`;
-      break;
-    case "guardian":
-      endpoint = `${API_BASE}/guardian/register`;
-      break;
-    case "patient":
-      endpoint = `${API_BASE}/patient/register`;
-      break;
-    default:
-      console.warn("Unknown role, defaulting to /user/register");
       break;
   }
 
@@ -105,18 +48,8 @@ export const register = (formData) => {
   };
 
   return fetch(endpoint, options)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Registration successful", data);
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error during registration:", error);
-      throw error;
+    .then(res => {
+      if (!res.ok) throw new Error("Registration failed");
+      return res.json();
     });
 };

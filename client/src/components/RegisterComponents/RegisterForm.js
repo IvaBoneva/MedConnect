@@ -251,6 +251,7 @@ const RegisterForm = () => {
     setLoading(true);
 
     
+    
     try {
 
       let uploadedPhotoURL = null;
@@ -494,12 +495,12 @@ const RegisterForm = () => {
 
             {formData.hasDisability === "yes" && (
               <Form.Group className="mb-3">
-                <Form.Label>Описание на уврежданията</Form.Label>
+                <Form.Label>Описание на увреждането</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
                   name="disabilityDetails"
-                  placeholder="Опишете уврежданията на пациента"
+                  placeholder="Опишете увреждането на пациента"
                   value={formData.disabilityDetails}
                   onChange={handleChange}
                 />
