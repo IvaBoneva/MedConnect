@@ -1,8 +1,7 @@
-package com.example.server.service.UserService;
+package com.example.server.service;
 
 import com.example.server.models.Patient;
 import com.example.server.repository.UserRepositories.PatientRepository;
-import com.example.server.service.UserService.BaseUserServiceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -13,12 +13,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # safer than create-drop (keeps data between restarts)
-    show-sql: true # optional: show generated SQL in logs
+      ddl-auto: create-drop
+      use-new-id-generator-mappings: false
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#        format_sql: true   # make SQL logs easier to read
 
 jwt:
   secret: supersecretkeysupersecretkey123456 # must be >= 32 chars

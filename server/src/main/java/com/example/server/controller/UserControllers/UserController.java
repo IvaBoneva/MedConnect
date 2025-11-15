@@ -3,7 +3,7 @@ package com.example.server.controller.UserControllers;
 
 import com.example.server.config.JwtGeneratorInterface;
 import com.example.server.models.User;
-import com.example.server.service.UserService.BaseUserService;
+import com.example.server.service.BaseUserService;
 //import com.example.server.service.UserService.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

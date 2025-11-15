@@ -1,8 +1,10 @@
 package com.example.server.controller;
 
 import com.example.server.dto.SubscriptionRequest;
+import com.example.server.models.User;
+import com.example.server.service.BaseUserService;
 import com.example.server.service.StripeService;
-import com.example.server.service.UserService;
+//import com.example.server.service.UserService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.Subscription;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 // Remove the CachingRequestWrapper import if you have it
 // import org.springframework.web.util.ContentCachingRequestWrapper; 
 
+
+// BOGDAN : 18:30 : CHANGED USER SERVICE TO BASE USER SERVICE
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -37,11 +42,11 @@ public class StripeController {
     private static final Logger logger = LoggerFactory.getLogger(StripeController.class);
 
     private final StripeService stripeService;
-    private final UserService userService;
+    private final BaseUserService<User> userService;
     private final String endpointSecret;
 
     // Constructor injection is correct
-    public StripeController(StripeService stripeService, UserService userService,
+    public StripeController(StripeService stripeService, BaseUserService<User> userService,
             @Value("${stripe.webhook.secret}") String endpointSecret) {
         this.stripeService = stripeService;
         this.userService = userService;

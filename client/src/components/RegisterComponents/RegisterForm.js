@@ -6,118 +6,45 @@ import RegisterInput from "./RegisterInput";
 import { useAuth } from "../../context/AuthContext";
 import PasswordInput from "./PasswordInput";
 
-// const transformFormToBackend = (form) => ({
-//   email: form.email,
-//   password: form.password,
-//   name: `${form.fname} ${form.lname}`,
-//   age: Number(form.age),
-//   phoneNumber: form.phone,
-//   role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
-// });
-
-// DO NOT DELETE - WILL BE USED LATER
-
-// const transformFormToBackend = (form) => {
-//   const baseUser = {
-//     email: form.email,
-//     password: form.password,
-//     name: `${form.fname} ${form.lname}`,
-//     age: Number(form.age),
-//     phoneNumber: form.phone,
-//     role: { role: form.role.charAt(0).toUpperCase() + form.role.slice(1) },
-//   };
-
-//   switch (form.role) {
-//     case "doctor":
-//       return {
-//         ...baseUser,
-//         doctorProfile: {
-//           specialty: form.specialty,
-//           experience: form.experience,
-//           city: form.city,
-//           hospital: form.hospital,
-//         },
-//       };
-
-//     case "guardian":
-//       return {
-//         ...baseUser,
-//         guardianProfile: {
-//           patientFirstName: form.patientFName,
-//           patientLastName: form.patientLName,
-//           patientAge: Number(form.patientAge),
-//           hasDisability: form.hasDisability === "yes",
-//           disabilityDetails: form.hasDisability === "yes"
-//             ? form.disabilityDetails
-//             : null,
-//         },
-//       };
-
-//     case "patient":
-//     default:
-//       return baseUser;
-//   }
-// };
-
-// const transformFormToBackend = (form) => {
-//   const base = {
-//     email: form.email,
-//     password: form.password,
-//     name: `${form.fname} ${form.lname}`,
-//     age: Number(form.age),
-//     phoneNumber: form.phone,
-//   };
-
-//   switch (form.role) {
-//     case "doctor":
-//       return { ...base, specialization: form.specialization };
-//     case "guardian":
-//       return {
-//         ...base,
-//         patientFirstName: form.patientFName,
-//         patientLastName: form.patientLName,
-//         patientAge: Number(form.patientAge),
-//         hasDisability: form.hasDisability === "yes",
-//         disabilityDetails:
-//           form.hasDisability === "yes" ? form.disabilityDetails : null,
-//       };
-//     default:
-//       return base;
-//   }
-// };
-
 const transformFormToBackend = (form) => {
   const baseUser = {
     email: form.email,
     password: form.password,
     firstName: form.fname,
     lastName: form.lname,
-    age: Number(form.age),
+    age: Number(form.age) || null,
     phoneNumber: form.phone,
-    role: form.role,
+    // send uppercase role for consistency with discriminator/DB
+    role: (form.role || ""),
   };
 
   switch (form.role) {
     case "doctor":
       return {
         ...baseUser,
-        specialization: form.specialization,
+        specialization: form.specialization 
       };
 
     case "guardian":
       return {
         ...baseUser,
-        wardFirstName: form.patientFName,
-        wardLastName: form.patientLName,
-        wardAge: Number(form.patientAge),
+        wardFirstName: form.patientFName || null,
+        wardLastName: form.patientLName || null,
+        wardAge: form.patientAge ? Number(form.patientAge) : null,
         isWardDisabled: form.hasDisability === "yes",
         wardDisabilityDescription:
-          form.hasDisability === "yes" ? form.disabilityDetails : null,
+          form.hasDisability === "yes" ? form.disabilityDetails || null : null,
+        wardAllergies: form.wardAllergies || null,
+        wardDiseases: form.wardDiseases || null,
       };
 
     case "patient":
     default:
-      return baseUser;
+      return {
+        ...baseUser,
+        allergies: form.allergies || null,
+        diseases: form.diseases || null,
+      };
   }
 };
 
@@ -134,7 +61,7 @@ const RegisterForm = () => {
     confirmPassword: "",
     phone: "",
     role: "patient",
-    specialty: "",
+    specialization: "",
     experience: "",
     city: "",
     hospital: "",
@@ -289,53 +216,54 @@ const RegisterForm = () => {
     if (name === "role") setShowPatientFields(value === "guardian");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (passwordErrors.length > 0)
-      return setMessage("Моля, коригирайте изискванията за паролата.");
+  if (passwordErrors.length > 0)
+    return setMessage("Моля, коригирайте изискванията за паролата.");
 
-    if (
-      ageError ||
-      emailError ||
-      phoneError ||
-      fnameError ||
-      lnameError ||
-      patientfnameError ||
-      patientlnameError ||
-      experienceError
-    )
-      return setMessage("Моля, проверете въведените данни за грешки.");
+  if (
+    ageError ||
+    emailError ||
+    phoneError ||
+    fnameError ||
+    lnameError ||
+    patientfnameError ||
+    patientlnameError ||
+    experienceError
+  )
+    return setMessage("Моля, проверете въведените данни за грешки.");
 
-    if (formData.password !== formData.confirmPassword)
-      return setMessage("Паролите не съвпадат.");
+  if (formData.password !== formData.confirmPassword)
+    return setMessage("Паролите не съвпадат.");
 
-    // Симулираме успешна регистрация
-    setMessage("Регистрацията беше успешна! Пренасочване към Вход...");
-    setLoading(true);
+  // Симулираме успешна регистрация
+  setMessage("Регистрацията беше успешна! Пренасочване към Вход...");
+  setLoading(true);
 
-    const backendPayload = transformFormToBackend(formData);
+  const backendPayload = transformFormToBackend(formData);
 
-    try {
-      await register(backendPayload);
-      const loginRes = await logIn(backendPayload);
-      await logIn(backendPayload);
+  try {
+    const registrationResponse = await register(backendPayload);
+    console.log("Registration response:", registrationResponse);
 
-      if (loginRes && loginRes.token) {
-        setToken(loginRes.token);
-        navigate("/");
-      } else {
-        setMessage("Неуспешен вход след регистрация.");
-      }
-    } catch (err) {
-      setMessage("Възникна грешка. Моля, опитайте отново.");
+    const loginResponse = await logIn({
+      email: formData.email,  
+      password: formData.password,  
+    });
+
+    if (loginResponse && loginResponse.token) {
+      setToken(loginResponse.token);  
+      navigate("/");  
+    } else {
+      setMessage("Неуспешен вход след регистрация.");
     }
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   navigate("/");
-    // }, 2000);
-  };
+  } catch (err) {
+    setMessage("Възникна грешка. Моля, опитайте отново.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
@@ -556,9 +484,9 @@ const RegisterForm = () => {
               <Form.Label>Специализация</Form.Label>
               <Form.Control
                 type="text"
-                name="specialty"
+                name="specialization"
                 placeholder="Въведете вашата специализация"
-                value={formData.specialty}
+                value={formData.specialization}
                 onChange={handleChange}
                 required
               />

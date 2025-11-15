@@ -2,7 +2,7 @@ package com.example.server.controller.UserControllers;
 
 
 import com.example.server.models.Patient;
-import com.example.server.service.UserService.PatientService;
+import com.example.server.service.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

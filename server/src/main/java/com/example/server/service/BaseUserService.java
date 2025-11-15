@@ -1,12 +1,11 @@
-package com.example.server.service.UserService;
+package com.example.server.service;
 
 
 import com.example.server.models.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface BaseUserService <T extends User> {
 

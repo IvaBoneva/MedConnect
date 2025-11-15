@@ -47,8 +47,8 @@ export const logIn = ({ email, password }) => {
 //     });
 // };
 
-/*export const register = (formData) => {
-  // choose the right endpoint based on the role
+
+export const register = (formData) => {
   let endpoint = `${API_BASE}/user/register`;
 
   switch (formData.role) {
@@ -61,9 +61,6 @@ export const logIn = ({ email, password }) => {
     case "patient":
       endpoint = `${API_BASE}/patient/register`;
       break;
-    default:
-      console.warn("Unknown role, defaulting to /user/register");
-      break;
   }
 
   const options = {
@@ -73,23 +70,11 @@ export const logIn = ({ email, password }) => {
     mode: "cors",
   };
 
-  return fetch(`${API_BASE}/register`, options)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.code) {
-        console.log("Error here broski", data);
-      } else {
-        console.log("Registration successful", data);
-      }
+  // FIXED 🔥🔥🔥
+  return fetch(endpoint, options)
+    .then(res => {
+      if (!res.ok) throw new Error("Registration failed");
       return res.json();
-    })
-    .then((data) => {
-      console.log("Registration successful", data);
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error during registration:", error);
-      throw error;
     });
 };*/
 
