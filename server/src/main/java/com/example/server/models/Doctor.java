@@ -11,14 +11,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @Table(name = "doctor")
-@DiscriminatorValue("Doctor")
 
 public class Doctor extends User{
 
     private String specialization;
 
+    private Float rating;
 
 }

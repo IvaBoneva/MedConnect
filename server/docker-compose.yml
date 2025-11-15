@@ -28,7 +28,7 @@ services:
       - db
     ports:  
       - "8080:8080"
-      - "5005:5005"   # NEW PORT FOR DEBUG
+#      - "5005:5005"   # NEWPORT FOR DEBUG
 
 volumes:
   db_data:

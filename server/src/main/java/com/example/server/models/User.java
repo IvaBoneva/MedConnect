@@ -19,7 +19,6 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type")
 public class User {
 
     @Id
@@ -44,7 +43,6 @@ public class User {
 
     private LocalDate created_at = LocalDate.now();
 
-    @Column(nullable = true)
     private String photoURL;
 
 

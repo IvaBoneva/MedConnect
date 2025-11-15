@@ -5,6 +5,9 @@ import { logIn, register } from "../../api/userApi";
 import RegisterInput from "./RegisterInput";
 import { useAuth } from "../../context/AuthContext";
 import PasswordInput from "./PasswordInput";
+import { uploadToCloudinary } from "../../api/cloudinaryApi";
+
+
 
 const transformFormToBackend = (form) => {
   const baseUser = {
@@ -14,15 +17,16 @@ const transformFormToBackend = (form) => {
     lastName: form.lname,
     age: Number(form.age) || null,
     phoneNumber: form.phone,
-    // send uppercase role for consistency with discriminator/DB
-    role: (form.role || ""),
+    role: form.role || "",
+        photoURL: form.photoURL || null,
+
   };
 
   switch (form.role) {
     case "doctor":
       return {
         ...baseUser,
-        specialization: form.specialization 
+        specialization: form.specialization,
       };
 
     case "guardian":
@@ -165,6 +169,11 @@ const RegisterForm = () => {
       }
     }
 
+    if (name === "photo") {
+      setFormData((prev) => ({ ...prev, photo: e.target.files[0] }));
+      return;
+    }
+
     // Проверка потвърждение на паролата
     if (name === "confirmPassword") {
       if (value !== formData.password) {
@@ -216,54 +225,65 @@ const RegisterForm = () => {
     if (name === "role") setShowPatientFields(value === "guardian");
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (passwordErrors.length > 0)
-    return setMessage("Моля, коригирайте изискванията за паролата.");
+    if (passwordErrors.length > 0)
+      return setMessage("Моля, коригирайте изискванията за паролата.");
 
-  if (
-    ageError ||
-    emailError ||
-    phoneError ||
-    fnameError ||
-    lnameError ||
-    patientfnameError ||
-    patientlnameError ||
-    experienceError
-  )
-    return setMessage("Моля, проверете въведените данни за грешки.");
+    if (
+      ageError ||
+      emailError ||
+      phoneError ||
+      fnameError ||
+      lnameError ||
+      patientfnameError ||
+      patientlnameError ||
+      experienceError
+    )
+      return setMessage("Моля, проверете въведените данни за грешки.");
 
-  if (formData.password !== formData.confirmPassword)
-    return setMessage("Паролите не съвпадат.");
+    if (formData.password !== formData.confirmPassword)
+      return setMessage("Паролите не съвпадат.");
 
-  // Симулираме успешна регистрация
-  setMessage("Регистрацията беше успешна! Пренасочване към Вход...");
-  setLoading(true);
+    // Симулираме успешна регистрация
+    setMessage("Регистрацията беше успешна! Пренасочване към Вход...");
+    setLoading(true);
 
-  const backendPayload = transformFormToBackend(formData);
+    
+    try {
 
-  try {
-    const registrationResponse = await register(backendPayload);
-    console.log("Registration response:", registrationResponse);
+      let uploadedPhotoURL = null;
 
-    const loginResponse = await logIn({
-      email: formData.email,  
-      password: formData.password,  
-    });
+      if (formData.photo) {
+        uploadedPhotoURL = await uploadToCloudinary(formData.photo);
+      }
 
-    if (loginResponse && loginResponse.token) {
-      setToken(loginResponse.token);  
-      navigate("/");  
-    } else {
-      setMessage("Неуспешен вход след регистрация.");
+      const backendPayload = transformFormToBackend({
+        ...formData,
+        photoURL: uploadedPhotoURL,
+      });
+
+      const registrationResponse = await register(backendPayload);
+      console.log("Registration response:", registrationResponse);
+
+      const loginResponse = await logIn({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (loginResponse && loginResponse.token) {
+        setToken(loginResponse.token);
+        navigate("/");
+      } else {
+        setMessage("Неуспешен вход след регистрация.");
+      }
+    } catch (err) {
+      setMessage("Възникна грешка. Моля, опитайте отново.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setMessage("Възникна грешка. Моля, опитайте отново.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
@@ -342,6 +362,18 @@ const handleSubmit = async (e) => {
           required
           error={phoneError}
         />
+
+        <Form.Group className="mb-3">
+          <Form.Label>Профилна снимка</Form.Label>
+          <Form.Control
+            type="file"
+            accept="image/*"
+            name="photo"
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, photo: e.target.files[0] }))
+            }
+          />
+        </Form.Group>
 
         {/* PASSWORD */}
 

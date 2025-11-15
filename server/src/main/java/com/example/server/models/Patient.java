@@ -11,10 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 @Table(name = "patient")
-@DiscriminatorValue("PATIENT")
 
 public class Patient extends User {
 
