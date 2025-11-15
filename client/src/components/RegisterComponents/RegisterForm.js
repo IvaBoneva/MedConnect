@@ -462,12 +462,12 @@ const handleSubmit = async (e) => {
 
             {formData.hasDisability === "yes" && (
               <Form.Group className="mb-3">
-                <Form.Label>Описание на увреждането</Form.Label>
+                <Form.Label>Описание на уврежданията</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={2}
                   name="disabilityDetails"
-                  placeholder="Опишете увреждането на пациента"
+                  placeholder="Опишете уврежданията на пациента"
                   value={formData.disabilityDetails}
                   onChange={handleChange}
                 />

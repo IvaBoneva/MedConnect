@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import profileImage from "../../images/profile.png";
 import { useLocation } from "react-router-dom";
 
-const PersonalInformation = () => {
+const GuardianPersonalInformation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const basePath = location.pathname.startsWith("/test")
-    ? "/test/patient"
-    : "/dashboard/patient";
+    ? "/test/guardian"
+    : "/dashboard/guardian";
 
   // Примерни данни – по-късно ще идват от backend
   const userData = {
@@ -18,7 +18,11 @@ const PersonalInformation = () => {
     age: 32,
     email: "ivan.petrov@example.com",
     phone: "+359888123456",
-    allergies: "Прах, полени",
+    patientFName: "Калоян",
+    patientLName: "Георгиев",
+    patientAge: 67,
+    disabilities: "Слепота",
+    allergies: "Няма",
     diseases: "Хипертония",
   };
 
@@ -60,31 +64,47 @@ const PersonalInformation = () => {
           {/* Основни данни */}
           <Col md={8}>
             <p>
-              <strong>Име:</strong> {userData.fname || "—"}
+              <strong>Име на пациент:</strong> {userData.patientFName || "—"}
             </p>
             <p>
-              <strong>Фамилия:</strong> {userData.lname || "—"}
+              <strong>Фамилия на пациент:</strong>{" "}
+              {userData.patientLName || "—"}
             </p>
             <p>
-              <strong>Възраст:</strong> {userData.age || "—"}
+              <strong>Възраст на пациент:</strong> {userData.patientAge || "—"}
+            </p>
+
+            {/* Медицински детайли */}
+            <p>
+              <strong>Увреждания:</strong> {userData.disabilities || "—"}
             </p>
             <p>
-              <strong>Имейл:</strong> {userData.email || "—"}
+              <strong>Алергии:</strong> {userData.allergies || "—"}
             </p>
             <p>
-              <strong>Телефон:</strong> {userData.phone || "—"}
+              <strong>Заболявания:</strong> {userData.diseases || "—"}
             </p>
           </Col>
         </Row>
 
         <hr />
 
-        {/* Медицински детайли */}
+        {/* Детайли за настойник */}
+
         <p>
-          <strong>Алергии:</strong> {userData.allergies || "—"}
+          <strong>Име на настойник:</strong> {userData.fname || "—"}
         </p>
         <p>
-          <strong>Заболявания:</strong> {userData.diseases || "—"}
+          <strong>Фамилия на настойник:</strong> {userData.lname || "—"}
+        </p>
+        <p>
+          <strong>Възраст на настойник:</strong> {userData.age || "—"}
+        </p>
+        <p>
+          <strong>Имейл:</strong> {userData.email || "—"}
+        </p>
+        <p>
+          <strong>Телефон:</strong> {userData.phone || "—"}
         </p>
 
         <div className="text-center mt-4">
@@ -101,4 +121,4 @@ const PersonalInformation = () => {
   );
 };
 
-export default PersonalInformation;
+export default GuardianPersonalInformation;

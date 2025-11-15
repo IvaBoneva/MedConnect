@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, Button } from "react-bootstrap";
 
 const DoctorCard = ({ doctor, onSelect }) => (

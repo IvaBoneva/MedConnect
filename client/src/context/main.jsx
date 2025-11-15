@@ -7,6 +7,7 @@ import { useAuth } from "./AuthContext";
 import { ProtectedRoute } from "./ProtectedRouteMine";
 import DashboardPatient from "../dashboards/DashboardPatient";
 import DashboardDoctor from "../dashboards/DashboardDoctor";
+import DashboardGuardian from "../dashboards/DashboardGuardian";
 import HomePage from "../pages/HomePage";
 import LogoutPage from "../pages/LogoutPage";
 import MainLayout from "../pages/MainLayout";
@@ -64,6 +65,15 @@ const Routes = () => {
           element: (
             <ProtectedRoute>
               <DashboardDoctor />
+            </ProtectedRoute>
+          ),
+        },
+
+        {
+          path: "dashboard/guardian/*",
+          element: (
+            <ProtectedRoute>
+              <DashboardGuardian />
             </ProtectedRoute>
           ),
         },

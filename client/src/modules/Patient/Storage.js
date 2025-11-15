@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container, Table, Button, Form } from "react-bootstrap";
 import { FileDown, FileText, Printer } from "lucide-react";
 
@@ -43,9 +43,23 @@ const Storage = () => {
     link.click();
   };
 
-  const handlePrint = (file) => {
-    const win = window.open(file.content, "_blank");
-    win?.print();
+  const handlePrint = async (file) => {
+    try {
+      let fileURL = file.content;
+
+      // Ако файлът е локален (Blob), създаваме обект URL
+      if (!fileURL && file.rawFile) {
+        fileURL = URL.createObjectURL(file.rawFile);
+      }
+
+      if (!fileURL) return;
+
+      const win = window.open(fileURL, "_blank");
+      win?.focus();
+      win?.print();
+    } catch (err) {
+      console.error("Не може да се принтира:", err);
+    }
   };
 
   const handleRemove = (fileId) => {
@@ -63,7 +77,7 @@ const Storage = () => {
   return (
     <Container className="py-5">
       <h3 className="mb-4" style={{ color: "#2E8B57" }}>
-        📁 Моето хранилище
+        📁 Хранилище
       </h3>
 
       <Form className="mb-3 d-flex">
