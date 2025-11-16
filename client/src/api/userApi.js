@@ -1,7 +1,6 @@
 const API_BASE = "http://localhost:8080/api/user";
 
-export const logIn = ({email,password}) => {
-
+export const logIn = ({ email, password }) => {
   const options = {
     method: "POST",
     mode: "cors",
@@ -23,7 +22,6 @@ export const logIn = ({email,password}) => {
       return data;
     });
 };
-
 
 export const register = (formData) => {
   let endpoint = `${API_BASE}/user/register`;
@@ -47,9 +45,8 @@ export const register = (formData) => {
     mode: "cors",
   };
 
-  return fetch(endpoint, options)
-    .then(res => {
-      if (!res.ok) throw new Error("Registration failed");
-      return res.json();
-    });
+  return fetch(endpoint, options).then((res) => {
+    if (!res.ok) throw new Error("Registration failed");
+    return res.json();
+  });
 };

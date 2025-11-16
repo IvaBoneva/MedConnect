@@ -7,8 +7,6 @@ import { useAuth } from "../../context/AuthContext";
 import PasswordInput from "./PasswordInput";
 import { uploadToCloudinary } from "../../api/cloudinaryApi";
 
-
-
 const transformFormToBackend = (form) => {
   const baseUser = {
     email: form.email,
@@ -18,8 +16,7 @@ const transformFormToBackend = (form) => {
     age: Number(form.age) || null,
     phoneNumber: form.phone,
     role: form.role || "",
-        photoURL: form.photoURL || null,
-
+    photoURL: form.photoURL || null,
   };
 
   switch (form.role) {
@@ -250,10 +247,7 @@ const RegisterForm = () => {
     setMessage("Регистрацията беше успешна! Пренасочване към Вход...");
     setLoading(true);
 
-    
-    
     try {
-
       let uploadedPhotoURL = null;
 
       if (formData.photo) {

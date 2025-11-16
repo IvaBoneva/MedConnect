@@ -1,4 +1,4 @@
-import { Container, Row} from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import "../App.css";
 import FeatureCard from "../components/HomeComponents/FeatureCard";
 import HomeBorder from "../components/HomeComponents/HomeBorder";
@@ -11,14 +11,13 @@ const Home = () => {
       <Row className="align-items-center">
         <WelcomeSection
           title={" Добре дошли в MedConnect+"}
-          desctiption={
+          description={
             " Вашият личен здравен асистент — управлявайте прегледи, лекарства и медицински досиета на едно сигурно място."
           }
           redirectUrl={"/register"}
         />
 
         <HeroImage />
-
       </Row>
 
       <HomeBorder />
