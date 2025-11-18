@@ -102,7 +102,12 @@ const DashboardGuardian = () => {
             <Route path="symptom_check" element={<SymptomCheck />} />
             <Route
               path="vaccines_profilactics"
-              element={<VaccinesAndProfilactics />}
+              element={
+                <VaccinesAndProfilactics
+                  isPremium={false} // за development
+                  patientAge={20}
+                />
+              }
             />
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
