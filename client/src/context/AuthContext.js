@@ -52,10 +52,10 @@ const AuthProvider = ({ children }) => {
     let storedToken = localStorage.getItem("token");
 
     if (!storedToken) {
-  console.warn("No token found in localStorage, user is not authenticated");
-  setIsReady(true);
-  return;
-}
+      console.warn("No token found in localStorage, user is not authenticated");
+      setIsReady(true);
+      return;
+    }
 
     setToken_(storedToken);
     axios.defaults.headers.common["Authorization"] = "Bearer " + storedToken;
@@ -79,7 +79,7 @@ const AuthProvider = ({ children }) => {
     try {
       if (!token) return;
 
-      const res = await axios.get("http://localhost:8080/api/user/patient/me"); 
+      const res = await axios.get("http://localhost:8080/api/user/patient/me");
       // Replace /me with your backend endpoint that returns the current logged-in user
 
       if (res.status === 200) {
@@ -104,4 +104,3 @@ const AuthProvider = ({ children }) => {
 
 export const useAuth = () => useContext(AuthContext);
 export default AuthProvider;
-

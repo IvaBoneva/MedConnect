@@ -49,13 +49,41 @@ const LoginForm = () => {
     setMessage("");
     setLoading(true);
 
-    try {
+    /*try {
       const res = await logIn({ email, password });
       console.log(res);
 
       if (res && res.token) {
         setToken(res.token);
-        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userEmail", email);z
+        setMessage("Вход успешен! Пренасочване към таблото...");
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else {
+        setMessage("Грешен имейл или парола.");
+      }
+    } catch (error) {
+      console.error("Неуспешен вход:", error);
+      setMessage("Възникна грешка при входа. Опитайте отново.");
+    } finally {
+      setLoading(false);
+    }
+  };*/
+
+    try {
+      const data = await logIn({ email, password }); // fetch вече връща JSON
+
+      if (data && data.token) {
+        // token се пази вече и в localStorage от logIn, но може пак да го пазим в context
+        setToken(data.token);
+
+        // Запазваме и другите полета
+        localStorage.setItem("userEmail", data.email);
+        localStorage.setItem("userFirstName", data.firstName);
+        localStorage.setItem("userLastName", data.lastName);
+        localStorage.setItem("userRole", data.role);
+
         setMessage("Вход успешен! Пренасочване към таблото...");
         setTimeout(() => {
           navigate("/");

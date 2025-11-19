@@ -22,7 +22,7 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface {
     @Value("${jwt.message}")
     private String message;
 
-    @Override
+    /*@Override
     public Map<String, String> generateToken(User user) {
 
         String jwtToken;
@@ -46,7 +46,30 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface {
         jwtTokenGen.put("message", message);
 
         return jwtTokenGen;
-    }
+    }*/
+
+   @Override
+public Map<String, Object> generateToken(User user) {
+    String jwtToken = Jwts.builder()
+            .setSubject(user.getEmail())
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // 24 минути
+            .signWith(getSignInKey())
+            .compact();
+
+    Map<String, Object> jwtTokenGen = new HashMap<>();
+    jwtTokenGen.put("token", jwtToken);
+    jwtTokenGen.put("message", "Login Successful");
+
+    // добавяме реалните полета на потребителя
+    jwtTokenGen.put("firstName", user.getFirstName());
+    jwtTokenGen.put("lastName", user.getLastName());
+    jwtTokenGen.put("role", user.getRole());
+    jwtTokenGen.put("email", user.getEmail());
+
+    return jwtTokenGen;
+}
+
 
     private Key getSignInKey() {
         byte[] keyBytes = this.secret.getBytes(StandardCharsets.UTF_8);
