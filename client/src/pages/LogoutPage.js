@@ -17,6 +17,10 @@ const LogoutPage = () => {
     setLoading(true); // показваме spinner
     localStorage.removeItem("token"); // изчистваме токени
     setToken(null); // This will clear localStorage and axios headers
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userFirstName");
+    localStorage.removeItem("userLastName");
+    localStorage.removeItem("userRole");
     navigate("/"); // пренасочваме към главната страница
     localStorage.removeItem("user");
     setUser(null);

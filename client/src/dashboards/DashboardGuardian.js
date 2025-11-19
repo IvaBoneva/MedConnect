@@ -12,6 +12,7 @@ import Storage from "../modules/Patient/Storage";
 import PaymentPage from "../modules/Patient/PaymentPage";
 import SymptomCheck from "../modules/Patient/SymptomCheck";
 import "../App.css";
+import VaccinesAndProfilactics from "../modules/Patient/VaccinesAndProfilactics";
 
 const DashboardGuardian = () => {
   const location = useLocation();
@@ -71,6 +72,11 @@ const DashboardGuardian = () => {
                 Проверка на симптоми
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to={`${basePath}/vaccines_profilactics`}>
+                Имунизации и профилактика
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Col>
 
@@ -94,6 +100,15 @@ const DashboardGuardian = () => {
             <Route path="appointments" element={<Appointments />} />
             <Route path="storage" element={<Storage />} />
             <Route path="symptom_check" element={<SymptomCheck />} />
+            <Route
+              path="vaccines_profilactics"
+              element={
+                <VaccinesAndProfilactics
+                  isPremium={false} // за development
+                  patientAge={20}
+                />
+              }
+            />
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
         </Col>

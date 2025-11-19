@@ -59,7 +59,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
 
         try {
@@ -77,7 +77,26 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
+    }*/
+
+   @PostMapping("/login")
+public ResponseEntity<?> loginUser(@RequestBody User user) {
+    try {
+        if (user.getEmail() == null || user.getPassword() == null) {
+            throw new UsernameNotFoundException("UserName or Password is Empty");
+        }
+        User userData = baseUserService.getUserByEmail(user.getEmail());
+        if (!passwordEncoder.matches(user.getPassword(), userData.getPassword())) {
+            throw new UsernameNotFoundException("Wrong PASSWORD");
+        }
+
+        return new ResponseEntity<>(jwtGeneratorInterface.generateToken(userData), HttpStatus.OK);
+
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
+}
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpServletRequest request) {

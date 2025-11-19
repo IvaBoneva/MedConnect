@@ -1,0 +1,164 @@
+import { useState, useEffect } from "react";
+import { Container, Table, Button, Alert, Card } from "react-bootstrap";
+
+const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
+  const [vaccines, setVaccines] = useState([]);
+  const [profilactics, setProfilactics] = useState([]);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  // Зареждане на ваксини
+  useEffect(() => {
+    if (isPremium) {
+      fetch("/vaccines.json")
+        .then((res) => res.json())
+        .then((data) => {
+          const upcoming = data.filter((v) => v.age >= patientAge);
+          setVaccines(upcoming);
+        })
+        .catch((err) => console.error("Failed to load vaccines:", err));
+    }
+  }, [isPremium, patientAge]);
+
+  // Зареждане на профилактични прегледи
+  useEffect(() => {
+    if (isPremium) {
+      fetch("/checks.json")
+        .then((res) => res.json())
+        .then((data) => {
+          let groupFiltered;
+
+          if (patientAge < 18) {
+            // само детски
+            groupFiltered = data.filter((p) => p.age < 18);
+          } else {
+            // само за възрастни
+            groupFiltered = data.filter((p) => p.age >= 18);
+          }
+
+          // втората проверка — да не показва бъдещи прегледи
+          const finalFiltered = groupFiltered.filter(
+            (p) => p.age <= patientAge
+          );
+
+          setProfilactics(finalFiltered);
+        })
+        .catch((err) => console.error("Failed to load profilactics:", err));
+    }
+  }, [isPremium, patientAge]);
+
+  if (!isPremium) {
+    return (
+      <Container className="py-5">
+        <Alert variant="warning" className="text-center p-4">
+          <h4>🔒 Платена функция</h4>
+          <p>
+            Имунизационният календар и профилактичните прегледи са достъпни само
+            за потребители с активен абонамент.
+          </p>
+          <Button variant="success" href="/subscriptions">
+            Отиди към абонаментите
+          </Button>
+        </Alert>
+      </Container>
+    );
+  }
+
+  return (
+    <Container className="py-5">
+      <h3 className="mb-4" style={{ color: "#2E8B57" }}>
+        Имунизации и профилактични прегледи
+      </h3>
+
+      {/* PDF секция с плавно показване/скриване */}
+      <Card className="mb-5 p-3 shadow-sm text-center">
+        <h5 style={{ color: "#2E8B57", marginBottom: "15px" }}>
+          Национален имунизационен календар (PDF)
+        </h5>
+        <Button
+          variant="success"
+          style={{ borderRadius: "50px", padding: "10px 25px" }}
+          onClick={() => setShowCalendar(!showCalendar)}
+        >
+          {showCalendar ? "Скрий календара 📄" : "Покажи календара 📄"}
+        </Button>
+
+        <div
+          style={{
+            marginTop: "20px",
+            border: "1px solid #ccc",
+            borderRadius: "10px",
+            overflow: "hidden",
+            transition: "all 0.7s ease",
+            height: showCalendar ? "600px" : "0px",
+            opacity: showCalendar ? 1 : 0,
+          }}
+        >
+          <iframe
+            src="/vaccination_calendar.pdf"
+            width="100%"
+            height="100%"
+            style={{ border: "none" }}
+          />
+        </div>
+      </Card>
+
+      {/* Ваксини */}
+      <Card className="mb-5 p-3 shadow-sm">
+        <h5 style={{ color: "#2E8B57" }}> 💉 Предстоящи ваксини</h5>
+        {vaccines.length === 0 ? (
+          <p>Няма предстоящи ваксини за вашата възраст.</p>
+        ) : (
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Възраст</th>
+                <th>Ваксини</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vaccines.map((v, i) => (
+                <tr key={i}>
+                  <td>{v.age} години</td>
+                  <td>{v.vaccines.join(", ")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Card>
+
+      {/* Профилактични прегледи */}
+      <Card className="mb-5 p-3 shadow-sm">
+        <h5 style={{ color: "#2E8B57" }}>🩺 Право на профилактични прегледи</h5>
+        {profilactics.length === 0 ? (
+          <p>Няма налични прегледи за вашата възраст.</p>
+        ) : (
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Възраст</th>
+                <th>Прегледи и изследвания</th>
+              </tr>
+            </thead>
+            <tbody>
+              {profilactics.map((p, i) => (
+                <tr key={i}>
+                  <td>{p.age}+</td>
+                  <td>
+                    <ul>
+                      {p.checks.map((check, j) => (
+                        <li key={j}>{check}</li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Card>
+    </Container>
+  );
+};
+
+export default VaccinesAndProfilactics;
