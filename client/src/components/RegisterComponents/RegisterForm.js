@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { logIn, register } from "../../api/userApi";
+import { currentUser, logIn, register } from "../../api/userApi";
 import RegisterInput from "./RegisterInput";
 import { useAuth } from "../../context/AuthContext";
 import PasswordInput from "./PasswordInput";
@@ -51,7 +51,7 @@ const transformFormToBackend = (form) => {
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { setToken } = useAuth();
+  const { setAuthData } = useAuth();
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -268,8 +268,10 @@ const RegisterForm = () => {
       });
 
       if (loginResponse && loginResponse.token) {
-        setToken(loginResponse.token);
-        localStorage.setItem("userEmail", formData.email);
+        
+        const currentUserData = await currentUser();
+
+        setAuthData(loginResponse.token, currentUserData);
         navigate("/");
       } else {
         setMessage("Неуспешен вход след регистрация.");

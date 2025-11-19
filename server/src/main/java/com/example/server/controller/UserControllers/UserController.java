@@ -1,34 +1,50 @@
 package com.example.server.controller.UserControllers;
 
+
 import com.example.server.config.JwtGeneratorInterface;
+import com.example.server.dto.ExposedUserDTO.PatientDTO;
+import com.example.server.dto.ExposedUserDTO.UserDTO;
+import com.example.server.mappers.PatientMapper;
+import com.example.server.mappers.UserDtoFactory;
+import com.example.server.mappers.UserMapper;
+import com.example.server.models.Patient;
 import com.example.server.models.User;
 import com.example.server.service.BaseUserService;
 //import com.example.server.service.UserService.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
-// @RequestMapping("api/v1/user")
+//@RequestMapping("api/v1/user")
 @RequestMapping("api/user")
 public class UserController {
 
-    // CHANGED UserService -> BaseUserService
+//    CHANGED UserService -> BaseUserService
 
     private final BaseUserService<User> baseUserService;
     private final JwtGeneratorInterface jwtGeneratorInterface;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final PatientMapper patientMapper;
+    private final UserDtoFactory userDtoFactory;
 
-    public UserController(BaseUserService<User> baseUserService, JwtGeneratorInterface jwtGeneratorInterface,
-            PasswordEncoder passwordEncoder) {
+
+    public UserController(BaseUserService<User> baseUserService, JwtGeneratorInterface jwtGeneratorInterface, PasswordEncoder passwordEncoder, UserMapper userMapper, PatientMapper patientMapper, UserDtoFactory userDtoFactory) {
         this.baseUserService = baseUserService;
         this.jwtGeneratorInterface = jwtGeneratorInterface;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+        this.patientMapper = patientMapper;
+        this.userDtoFactory = userDtoFactory;
     }
 
     @PostMapping("/register")
@@ -54,7 +70,7 @@ public class UserController {
             if (userData == null) {
                 throw new UsernameNotFoundException("User with this username not registered");
             }
-            if (!passwordEncoder.matches(user.getPassword(), userData.getPassword())) {
+            if (!passwordEncoder.matches(user.getPassword(), userData.getPassword())){
                 throw new UsernameNotFoundException("Wrong PASSWORD");
             }
             return new ResponseEntity<>(jwtGeneratorInterface.generateToken(userData), HttpStatus.OK);
@@ -90,11 +106,31 @@ public ResponseEntity<?> loginUser(@RequestBody User user) {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No token provided.");
     }
-
-    //
+//
     @GetMapping("/users")
-    public List<User> getTestData() {
+    public List<User> getTestData(){
         return baseUserService.getAll();
+    }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<?> me() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = (String) authentication.getPrincipal();
+
+            User user = baseUserService.getUserByEmail(email);
+
+            if (user != null) {
+                UserDTO userDTO = userDtoFactory.getUserDTO(user);
+                return ResponseEntity.ok(userDTO);
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is authenticated.");
     }
 
 }

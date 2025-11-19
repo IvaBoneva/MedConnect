@@ -4,7 +4,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { ProtectedRoute } from "./ProtectedRouteMine";
+import { ProtectedRoute } from "./ProtectedRoutes";
 import DashboardPatient from "../dashboards/DashboardPatient";
 import DashboardDoctor from "../dashboards/DashboardDoctor";
 import DashboardGuardian from "../dashboards/DashboardGuardian";
@@ -91,7 +91,6 @@ const Routes = () => {
     },
   ]);
 
-  // Provide the router configuration using RouterProvider
   return <RouterProvider router={router} />;
 };
 

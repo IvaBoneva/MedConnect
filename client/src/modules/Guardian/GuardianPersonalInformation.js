@@ -2,6 +2,7 @@ import { Container, Card, Row, Col, Image, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import profileImage from "../../images/profile.png";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const GuardianPersonalInformation = () => {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ const GuardianPersonalInformation = () => {
   const basePath = location.pathname.startsWith("/test")
     ? "/test/guardian"
     : "/dashboard/guardian";
+
+  const { user } = useAuth();
 
   // Примерни данни – по-късно ще идват от backend
   const userData = {
@@ -65,10 +68,13 @@ const GuardianPersonalInformation = () => {
           <Col md={8}>
             <p>
               <strong>Име на пациент:</strong> {userData.patientFName || "—"}
+                {/* <p><strong>Име на пациент:</strong> {user.firstName}</p>  Coming from backend - TEST */}
+
             </p>
             <p>
               <strong>Фамилия на пациент:</strong>{" "}
               {userData.patientLName || "—"}
+              {/* <strong>Име на пациент:</strong> {user.lastName} Coming from the backend  */}
             </p>
             <p>
               <strong>Възраст на пациент:</strong> {userData.patientAge || "—"}

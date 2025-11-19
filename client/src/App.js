@@ -1,5 +1,5 @@
 import AuthProvider from "./context/AuthContext";
-import Routes from "./context/main";
+import Routes from "./context/Routes";
 
 function App() {
   return (

@@ -72,7 +72,7 @@ public class DataSeeder {
                 doctor.setFirstName("Gregory");
                 doctor.setLastName("House");
                 doctor.setEmail("doctorhouse@example.com");
-                doctor.setPassword(passwordEncoder.encode("doc123456"));
+                    doctor.setPassword(passwordEncoder.encode("doc123456"));
                 doctor.setAge(45);
                 doctor.setPhoneNumber("125478963");
                 doctor.setRole("DOCTOR");

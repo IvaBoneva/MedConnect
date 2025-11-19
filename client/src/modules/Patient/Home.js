@@ -1,19 +1,15 @@
 import { Image, Card } from "react-bootstrap";
 import welcomeImage from "../../images/hello_img.png";
 import { motion } from "framer-motion";
+import GoogleCalendarComponent from "../../dashboards/GoogleCalendar/GoogleCalendarComponent";
 
-const GoogleCalendar = () => (
-  <iframe
-    title="Google Calendar"
-    src="https://calendar.google.com/calendar/embed?src=bg.bulgarian%23holiday%40group.v.calendar.google.com"
-    style={{ border: 0, width: "100%", height: "400px" }}
-  />
-);
+
 
 const Home = () => {
   const userName = localStorage.getItem("userName") || "Име";
 
   return (
+
     <div>
       <Card
         className="d-flex flex-row align-items-center p-4 mb-4 shadow-sm"
@@ -44,7 +40,7 @@ const Home = () => {
         </motion.div>
       </Card>
 
-      <GoogleCalendar />
+      <GoogleCalendarComponent/>
     </div>
   );
 };

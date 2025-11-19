@@ -1,0 +1,79 @@
+.calendar-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+/* Calendar background */
+.calendar-container .fc {
+  background: #ffffff;
+}
+
+/* Header bar */
+.calendar-container .fc-toolbar.fc-header-toolbar {
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* Title (November 2025) */
+.calendar-container .fc-toolbar-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Buttons (month / week / day) */
+.calendar-container .fc-button {
+  background: #0d6efd !important;        /* bootstrap primary */
+  border: none !important;
+  color: white !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+}
+
+.calendar-container .fc-button:hover {
+  background: #0b5ed7 !important;        /* darker primary */
+}
+
+/* Day cells */
+.calendar-container .fc-daygrid-day {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+}
+
+/* Today highlight */
+.calendar-container .fc-day-today {
+  background: #e8f3ff !important;
+}
+
+/* Day header (Sun, Mon, Tue...) */
+.calendar-container .fc-col-header-cell {
+  background: #f1f1f1;
+  font-weight: bold;
+  color: #333;
+  padding: 8px 0;
+}
+
+/* Event styling */
+.calendar-container .fc-event {
+  background: #0d6efd !important;
+  border: none !important;
+  color: white !important;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.calendar-container .fc-event:hover {
+  background: #0b5ed7 !important;
+}
+
+.calendar-container .fc-timegrid-now-indicator-line {
+  border-top: 3px solid red !important;
+}
+
+.calendar-container .fc-timegrid-now-indicator-arrow {
+  border-color: red !important;
+}
