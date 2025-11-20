@@ -1,6 +1,7 @@
 package com.example.server;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import com.stripe.model.Product;
 import com.stripe.model.ProductCollection;
@@ -8,6 +9,7 @@ import com.stripe.param.ProductListParams;
 import com.stripe.exception.StripeException;
 
 @Component
+//@Profile("!test")  // ⬅ prevents running during maven tests
 public class StripeTestRunner implements CommandLineRunner {
 
     @Override
