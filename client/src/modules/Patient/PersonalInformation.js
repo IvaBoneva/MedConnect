@@ -11,28 +11,7 @@ const PersonalInformation = () => {
     ? "/test/patient"
     : "/dashboard/patient";
 
-  const { user, isReady } = useAuth();
-  // Ако auth още не е готов → чакаме
-  if (!isReady) {
-    return <Container className="mt-4">Зареждане...</Container>;
-  }
-
-  // Ако няма потребител → грешка
-  if (!user) {
-    return <Container className="mt-4">Не е намерен потребител.</Container>;
-  }
-
-  // Примерни данни – по-късно ще идват от backend
-  const userData = {
-    photo: null,
-    fname: "Иван",
-    lname: "Петров",
-    age: 32,
-    email: "ivan.petrov@example.com",
-    phone: "+359888123456",
-    allergies: "Прах, полени",
-    diseases: "Хипертония",
-  };
+  const { user } = useAuth();
 
   return (
     <Container className="mt-4">
@@ -57,7 +36,7 @@ const PersonalInformation = () => {
               }}
             >
               <Image
-                src={user.photoURL || profileImage}
+                src={user?.photoURL || profileImage}
                 alt="Пациент"
                 fluid
                 style={{
@@ -72,19 +51,19 @@ const PersonalInformation = () => {
           {/* Основни данни */}
           <Col md={8}>
             <p>
-              <strong>Име:</strong> {user.firstName || "—"}
+              <strong>Име:</strong> {user?.firstName || "—"}
             </p>
             <p>
-              <strong>Фамилия:</strong> {user.lastName || "—"}
+              <strong>Фамилия:</strong> {user?.lastName || "—"}
             </p>
             <p>
-              <strong>Възраст:</strong> {user.age || "—"}
+              <strong>Възраст:</strong> {user?.age || "—"}
             </p>
             <p>
-              <strong>Имейл:</strong> {user.email || "—"}
+              <strong>Имейл:</strong> {user?.email || "—"}
             </p>
             <p>
-              <strong>Телефон:</strong> {user.phoneNumber || "—"}
+              <strong>Телефон:</strong> {user?.phoneNumber || "—"}
             </p>
           </Col>
         </Row>
@@ -93,10 +72,10 @@ const PersonalInformation = () => {
 
         {/* Медицински детайли */}
         <p>
-          <strong>Алергии:</strong> {user.allergies || "—"}
+          <strong>Алергии:</strong> {user?.allergies || "—"}
         </p>
         <p>
-          <strong>Заболявания:</strong> {user.diseases || "—"}
+          <strong>Заболявания:</strong> {user?.diseases || "—"}
         </p>
 
         <div className="text-center mt-4">
