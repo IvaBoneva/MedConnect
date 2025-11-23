@@ -12,19 +12,22 @@ import profileImage from "../../images/profile.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const DoctorEditInformation = () => {
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
-    photo: null,
-    fname: "",
-    lname: "",
-    age: "",
-    email: "",
-    phone: "",
-    speciality: "",
-    experience: "",
-    city: "",
-    hospital: "",
+    photo: user.photoURL,
+    fname: user.firstName,
+    lname: user.lastName,
+    age: user.age,
+    email: user.email,
+    phone: user.phoneNumber,
+    speciality: user.specialization,
+    experience: user.experience,
+    city: user.city,
+    hospital: user.hospital,
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -209,7 +212,7 @@ const DoctorEditInformation = () => {
                     style={{
                       width: "150px",
                       height: "150px",
-                      objectFit: "contain", // показва цялата снимка
+                      objectFit: "cover",
                     }}
                   />
                 </div>

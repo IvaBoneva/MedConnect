@@ -56,7 +56,6 @@ const LoginForm = () => {
       console.log(res);
 
       if (res && res.token) {
-
         try {
           const currentUserData = await currentUser();
           console.log("Current user data:", currentUserData);

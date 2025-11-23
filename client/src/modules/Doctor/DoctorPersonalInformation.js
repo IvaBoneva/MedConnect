@@ -11,30 +11,7 @@ const DoctorPersonalInformation = () => {
     ? "/test/doctor"
     : "/dashboard/doctor";
 
-  const { user, isReady } = useAuth();
-  // Ако auth още не е готов → чакаме
-  if (!isReady) {
-    return <Container className="mt-4">Зареждане...</Container>;
-  }
-
-  // Ако няма потребител → грешка
-  if (!user) {
-    return <Container className="mt-4">Не е намерен потребител.</Container>;
-  }
-
-  // Примерни данни – по-късно ще идват от backend
-  const userData = {
-    photo: null,
-    fname: "Иван",
-    lname: "Петров",
-    age: 36,
-    email: "drpetrov@example.com",
-    phone: "+359888123456",
-    speciality: "Кардиология",
-    experience: 14,
-    city: "София",
-    hospital: "Болница Пирогов",
-  };
+  const { user } = useAuth();
 
   return (
     <Container className="mt-4">
@@ -59,7 +36,7 @@ const DoctorPersonalInformation = () => {
               }}
             >
               <Image
-                src={user.photoURL || profileImage}
+                src={user?.photoURL || profileImage}
                 alt="Доктор"
                 fluid
                 style={{
@@ -74,19 +51,19 @@ const DoctorPersonalInformation = () => {
           {/* Основни данни */}
           <Col md={8}>
             <p>
-              <strong>Име:</strong> {user.firstName || "—"}
+              <strong>Име:</strong> {user?.firstName || "—"}
             </p>
             <p>
-              <strong>Фамилия:</strong> {user.lastName || "—"}
+              <strong>Фамилия:</strong> {user?.lastName || "—"}
             </p>
             <p>
-              <strong>Възраст:</strong> {user.age || "—"}
+              <strong>Възраст:</strong> {user?.age || "—"}
             </p>
             <p>
-              <strong>Имейл:</strong> {user.email || "—"}
+              <strong>Имейл:</strong> {user?.email || "—"}
             </p>
             <p>
-              <strong>Телефон:</strong> {user.phoneNumber || "—"}
+              <strong>Телефон:</strong> {user?.phoneNumber || "—"}
             </p>
           </Col>
         </Row>
@@ -95,16 +72,16 @@ const DoctorPersonalInformation = () => {
 
         {/* Медицински детайли */}
         <p>
-          <strong>Специализация:</strong> {user.specialization || "—"}
+          <strong>Специализация:</strong> {user?.specialization || "—"}
         </p>
         <p>
-          <strong>Опит (години):</strong> {user.experience || "—"}
+          <strong>Опит (години):</strong> {user?.experience || "—"}
         </p>
         <p>
-          <strong>Град:</strong> {user.city || "—"}
+          <strong>Град:</strong> {user?.city || "—"}
         </p>
         <p>
-          <strong>Работно място:</strong> {user.hospital || "—"}
+          <strong>Работно място:</strong> {user?.hospital || "—"}
         </p>
 
         <div className="text-center mt-4">

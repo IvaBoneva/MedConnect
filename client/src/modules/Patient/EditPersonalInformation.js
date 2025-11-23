@@ -12,17 +12,20 @@ import profileImage from "../../images/profile.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const EditPersonalInformation = () => {
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
-    photo: null,
-    fname: "",
-    lname: "",
-    age: "",
-    email: "",
-    phone: "",
-    allergies: "",
-    diseases: "",
+    photo: user.photoURL,
+    fname: user.firstName,
+    lname: user.lastName,
+    age: user.age,
+    email: user.email,
+    phone: user.phoneNumber,
+    allergies: user.allergies,
+    diseases: user.diseases,
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -192,7 +195,7 @@ const EditPersonalInformation = () => {
                     style={{
                       width: "150px",
                       height: "150px",
-                      objectFit: "contain", // показва цялата снимка
+                      objectFit: "cover",
                     }}
                   />
                 </div>

@@ -11,28 +11,7 @@ const GuardianPersonalInformation = () => {
     ? "/test/guardian"
     : "/dashboard/guardian";
 
-  const { user, isReady } = useAuth();
-
-  // Ако auth още не е готов → чакаме
-  if (!isReady) {
-    return <Container className="mt-4">Зареждане...</Container>;
-  }
-
-  // Ако няма потребител → грешка
-  if (!user) {
-    return <Container className="mt-4">Не е намерен потребител.</Container>;
-  }
-
-  // Примерни данни – само за пациента
-  const patientData = {
-    photo: null,
-    patientFName: "Калоян",
-    patientLName: "Георгиев",
-    patientAge: 67,
-    disabilities: "Слепота",
-    allergies: "Няма",
-    diseases: "Хипертония",
-  };
+  const { user } = useAuth();
 
   return (
     <Container className="mt-4">
@@ -57,7 +36,7 @@ const GuardianPersonalInformation = () => {
               }}
             >
               <Image
-                src={user.photoURL || profileImage}
+                src={user?.photoURL || profileImage}
                 alt="Пациент"
                 fluid
                 style={{
@@ -72,25 +51,25 @@ const GuardianPersonalInformation = () => {
           {/* Основни данни – ПАЦИЕНТ */}
           <Col md={8}>
             <p>
-              <strong>Име на пациент:</strong> {user.wardFirstName || "—"}
+              <strong>Име на пациент:</strong> {user?.wardFirstName || "—"}
             </p>
             <p>
-              <strong>Фамилия на пациент:</strong> {user.wardLastName || "—"}
+              <strong>Фамилия на пациент:</strong> {user?.wardLastName || "—"}
             </p>
             <p>
-              <strong>Възраст на пациент:</strong> {user.wardAge || "—"}
+              <strong>Възраст на пациент:</strong> {user?.wardAge || "—"}
             </p>
 
             {/* Медицински детайли */}
             <p>
               <strong>Увреждания:</strong>{" "}
-              {user.wardDisabilityDescription || "—"}
+              {user?.wardDisabilityDescription || "—"}
             </p>
             <p>
-              <strong>Алергии:</strong> {user.wardAllergies || "—"}
+              <strong>Алергии:</strong> {user?.wardAllergies || "—"}
             </p>
             <p>
-              <strong>Заболявания:</strong> {user.wardDiseases || "—"}
+              <strong>Заболявания:</strong> {user?.wardDiseases || "—"}
             </p>
           </Col>
         </Row>
@@ -99,19 +78,19 @@ const GuardianPersonalInformation = () => {
 
         {/* Детайли за настойник – ДАННИТЕ ОТ BACKEND */}
         <p>
-          <strong>Име на настойник:</strong> {user.firstName}
+          <strong>Име на настойник:</strong> {user?.firstName}
         </p>
         <p>
-          <strong>Фамилия на настойник:</strong> {user.lastName}
+          <strong>Фамилия на настойник:</strong> {user?.lastName}
         </p>
         <p>
-          <strong>Възраст на настойник:</strong> {user.age}
+          <strong>Възраст на настойник:</strong> {user?.age}
         </p>
         <p>
-          <strong>Имейл:</strong> {user.email}
+          <strong>Имейл:</strong> {user?.email}
         </p>
         <p>
-          <strong>Телефон:</strong> {user.phoneNumber || "—"}
+          <strong>Телефон:</strong> {user?.phoneNumber || "—"}
         </p>
 
         <div className="text-center mt-4">

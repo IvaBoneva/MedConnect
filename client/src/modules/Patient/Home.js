@@ -50,17 +50,15 @@ const Home = () => {
         </motion.div>
       </Card>
 
+      <Button onClick={googleAuthorize} style={{ marginRight: "10px" }}>
+        Press for google authorize
+      </Button>
 
+      <Button onClick={listEvents}>Press to get user's events</Button>
 
-    <Button onClick={googleAuthorize}>
-        press for google authorize /google 
-    </Button>
-
-    <Button onClick={listEvents}>
-        Press to get user's events
-    </Button>
-
-    <br/><br/><br/>
+      <br />
+      <br />
+      <br />
 
       <GoogleCalendarComponent />
     </div>

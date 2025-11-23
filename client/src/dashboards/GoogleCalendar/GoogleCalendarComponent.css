@@ -2,7 +2,7 @@
   background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Calendar background */
@@ -27,15 +27,16 @@
 
 /* Buttons (month / week / day) */
 .calendar-container .fc-button {
-  background: #0d6efd !important;        /* bootstrap primary */
+  background: #0d6efd !important; /* bootstrap primary */
   border: none !important;
   color: white !important;
   border-radius: 6px !important;
   padding: 6px 12px !important;
+  margin-right: 10px;
 }
 
 .calendar-container .fc-button:hover {
-  background: #0b5ed7 !important;        /* darker primary */
+  background: #0b5ed7 !important; /* darker primary */
 }
 
 /* Day cells */

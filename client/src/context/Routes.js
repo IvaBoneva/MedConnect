@@ -21,7 +21,7 @@ const Routes = () => {
   const { user } = useAuth();
   const { token } = useAuth();
 
-  // ✅ Add a small hydration delay so the router waits for AuthContext to initialize
+  // Add a small hydration delay so the router waits for AuthContext to initialize
   const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     setIsReady(true);
