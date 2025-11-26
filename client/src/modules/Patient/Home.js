@@ -51,10 +51,10 @@ const Home = () => {
       </Card>
 
       <Button onClick={googleAuthorize} style={{ marginRight: "10px" }}>
-        Press for google authorize
+        Натиснете за Google оторизация
       </Button>
 
-      <Button onClick={listEvents}>Press to get user's events</Button>
+      <Button onClick={listEvents}>Натиснете за събитията</Button>
 
       <br />
       <br />

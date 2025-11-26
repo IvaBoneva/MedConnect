@@ -28,7 +28,7 @@ const mockDoctors = [
     phone: "0887561422",
     specialty: "Невролог",
     city: "Пловдив",
-    hospital: "Клиника Здраве",
+    hospital: "Клиника Медикус Алфа",
     experience: 20,
     rating: 4.6,
   },

@@ -353,7 +353,7 @@ const DoctorEditInformation = () => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Работно място</Form.Label>
+            <Form.Label>Кабинет</Form.Label>
             <Form.Control
               type="text"
               name="hospital"

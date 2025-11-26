@@ -276,7 +276,7 @@ const PharmacyMap = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Навигирай →
+                    ➜ Навигирай
                   </a>
                 </div>
               ))}

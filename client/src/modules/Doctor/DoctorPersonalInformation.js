@@ -81,7 +81,7 @@ const DoctorPersonalInformation = () => {
           <strong>Град:</strong> {user?.city || "—"}
         </p>
         <p>
-          <strong>Работно място:</strong> {user?.hospital || "—"}
+          <strong>Кабинет:</strong> {user?.hospital || "—"}
         </p>
 
         <div className="text-center mt-4">
