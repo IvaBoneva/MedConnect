@@ -80,3 +80,10 @@ body {
   font-weight: 600;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
+
+@import url("https://unpkg.com/leaflet/dist/leaflet.css");
+
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+}

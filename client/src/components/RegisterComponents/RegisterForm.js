@@ -99,6 +99,8 @@ const RegisterForm = () => {
     if (!/[0-9]/.test(password)) errors.push("Поне една цифра");
     if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password))
       errors.push("Поне един специален символ");
+    if (/[а-яА-Я]/.test(password))
+      errors.push("Паролата не трябва да съдържа кирилица");
     return errors;
   };
 

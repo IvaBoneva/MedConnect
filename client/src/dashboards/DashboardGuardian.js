@@ -11,6 +11,7 @@ import Appointments from "../modules/Patient/Appointments";
 import Storage from "../modules/Patient/Storage";
 import PaymentPage from "../modules/Patient/PaymentPage";
 import SymptomCheck from "../modules/Patient/SymptomCheck";
+import PharmacyMap from "../modules/Patient/Pharmacies";
 import "../App.css";
 import VaccinesAndProfilactics from "../modules/Patient/VaccinesAndProfilactics";
 
@@ -77,6 +78,11 @@ const DashboardGuardian = () => {
                 Имунизации и профилактика
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link as={NavLink} to={`${basePath}/pharmacies_hospitals`}>
+                Болници и аптеки наоколо
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Col>
 
@@ -109,6 +115,7 @@ const DashboardGuardian = () => {
                 />
               }
             />
+            <Route path="pharmacies_hospitals" element={<PharmacyMap />} />
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
         </Col>
