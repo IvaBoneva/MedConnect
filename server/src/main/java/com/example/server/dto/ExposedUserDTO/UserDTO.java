@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -26,6 +25,7 @@ public class UserDTO {
     private String role;
 
     private String subscription = "free";
+    private String subscriptionType;
     private LocalDate subscriptionExpiry;
 
     private LocalDate created_at = LocalDate.now();
