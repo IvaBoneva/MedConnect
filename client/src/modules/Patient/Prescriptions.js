@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const daysOfWeek = [
   "Понеделник",
@@ -23,9 +24,12 @@ const daysOfWeek = [
 
 const Prescriptions = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
     medicine: "",
     dosage: "",
+    doctor: "",
     days: [],
     times: [""],
   });
@@ -63,7 +67,7 @@ const Prescriptions = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  /* const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!formData.medicine || !formData.dosage || !formData.days.length) {
@@ -78,6 +82,64 @@ const Prescriptions = () => {
     setTimeout(() => {
       navigate(`${basePath}/home`);
     }, 2000);
+  };*/
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // ✅ Валидация на формата
+    if (!formData.medicine || !formData.dosage) {
+      setMessage("❌ Моля, въведете лекарство и доза.");
+      return;
+    }
+
+    if (!formData.days.length) {
+      setMessage("❌ Моля, изберете поне един ден.");
+      return;
+    }
+
+    if (!formData.times.length || formData.times.some((t) => !t)) {
+      setMessage("❌ Моля, въведете поне един валиден час.");
+      return;
+    }
+
+    // ✅ Създаваме payload за backend
+    const payload = {
+      medicationName: formData.medicine,
+      dosage: formData.dosage,
+      frequency: formData.days.join(", "), // масив -> CSV стринг
+      prescribingDoctor: formData.doctor || "Не е посочен",
+      takingHour: formData.times.join(", "), // масив -> CSV стринг
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `http://localhost:8080/api/prescriptions/user/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      // ✅ Логваме response за отстраняване на грешки
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Backend error:", data);
+        throw new Error(data.message || "Грешка при запис в базата");
+      }
+
+      setMessage("✅ Предписанието е успешно запазено!");
+      setTimeout(() => navigate(`${basePath}/home`), 2000);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setMessage("❌ Грешка при запис в базата.");
+    }
   };
 
   return (
@@ -120,6 +182,20 @@ const Prescriptions = () => {
                   value={formData.dosage}
                   onChange={(e) =>
                     setFormData({ ...formData, dosage: e.target.value })
+                  }
+                />
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Предписващ лекар</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="doctor"
+                  placeholder="Напр. личен лекар"
+                  value={formData.doctor}
+                  onChange={(e) =>
+                    setFormData({ ...formData, doctor: e.target.value })
                   }
                 />
               </Form.Group>
