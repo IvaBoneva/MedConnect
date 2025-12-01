@@ -1,7 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.dto.SubscriptionRequest;
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import com.example.server.service.UserServices.BaseUserService;
 import com.example.server.service.StripeService;
 import com.stripe.exception.SignatureVerificationException;

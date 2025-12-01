@@ -1,74 +1,93 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Row, Col, InputGroup, Container } from "react-bootstrap";
 import DoctorCard from "./DoctorCard";
 import doctor1 from "../../images/doctor1.jpg";
 import doctor2 from "../../images/doctor2.jpg";
 import doctor3 from "../../images/doctor3.jpg";
+import { getDoctors } from "../../api/doctorApi";
 
-const mockDoctors = [
-  {
-    id: 1,
-    photo: doctor2,
-    fname: "Иван",
-    lname: "Петров",
-    email: "drpetrov@example.com",
-    phone: "0887642143",
-    specialty: "Кардиолог",
-    city: "София",
-    hospital: "Болница Пирогов",
-    experience: 10,
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    photo: doctor1,
-    fname: "Мария",
-    lname: "Георгиева",
-    email: "drmg@example.com",
-    phone: "0887561422",
-    specialty: "Невролог",
-    city: "Пловдив",
-    hospital: "Клиника Здраве",
-    experience: 20,
-    rating: 4.6,
-  },
-  {
-    id: 3,
-    photo: doctor3,
-    fname: "Николай",
-    lname: "Костов",
-    email: "nikkostov@example.com",
-    phone: "0888646913",
-    specialty: "Дерматолог",
-    city: "Варна",
-    hospital: "Болница Света Анна",
-    experience: 12,
-    rating: 4.9,
-  },
-];
+// const mockDoctors = [
+//   {
+//     id: 1,
+//     photo: doctor2,
+//     fname: "Иван",
+//     lname: "Петров",
+//     email: "drpetrov@example.com",
+//     phone: "0887642143",
+//     specialty: "Кардиолог",
+//     city: "София",
+//     hospital: "Болница Пирогов",
+//     experience: 10,
+//     rating: 4.8,
+//   },
+//   {
+//     id: 2,
+//     photo: doctor1,
+//     fname: "Мария",
+//     lname: "Георгиева",
+//     email: "drmg@example.com",
+//     phone: "0887561422",
+//     specialty: "Невролог",
+//     city: "Пловдив",
+//     hospital: "Клиника Здраве",
+//     experience: 20,
+//     rating: 4.6,
+//   },
+//   {
+//     id: 3,
+//     photo: doctor3,
+//     fname: "Николай",
+//     lname: "Костов",
+//     email: "nikkostov@example.com",
+//     phone: "0888646913",
+//     specialty: "Дерматолог",
+//     city: "Варна",
+//     hospital: "Болница Света Анна",
+//     experience: 12,
+//     rating: 4.9,
+//   },
+// ];
 
 const DoctorSearch = ({ onSelectDoctor }) => {
   const [query, setQuery] = useState("");
   const [specialtyFilter, setSpecialtyFilter] = useState("");
   const [cityFilter, setCityFilter] = useState("");
   const [sort, setSort] = useState("");
+  const [mockDoctors, setMockDoctors] = useState([]);
 
-  const filteredDoctors = mockDoctors
-    .filter((doc) =>
-      ("Д-р " + doc.fname + " " + doc.lname)
-        .toLowerCase()
-        .includes(query.toLowerCase())
-    )
-    .filter((doc) =>
-      specialtyFilter ? doc.specialty === specialtyFilter : true
-    )
-    .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
-    .sort((a, b) => {
-      if (sort === "rating") return b.rating - a.rating;
-      if (sort === "fname") return a.fname.localeCompare(b.fname);
-      if (sort === "lname") return a.lname.localeCompare(b.lname);
-      return 0;
-    });
+
+      useEffect(() => {
+    // Make getDoctors() call asynchronous and set mockDoctors correctly
+    const fetchDoctors = async () => {
+      try {
+        const doctors = await getDoctors(); // Get the doctor data from the API
+        setMockDoctors(doctors); // Update the state with the fetched doctors
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        setMockDoctors([]); // Handle the error by setting an empty array if the fetch fails
+      }
+    };
+
+    fetchDoctors(); // Call the function to fetch doctors
+  }, []); // Empty dependency array to run only once when the component mounts
+
+
+//   const filteredDoctors = mockDoctors
+//     .filter((doc) =>
+//       ("Д-р " + doc.fname + " " + doc.lname)
+//         .toLowerCase()
+//         .includes(query.toLowerCase())
+//     )
+//     .filter((doc) =>
+//       specialtyFilter ? doc.specialty === specialtyFilter : true
+//     )
+//     .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
+//     .sort((a, b) => {
+//       if (sort === "rating") return b.rating - a.rating;
+//       if (sort === "fname") return a.fname.localeCompare(b.fname);
+//       if (sort === "lname") return a.lname.localeCompare(b.lname);
+//       return 0;
+//     });
 
   return (
     <Container className="py-3">
@@ -96,8 +115,8 @@ const DoctorSearch = ({ onSelectDoctor }) => {
           {/* Филтър по специалност */}
           <Col md={3}>
             <Form.Select
-              value={specialtyFilter}
-              onChange={(e) => setSpecialtyFilter(e.target.value)}
+            //   value={specialtyFilter}
+            //   onChange={(e) => setSpecialtyFilter(e.target.value)}
             >
               <option value="">Всички специалности</option>
               <option value="Кардиолог">Кардиолог</option>
@@ -109,8 +128,8 @@ const DoctorSearch = ({ onSelectDoctor }) => {
           {/* Филтър по град */}
           <Col md={3}>
             <Form.Select
-              value={cityFilter}
-              onChange={(e) => setCityFilter(e.target.value)}
+            //   value={cityFilter}
+            //   onChange={(e) => setCityFilter(e.target.value)}
             >
               <option value="">Всички градове</option>
               <option value="София">София</option>
@@ -131,13 +150,28 @@ const DoctorSearch = ({ onSelectDoctor }) => {
         </Row>
       </Form>
 
-      <Row>
-        {filteredDoctors.length > 0 ? (
-          filteredDoctors.map((doctor) => (
+      {/* <Row>
+        {mockDoctors.length > 0 ? (
+          mockDoctors.map((doctor) => (
             <Col md={4} key={doctor.id} className="mb-3">
               <DoctorCard
                 doctor={doctor}
-                onSelect={() => onSelectDoctor(doctor)}
+                // onSelect={() => onSelectDoctor(doctor)}
+              />
+            </Col>
+          ))
+        ) : (
+          <p className="text-muted mt-3">Няма намерени резултати.</p>
+         )}
+      </Row> */}
+
+         <Row>
+        {mockDoctors?.length > 0 ? (
+          mockDoctors.map((doctor) => (
+            <Col md={4} key={doctor.id} className="mb-3">
+              <DoctorCard
+                doctor={doctor}
+                // onSelect={() => onSelectDoctor(doctor)}
               />
             </Col>
           ))
@@ -145,6 +179,7 @@ const DoctorSearch = ({ onSelectDoctor }) => {
           <p className="text-muted mt-3">Няма намерени резултати.</p>
         )}
       </Row>
+      
     </Container>
   );
 };

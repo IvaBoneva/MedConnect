@@ -1,6 +1,6 @@
 package com.example.server.service.UserServices;
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import com.example.server.repository.UserRepositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

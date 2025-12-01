@@ -2,9 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57183794-661c-4e38-bd48-c97781d5f4eb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/JwtFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/DoctorComponents/DoctorCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/DoctorComponents/DoctorCard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/DoctorComponents/DoctorSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/DoctorComponents/DoctorSearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/modules/Doctor/DoctorHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/modules/Doctor/DoctorHome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/modules/Patient/Appointments.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/modules/Patient/Appointments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/modules/Patient/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/modules/Patient/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/config/DataSeeder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/controller/GoogleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/controller/GoogleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/controller/UserControllers/DoctorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/controller/UserControllers/DoctorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/dto/ExposedUserDTO/DoctorDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/dto/ExposedUserDTO/DoctorDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Doctor.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Doctor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Guardian.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Guardian.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/models/Patient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/repository/UserRepositories/DoctorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/repository/UserRepositories/DoctorRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/BaseUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/BaseUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/BaseUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/BaseUserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/example/server/service/UserServices/DoctorService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,16 +36,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/MedConnect&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "medconnectv11",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/User/MedConnect"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="MedConnect" />

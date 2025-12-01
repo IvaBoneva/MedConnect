@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Container, Row, Col, Card, Image, Button } from "react-bootstrap";
 import {
   BarChart,
   Bar,
@@ -11,14 +11,20 @@ import {
 import { motion } from "framer-motion";
 import welcomeImage from "../../images/hello_img.png";
 import { useAuth } from "../../context/AuthContext";
+import GoogleCalendarComponent from "../../dashboards/GoogleCalendar/GoogleCalendarComponent";
+import { googleAuthorize, listEvents } from "../../api/googleApi";
+import { getAllWorkDays } from "../../api/doctorApi";
+import { useState } from "react";
 
-const GoogleCalendar = () => (
-  <iframe
-    title="Google Calendar"
-    src="https://calendar.google.com/calendar/embed?src=bg.bulgarian%23holiday%40group.v.calendar.google.com"
-    style={{ border: 0, width: "100%", height: "400px" }}
-  />
-);
+
+// TEST CALENDAR
+// const GoogleCalendar = () => (
+//   <iframe
+//     title="Google Calendar"
+//     src="https://calendar.google.com/calendar/embed?src=bg.bulgarian%23holiday%40group.v.calendar.google.com"
+//     style={{ border: 0, width: "100%", height: "400px" }}
+//   />
+// );
 
 const DoctorHome = () => {
   const { user, isReady } = useAuth();
@@ -68,7 +74,20 @@ const DoctorHome = () => {
         </motion.div>
       </Card>
 
-      <GoogleCalendar />
+      {/* <GoogleCalendar /> */}
+
+      <Button onClick={googleAuthorize}>
+        press for google authorize /google
+      </Button>
+
+      {/* <Button onClick={async () => {
+        await getAllWorkDays(setWorkingDays)
+      }}>
+        press to fetch data for current doctor
+      </Button> */}
+
+      <GoogleCalendarComponent/>
+
       {/* Summary Cards */}
       <Row className="g-4 mt-2 mb-4">
         <Col xs={12} md={4}>

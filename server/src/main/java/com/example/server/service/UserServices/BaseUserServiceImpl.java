@@ -1,6 +1,6 @@
 package com.example.server.service.UserServices;
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import com.example.server.repository.UserRepositories.BaseUserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +21,7 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public T saveUser(T user) throws Exception {

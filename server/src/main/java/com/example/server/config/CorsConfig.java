@@ -17,7 +17,7 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         // This config now correctly applies ONLY to Chain 2 (your API)
                         .allowedOriginPatterns("http://localhost:*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }

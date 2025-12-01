@@ -1,7 +1,7 @@
-package com.example.server.mappers;
+package com.example.server.mappers.UserMappers;
 
 import com.example.server.dto.ExposedUserDTO.PatientDTO;
-import com.example.server.models.Patient;
+import com.example.server.models.UserModels.Patient;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

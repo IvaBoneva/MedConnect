@@ -3,10 +3,10 @@ package com.example.server.controller.UserControllers;
 
 import com.example.server.config.JwtGeneratorInterface;
 import com.example.server.dto.ExposedUserDTO.UserDTO;
-import com.example.server.mappers.PatientMapper;
+import com.example.server.mappers.UserMappers.PatientMapper;
 import com.example.server.mappers.UserDtoFactory;
-import com.example.server.mappers.UserMapper;
-import com.example.server.models.User;
+import com.example.server.mappers.UserMappers.UserMapper;
+import com.example.server.models.UserModels.User;
 import com.example.server.service.UserServices.BaseUserService;
 //import com.example.server.service.UserService.UserService;
 import jakarta.servlet.http.HttpServletRequest;

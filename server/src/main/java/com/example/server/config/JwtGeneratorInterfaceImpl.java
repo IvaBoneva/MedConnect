@@ -1,7 +1,7 @@
 package com.example.server.config;
 
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;

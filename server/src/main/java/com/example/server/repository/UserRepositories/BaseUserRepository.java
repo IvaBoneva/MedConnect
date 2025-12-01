@@ -1,6 +1,6 @@
 package com.example.server.repository.UserRepositories;
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

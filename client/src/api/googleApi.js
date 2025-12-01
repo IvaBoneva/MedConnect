@@ -19,6 +19,5 @@ export const listEvents = () => {
         }
     })
         .then(res => res.json())
-        // .then(console.log);
 
 }

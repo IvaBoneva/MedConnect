@@ -49,6 +49,8 @@ public class SecurityConfig {
                         "/api/user/patient/register",
                         "/api/user/guardian/register",
 
+                        "/api/workDays/allWorkDays",
+
 //                        "/google",
 //                        "/google/callback",
 
@@ -60,6 +62,13 @@ public class SecurityConfig {
 
                         "/auth/me",
 
+
+
+                        "/api/calendar/doctor",
+                        "/api/calendar/doctor/off",
+                        "/api/calendar/doctor/*/exception",
+
+                        "/api/appointments",
 
                         "/guardians",
                         "/api/user/doctor/register",

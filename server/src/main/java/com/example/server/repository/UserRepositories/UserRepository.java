@@ -1,6 +1,6 @@
 package com.example.server.repository.UserRepositories;
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,7 +1,8 @@
 package com.example.server.controller.UserControllers;
 
 
-import com.example.server.models.Doctor;
+import com.example.server.dto.ExposedUserDTO.DoctorDTO;
+import com.example.server.models.UserModels.Doctor;
 import com.example.server.service.UserServices.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,19 @@ public class DoctorController{
         }
     }
 
+//    @GetMapping("/doctors")
+//    public List<Doctor> getTestData(){
+//        return doctorService.getAll();
+//    }
+
     @GetMapping("/doctors")
-    public List<Doctor> getTestData(){
-        return doctorService.getAll();
+    public List<DoctorDTO> getAllDoctorsDTO(){
+        return doctorService.getAllDoctorsDTO();
+    }
+
+    @GetMapping("/doctors/{doctorSlug}")
+    public DoctorDTO getDoctor(@PathVariable String doctorSlug){
+        return doctorService.getDoctorBySlug(doctorSlug);
     }
 
 }

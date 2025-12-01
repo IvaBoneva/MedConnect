@@ -2,7 +2,6 @@
 import { useState } from "react";
 import DoctorSearch from "../../components/DoctorComponents/DoctorSearch";
 import DoctorDetails from "../../components/DoctorComponents/DoctorDetails";
-
 const Appointments = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
 

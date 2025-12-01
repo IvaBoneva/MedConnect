@@ -1,14 +1,12 @@
 package com.example.server.controller;
 
-import com.example.server.models.User;
+import com.example.server.models.UserModels.User;
 import com.example.server.service.JwtService;
 import com.example.server.service.UserServices.BaseUserService;
-import com.example.server.service.GoogleCalendarService;
+import com.example.server.service.CalendarServices.GoogleCalendarService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.services.calendar.model.Event;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -90,7 +88,7 @@ public class GoogleController {
                         "&scope=https://www.googleapis.com/auth/calendar.readonly" +
                         "&access_type=offline" +
                         "&prompt=consent" +
-                        "&state=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
+        "&state=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
 
         response.sendRedirect(url);
     }

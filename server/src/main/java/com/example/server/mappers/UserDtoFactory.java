@@ -1,11 +1,14 @@
 package com.example.server.mappers;
 
-import com.example.server.dto.ExposedUserDTO.DoctorDTO;
 import com.example.server.dto.ExposedUserDTO.UserDTO;
-import com.example.server.models.Doctor;
-import com.example.server.models.Guardian;
-import com.example.server.models.Patient;
-import com.example.server.models.User;
+import com.example.server.mappers.UserMappers.DoctorMapper;
+import com.example.server.mappers.UserMappers.GuardianMapper;
+import com.example.server.mappers.UserMappers.PatientMapper;
+import com.example.server.mappers.UserMappers.UserMapper;
+import com.example.server.models.UserModels.Doctor;
+import com.example.server.models.UserModels.Guardian;
+import com.example.server.models.UserModels.Patient;
+import com.example.server.models.UserModels.User;
 import org.springframework.stereotype.Component;
 
 @Component

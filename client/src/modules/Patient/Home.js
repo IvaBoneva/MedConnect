@@ -56,13 +56,9 @@ const Home = () => {
         press for google authorize /google 
     </Button>
 
-    <Button onClick={listEvents}>
-        Press to get user's events
-    </Button>
-
     <br/><br/><br/>
 
-      <GoogleCalendarComponent />
+      {/* <GoogleCalendarComponent /> */}
     </div>
   );
 };

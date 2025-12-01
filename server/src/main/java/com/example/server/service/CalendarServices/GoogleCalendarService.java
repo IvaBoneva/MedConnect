@@ -1,4 +1,4 @@
-package com.example.server.service;
+package com.example.server.service.CalendarServices;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
