@@ -1,18 +1,15 @@
 import { Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-
-
 const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
 
-  
   const handleSelect = () => {
-    navigate(`/doctor/${doctor.slug}`);
+    navigate(`/dashboard/patient/appointments/doctor/${doctor.slug}`);
   };
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm mb-3">
       <Card.Body>
         <Card.Title>
           {"Д-р " + doctor.firstName + " " + doctor.lastName}
