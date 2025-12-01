@@ -8,6 +8,7 @@ import EditPersonalInformation from "../modules/Patient/EditPersonalInformation"
 import Subscriptions from "../modules/Patient/Subscriptions";
 import Prescriptions from "../modules/Patient/Prescriptions";
 import Appointments from "../modules/Patient/Appointments";
+import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorNewPersonalDetails";
 import Storage from "../modules/Patient/Storage";
 import PaymentPage from "../modules/Patient/PaymentPage";
 import SymptomCheck from "../modules/Patient/SymptomCheck";
@@ -104,6 +105,11 @@ const DashboardPatient = () => {
 
             <Route path="prescriptions" element={<Prescriptions />} />
             <Route path="appointments" element={<Appointments />} />
+            {/* НОВО: детайли на доктор */}
+            <Route
+              path="appointments/doctor/:slug"
+              element={<DoctorNewPersonalDetails />}
+            />
             <Route path="storage" element={<Storage />} />
             <Route path="symptom_check" element={<SymptomCheck />} />
             <Route

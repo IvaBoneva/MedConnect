@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorNewPersonalDetails";
 
-
 const Routes = () => {
   const { user } = useAuth();
   const { token } = useAuth();
@@ -104,12 +103,6 @@ const Routes = () => {
         {
           path: "payment-success",
           element: <PaymentSuccess />,
-        },
-
-// NEWLY ADDED
-        {
-          path: "doctor/:slug",  // Dynamic route with slug
-          element: <DoctorNewPersonalDetails />,  // New component to show doctor details
         },
       ],
     },

@@ -1,4 +1,4 @@
-import { Button, Image } from "react-bootstrap";
+import { Button, Image, Container } from "react-bootstrap";
 import DoctorReviews from "./DoctorReviews";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,34 +19,11 @@ L.Icon.Default.mergeOptions({
 });
 
 export const DoctorNewPersonalDetails = () => {
-  const [coords, setCoords] = useState(null); //   doctor will be loaded through slug
+  const [coords, setCoords] = useState(null);
   const { slug } = useParams();
   const [doctor, setDoctor] = useState(null);
-  const [calendar, setCalendar] = useState([]); // Store the doctor's workdays
+  const [calendar, setCalendar] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  // Търси координати на кабинета
-  useEffect(() => {
-    if (!doctor?.hospital || !doctor?.city) return;
-
-    const fetchCoords = async () => {
-      const query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data?.length > 0) {
-        setCoords({
-          lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon),
-        });
-      }
-    };
-
-    fetchCoords();
-  }, [doctor]);
-
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -58,10 +35,8 @@ export const DoctorNewPersonalDetails = () => {
     setCalendar(updatedDays);
   };
 
-  //   plots time slots of 30 minutes each HARDCODED
   const generateTimeSlots = (start, end, appointments) => {
     if (!start || !end) return [];
-
     const slots = [];
     let current = start.slice(0, 5);
     const endTime = end.slice(0, 5);
@@ -79,7 +54,6 @@ export const DoctorNewPersonalDetails = () => {
       const blocked = appointments?.some(
         (a) => a.start.slice(0, 5) === current
       );
-
       if (!blocked) slots.push(current);
 
       current = nextStr;
@@ -90,7 +64,6 @@ export const DoctorNewPersonalDetails = () => {
 
   const transformedCalendar = calendar.map((day) => {
     const dateObj = new Date(day.date);
-
     const weekdayNames = [
       "неделя",
       "понеделник",
@@ -100,7 +73,6 @@ export const DoctorNewPersonalDetails = () => {
       "петък",
       "събота",
     ];
-
     return {
       weekday: weekdayNames[dateObj.getDay()],
       date: day.date.split("-").reverse().join("."),
@@ -114,12 +86,8 @@ export const DoctorNewPersonalDetails = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // 1. Load doctor
         const doctorData = await getDoctorBySlug(slug);
         setDoctor(doctorData);
-
-        // 2. Load calendar automatically
         const workdays = await getAllWorkDays();
         setCalendar(workdays);
       } catch (err) {
@@ -128,23 +96,39 @@ export const DoctorNewPersonalDetails = () => {
         setLoading(false);
       }
     };
-
     fetchData();
   }, [slug]);
   
 
-  if (!doctor) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (!doctor?.hospital || !doctor?.city) return;
+
+    const fetchCoords = async () => {
+      const query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
+      );
+      const data = await res.json();
+      if (data?.length > 0) {
+        setCoords({
+          lat: parseFloat(data[0].lat),
+          lon: parseFloat(data[0].lon),
+        });
+      }
+    };
+
+    fetchCoords();
+  }, [doctor]);
+
+  if (!doctor) return <div>Loading...</div>;
 
   return (
-    <>
+    <Container className="py-3">
       <Button variant="secondary" className="mb-3" onClick={handleBack}>
         ← Назад към търсачката
       </Button>
 
       <div className="p-4 bg-light rounded shadow-sm mb-4 d-flex align-items-center">
-        {/* Снимка на лекаря */}
         <Image
           src={doctor.photo}
           alt={"Д-р " + doctor.fname + " " + doctor.lname}
@@ -160,7 +144,6 @@ export const DoctorNewPersonalDetails = () => {
             overflow: "hidden",
           }}
         />
-
         <div>
           <h4>{"Д-р " + doctor.firstName + " " + doctor.lastName}</h4>
           <p>{doctor.specialization}</p>
@@ -181,7 +164,6 @@ export const DoctorNewPersonalDetails = () => {
 
       <div className="mb-4">
         <h5>🗺️ Местоположение на кабинета</h5>
-
         {coords ? (
           <div
             style={{
@@ -197,7 +179,6 @@ export const DoctorNewPersonalDetails = () => {
               style={{ width: "100%", height: "100%" }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
               <Marker position={[coords.lat, coords.lon]}>
                 <Popup>
                   <b>{doctor.hospital}</b> <br />
@@ -227,6 +208,6 @@ export const DoctorNewPersonalDetails = () => {
       )}
 
       <DoctorReviews doctorId={doctor.id} />
-    </>
+    </Container>
   );
 };

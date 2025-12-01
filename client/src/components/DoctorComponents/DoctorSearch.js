@@ -1,147 +1,55 @@
 import { useEffect, useState } from "react";
 import { Form, Row, Col, InputGroup, Container } from "react-bootstrap";
 import DoctorCard from "./DoctorCard";
-import doctor1 from "../../images/doctor1.jpg";
-import doctor2 from "../../images/doctor2.jpg";
-import doctor3 from "../../images/doctor3.jpg";
 import { getDoctors } from "../../api/doctorApi";
 
-// const mockDoctors = [
-//   {
-//     id: 1,
-//     photo: doctor2,
-//     fname: "Иван",
-//     lname: "Петров",
-//     email: "drpetrov@example.com",
-//     phone: "0887642143",
-//     specialty: "Кардиолог",
-//     city: "София",
-//     hospital: "Болница Пирогов",
-//     experience: 10,
-//     rating: 4.8,
-//   },
-//   {
-//     id: 2,
-//     photo: doctor1,
-//     fname: "Мария",
-//     lname: "Георгиева",
-//     email: "drmg@example.com",
-//     phone: "0887561422",
-//     specialty: "Невролог",
-//     city: "Пловдив",
-//     hospital: "Клиника Здраве",
-//     experience: 20,
-//     rating: 4.6,
-//   },
-//   {
-//     id: 3,
-//     photo: doctor3,
-//     fname: "Николай",
-//     lname: "Костов",
-//     email: "nikkostov@example.com",
-//     phone: "0888646913",
-//     specialty: "Дерматолог",
-//     city: "Варна",
-//     hospital: "Болница Света Анна",
-//     experience: 12,
-//     rating: 4.9,
-//   },
-// ];
-const mockDoctors = [
-  {
-    id: 1,
-    photo: doctor2,
-    fname: "Иван",
-    lname: "Петров",
-    email: "drpetrov@example.com",
-    phone: "0887642143",
-    specialty: "Кардиолог",
-    city: "София",
-    hospital: "Болница Пирогов",
-    experience: 10,
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    photo: doctor1,
-    fname: "Мария",
-    lname: "Георгиева",
-    email: "drmg@example.com",
-    phone: "0887561422",
-    specialty: "Невролог",
-    city: "Пловдив",
-    hospital: "Клиника Медикус Алфа",
-    experience: 20,
-    rating: 4.6,
-  },
-  {
-    id: 3,
-    photo: doctor3,
-    fname: "Николай",
-    lname: "Костов",
-    email: "nikkostov@example.com",
-    phone: "0888646913",
-    specialty: "Дерматолог",
-    city: "Варна",
-    hospital: "Болница Света Анна",
-    experience: 12,
-    rating: 4.9,
-  },
-];
-
-const DoctorSearch = ({ onSelectDoctor }) => {
+const DoctorSearch = () => {
   const [query, setQuery] = useState("");
   const [specialtyFilter, setSpecialtyFilter] = useState("");
   const [cityFilter, setCityFilter] = useState("");
   const [sort, setSort] = useState("");
-  const [mockDoctors, setMockDoctors] = useState([]);
+  const [doctors, setDoctors] = useState([]);
 
-
-      useEffect(() => {
-    // Make getDoctors() call asynchronous and set mockDoctors correctly
+  useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const doctors = await getDoctors(); // Get the doctor data from the API
-        setMockDoctors(doctors); // Update the state with the fetched doctors
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-        setMockDoctors([]); // Handle the error by setting an empty array if the fetch fails
+        const data = await getDoctors();
+        setDoctors(data);
+      } catch (err) {
+        console.error("Error fetching doctors:", err);
+        setDoctors([]);
       }
     };
 
-    fetchDoctors(); // Call the function to fetch doctors
-  }, []); // Empty dependency array to run only once when the component mounts
+    fetchDoctors();
+  }, []);
 
-
-//   const filteredDoctors = mockDoctors
-//     .filter((doc) =>
-//       ("Д-р " + doc.fname + " " + doc.lname)
-//         .toLowerCase()
-//         .includes(query.toLowerCase())
-//     )
-//     .filter((doc) =>
-//       specialtyFilter ? doc.specialty === specialtyFilter : true
-//     )
-//     .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
-//     .sort((a, b) => {
-//       if (sort === "rating") return b.rating - a.rating;
-//       if (sort === "fname") return a.fname.localeCompare(b.fname);
-//       if (sort === "lname") return a.lname.localeCompare(b.lname);
-//       return 0;
-//     });
+  const filteredDoctors = doctors
+    .filter((doc) =>
+      ("Д-р " + doc.fname + " " + doc.lname)
+        .toLowerCase()
+        .includes(query.toLowerCase())
+    )
+    .filter((doc) =>
+      specialtyFilter ? doc.specialty === specialtyFilter : true
+    )
+    .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
+    .sort((a, b) => {
+      if (sort === "rating") return b.rating - a.rating;
+      if (sort === "fname") return a.fname.localeCompare(b.fname);
+      if (sort === "lname") return a.lname.localeCompare(b.lname);
+      return 0;
+    });
 
   return (
     <Container className="py-3">
       <h3 className="mb-4 text-success">Търсене на лекар</h3>
       <Form className="mb-4">
         <Row className="g-2 align-items-center">
-          {/* Поле за търсене с иконка */}
           <Col md={4}>
             <InputGroup>
               <InputGroup.Text className="bg-white border-end-0">
-                <span role="img" aria-label="лупа">
-                  🔍
-                </span>
+                🔍
               </InputGroup.Text>
               <Form.Control
                 type="text"
@@ -153,11 +61,10 @@ const DoctorSearch = ({ onSelectDoctor }) => {
             </InputGroup>
           </Col>
 
-          {/* Филтър по специалност */}
           <Col md={3}>
             <Form.Select
-            //   value={specialtyFilter}
-            //   onChange={(e) => setSpecialtyFilter(e.target.value)}
+              value={specialtyFilter}
+              onChange={(e) => setSpecialtyFilter(e.target.value)}
             >
               <option value="">Всички специалности</option>
               <option value="Кардиолог">Кардиолог</option>
@@ -166,11 +73,10 @@ const DoctorSearch = ({ onSelectDoctor }) => {
             </Form.Select>
           </Col>
 
-          {/* Филтър по град */}
           <Col md={3}>
             <Form.Select
-            //   value={cityFilter}
-            //   onChange={(e) => setCityFilter(e.target.value)}
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
             >
               <option value="">Всички градове</option>
               <option value="София">София</option>
@@ -179,7 +85,6 @@ const DoctorSearch = ({ onSelectDoctor }) => {
             </Form.Select>
           </Col>
 
-          {/* Сортиране */}
           <Col md={2}>
             <Form.Select value={sort} onChange={(e) => setSort(e.target.value)}>
               <option value="">Без сортиране</option>
@@ -191,36 +96,17 @@ const DoctorSearch = ({ onSelectDoctor }) => {
         </Row>
       </Form>
 
-      {/* <Row>
-        {mockDoctors.length > 0 ? (
-          mockDoctors.map((doctor) => (
+      <Row>
+        {filteredDoctors.length > 0 ? (
+          filteredDoctors.map((doctor) => (
             <Col md={4} key={doctor.id} className="mb-3">
-              <DoctorCard
-                doctor={doctor}
-                // onSelect={() => onSelectDoctor(doctor)}
-              />
-            </Col>
-          ))
-        ) : (
-          <p className="text-muted mt-3">Няма намерени резултати.</p>
-         )}
-      </Row> */}
-
-         <Row>
-        {mockDoctors?.length > 0 ? (
-          mockDoctors.map((doctor) => (
-            <Col md={4} key={doctor.id} className="mb-3">
-              <DoctorCard
-                doctor={doctor}
-                // onSelect={() => onSelectDoctor(doctor)}
-              />
+              <DoctorCard doctor={doctor} />
             </Col>
           ))
         ) : (
           <p className="text-muted mt-3">Няма намерени резултати.</p>
         )}
       </Row>
-      
     </Container>
   );
 };
