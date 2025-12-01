@@ -25,7 +25,7 @@ const DoctorEditInformation = () => {
     email: user.email,
     phone: user.phoneNumber,
     speciality: user.specialization,
-    experience: user.experience,
+    experience: user.yearsOfExperience,
     city: user.city,
     hospital: user.hospital,
   });

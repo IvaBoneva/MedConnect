@@ -75,7 +75,7 @@ const DoctorPersonalInformation = () => {
           <strong>Специализация:</strong> {user?.specialization || "—"}
         </p>
         <p>
-          <strong>Опит (години):</strong> {user?.experience || "—"}
+          <strong>Опит (години):</strong> {user?.yearsOfExperience || "—"}
         </p>
         <p>
           <strong>Град:</strong> {user?.city || "—"}
