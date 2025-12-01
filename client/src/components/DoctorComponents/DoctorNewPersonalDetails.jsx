@@ -131,6 +131,7 @@ export const DoctorNewPersonalDetails = () => {
 
     fetchData();
   }, [slug]);
+  
 
   if (!doctor) {
     return <div>Loading...</div>;
@@ -176,6 +177,7 @@ export const DoctorNewPersonalDetails = () => {
           </p>
         </div>
       </div>
+
 
       <div className="mb-4">
         <h5>🗺️ Местоположение на кабинета</h5>

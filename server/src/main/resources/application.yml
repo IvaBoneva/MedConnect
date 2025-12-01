@@ -54,3 +54,9 @@ stripe:
     key: ${STRIPE_API_KEY:sk_test_51SQ6KgRTNyC3ef1LCsrHEozs5KNspvoquqkdbdelzul7OaiWuSLkEI60fvSIDjXkrVcnTXHE6fdybLy3Fesumrl800TczDkQ20}
   webhook:
     secret: ${STRIPE_WEBHOOK_SECRET:whsec_cfbc863d3fcf144520d1bd827463a337a0121a3f13a504875143879b6dff79df}
+
+twilio:
+  account:
+    sid: ${TWILIO_ACCOUNT_SID:ACaae86548392419ad5c02c6764615c428}
+    auth-token: ${TWILIO_AUTH_TOKEN:d5c58b8cd456a0951fd44e608cbe4262}
+    phone-number: ${TWILIO_PHONE_NUMBER:+16594002450}
