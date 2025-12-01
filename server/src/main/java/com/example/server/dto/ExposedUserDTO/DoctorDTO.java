@@ -25,5 +25,5 @@ public class DoctorDTO extends UserDTO{
 
     private String slug;
 
-
+    private String hospital;
 }

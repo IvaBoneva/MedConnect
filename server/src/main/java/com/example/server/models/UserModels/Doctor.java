@@ -25,9 +25,7 @@ public class Doctor extends User {
 
     private String slug;
 
-//    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    private Set<WorkDaySchedule> workDayScheduleSet = new HashSet<>();
+    private String hospital;
 
     @PrePersist
     public void generateSlug() {
@@ -35,11 +33,5 @@ public class Doctor extends User {
         this.slug = (this.getFirstName() + "-" + this.getLastName() + "-" + UUID.randomUUID().toString()).toLowerCase().replaceAll("[^a-z0-9-]", "-");
     }
 
-//    @JsonProperty("workDayScheduleIds")  // The name you want to use in JSON response
-//    public Set<Long> getWorkDayScheduleIds() {
-//        return workDayScheduleSet.stream()
-//                .map(WorkDaySchedule::getId)  // Assuming WorkDaySchedule has an `id` field
-//                .collect(Collectors.toSet());
-//    }
 
 }

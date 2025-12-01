@@ -105,6 +105,7 @@ public class DataSeeder {
                 doctor1.setRating(4.5F);
                 doctor1.setCity("Sofia");
                 doctor1.setYearsOfExperience(10);
+                doctor1.setHospital("Pirogov Hospital");
                 doctorRepository.save(doctor1);
 
                 Doctor doctor2 = new Doctor();
