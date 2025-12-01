@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -10,19 +9,19 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const refreshUser = async () => {
-  if (!token) return;
+    if (!token) return;
 
-  const res = await fetch("http://localhost:8080/api/user/auth/me", {
-    headers: {
-      "Authorization": `Bearer ${token}`
+    const res = await fetch("http://localhost:8080/api/user/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setAuthData(token, data);
     }
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    setAuthData(token, data);
-  }
-};
+  };
 
   useEffect(() => {
     let storedToken = localStorage.getItem("token");
@@ -59,7 +58,15 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-    const contextValue = { token, user, isReady, setAuthData, setToken, setUser, refreshUser };
+  const contextValue = {
+    token,
+    user,
+    isReady,
+    setAuthData,
+    setToken,
+    setUser,
+    refreshUser,
+  };
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
