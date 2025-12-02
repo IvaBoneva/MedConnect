@@ -107,14 +107,14 @@ const DashboardGuardian = () => {
 
             <Route path="prescriptions" element={<Prescriptions />} />
             <Route path="appointments" element={<Appointments />} />
-            <Route path="storage" element={<Storage />} />
+            <Route path="storage" element={<Storage userId={user?.id} />} />
             <Route path="symptom_check" element={<SymptomCheck />} />
             <Route
               path="vaccines_profilactics"
               element={
                 <VaccinesAndProfilactics
                   isPremium={false} // за development
-                  patientAge={user?.age}
+                  patientAge={user?.wardAge}
                   userId={user?.id}
                 />
               }

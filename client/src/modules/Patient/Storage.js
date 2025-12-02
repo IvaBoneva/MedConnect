@@ -2,23 +2,22 @@ import { useState, useEffect, useRef } from "react";
 import { Container, Table, Button, Form } from "react-bootstrap";
 import { FileDown, FileText, Printer } from "lucide-react";
 
-const Storage = () => {
+const Storage = ({ userId }) => {
+  const [files, setFiles] = useState(() => {
+    const saved = localStorage.getItem(`patient_files-${userId}`);
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [newFiles, setNewFiles] = useState([]);
+  const fileInputRef = useRef(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [droppedFilesNames, setDroppedFilesNames] = useState([]);
   const [dropSuccess, setDropSuccess] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0); // 0–100%
 
-  const [files, setFiles] = useState(() => {
-    const saved = localStorage.getItem("patient_files");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [newFiles, setNewFiles] = useState([]);
-  const fileInputRef = useRef(null);
-
+  // Запис в localStorage само за текущия user
   useEffect(() => {
-    localStorage.setItem("patient_files", JSON.stringify(files));
-  }, [files]);
+    localStorage.setItem(`patient_files-${userId}`, JSON.stringify(files));
+  }, [files, userId]);
 
   const handleUpload = () => {
     if (!newFiles || newFiles.length === 0) return;
@@ -50,7 +49,6 @@ const Storage = () => {
             setNewFiles([]);
             if (fileInputRef.current) fileInputRef.current.value = "";
 
-            // ако всички файлове са качени, изчисти прогрес бара
             if (completedFiles === totalFiles) {
               setTimeout(() => setUploadProgress(0), 300);
             }
