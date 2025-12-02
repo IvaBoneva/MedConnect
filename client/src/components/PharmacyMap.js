@@ -9,6 +9,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 // Икони
 delete L.Icon.Default.prototype._getIconUrl;
+
 const pharmacyIcon = new L.Icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -17,11 +18,20 @@ const pharmacyIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+const selectedIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", // примерна икона за избрано
+  iconRetinaUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+  shadowUrl: markerShadow,
+  iconSize: [35, 45],
+  iconAnchor: [17, 45],
+});
+
 const PharmacyMap = () => {
   const [coords, setCoords] = useState({ lat: 42.6977, lng: 23.3219 }); // Default София
   const [pharmacies, setPharmacies] = useState([]);
   const [hospitals, setHospitals] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+  const [selectedHospital, setSelectedHospital] = useState(null);
   const [gpsEnabled, setGpsEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -226,10 +236,13 @@ const PharmacyMap = () => {
                   key={`ph-${i}`}
                   style={{
                     ...sidebarItemStyle,
-                    background: selected === i ? "#f0f8ff" : "white",
+                    background: selectedPharmacy === i ? "#f0f8ff" : "white",
                     borderColor: "#2e8b57",
                   }}
-                  onClick={() => setSelected(i)}
+                  onClick={() => {
+                    setSelectedPharmacy(i);
+                    setSelectedHospital(null);
+                  }}
                 >
                   <strong>{p.display_name.split(",")[0]}</strong>
                   <br />
@@ -256,10 +269,13 @@ const PharmacyMap = () => {
                   key={`h-${i}`}
                   style={{
                     ...sidebarItemStyle,
-                    background: selected === i ? "#f0f8ff" : "white",
+                    background: selectedHospital === i ? "#f0f8ff" : "white",
                     borderColor: "#2e8b57",
                   }}
-                  onClick={() => setSelected(i)}
+                  onClick={() => {
+                    setSelectedHospital(i);
+                    setSelectedPharmacy(null);
+                  }}
                 >
                   <strong>{h.display_name.split(",")[0]}</strong>
                   <br />
@@ -295,7 +311,7 @@ const PharmacyMap = () => {
               <Marker
                 key={`ph-${i}`}
                 position={[p.lat, p.lon]}
-                icon={pharmacyIcon}
+                icon={selectedPharmacy === i ? selectedIcon : pharmacyIcon}
               >
                 <Popup>
                   <strong>{p.display_name}</strong>
@@ -310,7 +326,7 @@ const PharmacyMap = () => {
               <Marker
                 key={`h-${i}`}
                 position={[h.lat, h.lon]}
-                icon={pharmacyIcon}
+                icon={selectedHospital === i ? selectedIcon : pharmacyIcon}
               >
                 <Popup>
                   <strong>{h.display_name}</strong>
@@ -320,8 +336,15 @@ const PharmacyMap = () => {
               </Marker>
             ))}
 
-            {selected !== null && (
-              <FlyToMarker pos={pharmacies[selected] || hospitals[selected]} />
+            {/* Fly to selected */}
+            {(selectedPharmacy !== null || selectedHospital !== null) && (
+              <FlyToMarker
+                pos={
+                  selectedPharmacy !== null
+                    ? pharmacies[selectedPharmacy]
+                    : hospitals[selectedHospital]
+                }
+              />
             )}
           </MapContainer>
         </div>
