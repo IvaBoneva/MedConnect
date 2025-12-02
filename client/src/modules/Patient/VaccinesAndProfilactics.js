@@ -1,10 +1,26 @@
 import { useState, useEffect } from "react";
-import { Container, Table, Button, Alert, Card } from "react-bootstrap";
+import { Container, Table, Button, Alert, Card, Form } from "react-bootstrap";
 
-const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
+const VaccinesAndProfilactics = ({ isPremium, patientAge, userId }) => {
   const [vaccines, setVaccines] = useState([]);
   const [profilactics, setProfilactics] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [checkedItems, setCheckedItems] = useState({});
+
+  const storageKey = `checkedItems-${userId}`; // уникален ключ за потребителя
+
+  // Зареждане на отметките при зареждане на компонента
+  useEffect(() => {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      setCheckedItems(JSON.parse(saved));
+    }
+  }, [storageKey]);
+
+  // Съхраняване на отметките при промяна
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(checkedItems));
+  }, [checkedItems, storageKey]);
 
   // Зареждане на ваксини
   useEffect(() => {
@@ -26,25 +42,28 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
         .then((res) => res.json())
         .then((data) => {
           let groupFiltered;
-
           if (patientAge < 18) {
-            // само детски
             groupFiltered = data.filter((p) => p.age < 18);
           } else {
-            // само за възрастни
             groupFiltered = data.filter((p) => p.age >= 18);
           }
-
-          // втората проверка — да не показва бъдещи прегледи
           const finalFiltered = groupFiltered.filter(
             (p) => p.age <= patientAge
           );
-
           setProfilactics(finalFiltered);
         })
         .catch((err) => console.error("Failed to load profilactics:", err));
     }
   }, [isPremium, patientAge]);
+
+  // Обработка на checkbox
+  const handleCheck = (type, age, index) => {
+    const key = `${type}-${age}-${index}`;
+    setCheckedItems((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   if (!isPremium) {
     return (
@@ -69,7 +88,7 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
         Имунизации и профилактични прегледи
       </h3>
 
-      {/* PDF секция с плавно показване/скриване */}
+      {/* PDF секция */}
       <Card className="mb-5 p-3 shadow-sm text-center">
         <h5 style={{ color: "#2E8B57", marginBottom: "15px" }}>
           Национален имунизационен календар (PDF)
@@ -119,7 +138,23 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
               {vaccines.map((v, i) => (
                 <tr key={i}>
                   <td>{v.age} години</td>
-                  <td>{v.vaccines.join(", ")}</td>
+                  <td>
+                    <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+                      {v.vaccines.map((vac, j) => {
+                        const key = `vaccine-${v.age}-${j}`;
+                        return (
+                          <li key={j}>
+                            <Form.Check
+                              type="checkbox"
+                              label={vac}
+                              checked={!!checkedItems[key]}
+                              onChange={() => handleCheck("vaccine", v.age, j)}
+                            />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -145,10 +180,20 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge }) => {
                 <tr key={i}>
                   <td>{p.age}+</td>
                   <td>
-                    <ul>
-                      {p.checks.map((check, j) => (
-                        <li key={j}>{check}</li>
-                      ))}
+                    <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+                      {p.checks.map((check, j) => {
+                        const key = `check-${p.age}-${j}`;
+                        return (
+                          <li key={j}>
+                            <Form.Check
+                              type="checkbox"
+                              label={check}
+                              checked={!!checkedItems[key]}
+                              onChange={() => handleCheck("check", p.age, j)}
+                            />
+                          </li>
+                        );
+                      })}
                     </ul>
                   </td>
                 </tr>

@@ -14,12 +14,15 @@ import SymptomCheck from "../modules/Patient/SymptomCheck";
 import PharmacyMap from "../modules/Patient/Pharmacies";
 import "../App.css";
 import VaccinesAndProfilactics from "../modules/Patient/VaccinesAndProfilactics";
+import { useAuth } from "../context/AuthContext";
 
 const DashboardGuardian = () => {
   const location = useLocation();
   const basePath = location.pathname.startsWith("/test")
     ? "/test/guardian"
     : "/dashboard/guardian";
+
+  const { user } = useAuth();
 
   return (
     <Container fluid className="mt-3">
@@ -111,7 +114,8 @@ const DashboardGuardian = () => {
               element={
                 <VaccinesAndProfilactics
                   isPremium={false} // за development
-                  patientAge={20}
+                  patientAge={user?.age}
+                  userId={user?.id}
                 />
               }
             />
