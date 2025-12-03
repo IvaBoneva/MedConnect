@@ -1,6 +1,9 @@
 package com.example.server.controller.UserControllers;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,5 +36,18 @@ public class PrescriptionController {
 
         return ResponseEntity.ok(prescriptionDTO);
     }
+
+    @GetMapping("/user/{userId}")
+public ResponseEntity<List<PrescriptionDTO>> getPrescriptionsByUserId(@PathVariable Long userId) {
+
+    List<Prescription> prescriptions = prescriptionService.getPrescriptionsByUserId(userId);
+
+    List<PrescriptionDTO> dtoList = prescriptions.stream()
+            .map(prescriptionMapper::convertToDTO)
+            .toList();
+
+    return ResponseEntity.ok(dtoList);
+}
+
 
 }

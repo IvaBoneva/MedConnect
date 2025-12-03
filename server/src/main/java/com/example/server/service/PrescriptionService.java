@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -30,4 +31,9 @@ public class PrescriptionService {
 
         return prescriptionRepository.save(prescription);
     }
+
+    public List<Prescription> getPrescriptionsByUserId(Long userId) {
+    return prescriptionRepository.findByUserId(userId);
+}
+
 }

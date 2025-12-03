@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Button,
@@ -8,8 +8,7 @@ import {
   Col,
   Alert,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const daysOfWeek = [
@@ -24,7 +23,12 @@ const daysOfWeek = [
 
 const Prescriptions = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
+
+  const basePath = location.pathname.startsWith("/test")
+    ? "/test/patient"
+    : "/dashboard/patient";
 
   const [formData, setFormData] = useState({
     medicine: "",
@@ -34,13 +38,50 @@ const Prescriptions = () => {
     times: [""],
   });
 
-  const location = useLocation();
-  const basePath = location.pathname.startsWith("/test")
-    ? "/test/patient"
-    : "/dashboard/patient";
-
   const [message, setMessage] = useState("");
 
+  // ----------------------------
+  // Нови state-ове
+  // ----------------------------
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ----------------------------
+  // Зареждане на предписания
+  // ----------------------------
+  const loadPrescriptions = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `http://localhost:8080/api/prescriptions/user/${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Error loading prescriptions:", data);
+        return;
+      }
+
+      setPrescriptions(data);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) loadPrescriptions();
+  }, [user]);
+
+  // ----------------------------
+  // Функции за формата
+  // ----------------------------
   const handleDayToggle = (day) => {
     setFormData((prev) => ({
       ...prev,
@@ -56,6 +97,18 @@ const Prescriptions = () => {
     setFormData({ ...formData, times: updatedTimes });
   };
 
+  // Добавете тази функция в компонентa Prescriptions
+  const handleReset = () => {
+    setFormData({
+      medicine: "",
+      dosage: "",
+      doctor: "",
+      days: [],
+      times: [""],
+    });
+    setMessage(""); // ако искате да изчистите и съобщенията
+  };
+
   const addTimeField = () => {
     setFormData({ ...formData, times: [...formData.times, ""] });
   };
@@ -67,27 +120,12 @@ const Prescriptions = () => {
     });
   };
 
-  /* const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!formData.medicine || !formData.dosage || !formData.days.length) {
-      setMessage("❌ Моля, попълнете всички задължителни полета.");
-      return;
-    }
-
-    setMessage("✅ Предписанието е успешно запазено!");
-    console.log("Записано предписание:", formData);
-
-    // След 2 сек — връщаме към home
-    setTimeout(() => {
-      navigate(`${basePath}/home`);
-    }, 2000);
-  };*/
-
+  // ----------------------------
+  // Submit на ново предписание
+  // ----------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Валидация на формата
     if (!formData.medicine || !formData.dosage) {
       setMessage("❌ Моля, въведете лекарство и доза.");
       return;
@@ -103,13 +141,12 @@ const Prescriptions = () => {
       return;
     }
 
-    // ✅ Създаваме payload за backend
     const payload = {
       medicationName: formData.medicine,
       dosage: formData.dosage,
-      frequency: formData.days.join(", "), // масив -> CSV стринг
+      frequency: formData.days.join(", "),
       prescribingDoctor: formData.doctor || "Не е посочен",
-      takingHour: formData.times.join(", "), // масив -> CSV стринг
+      takingHour: formData.times.join(", "),
     };
 
     try {
@@ -127,15 +164,17 @@ const Prescriptions = () => {
         }
       );
 
-      // ✅ Логваме response за отстраняване на грешки
       const data = await res.json();
+
       if (!res.ok) {
         console.error("Backend error:", data);
         throw new Error(data.message || "Грешка при запис в базата");
       }
 
       setMessage("✅ Предписанието е успешно запазено!");
-      setTimeout(() => navigate(`${basePath}/home`), 2000);
+
+      // Обновяване на списъка след добавяне
+      await loadPrescriptions();
     } catch (err) {
       console.error("Fetch error:", err);
       setMessage("❌ Грешка при запис в базата.");
@@ -156,6 +195,9 @@ const Prescriptions = () => {
           </Alert>
         )}
 
+        {/* ------------------------------------ */}
+        {/* FORM */}
+        {/* ------------------------------------ */}
         <Form onSubmit={handleSubmit}>
           <Row>
             <Col md={6}>
@@ -163,7 +205,6 @@ const Prescriptions = () => {
                 <Form.Label>Лекарство</Form.Label>
                 <Form.Control
                   type="text"
-                  name="medicine"
                   placeholder="Въведете име на лекарството"
                   value={formData.medicine}
                   onChange={(e) =>
@@ -172,12 +213,12 @@ const Prescriptions = () => {
                 />
               </Form.Group>
             </Col>
+
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Доза / Количество</Form.Label>
                 <Form.Control
                   type="text"
-                  name="dosage"
                   placeholder="Напр. 1 таблетка"
                   value={formData.dosage}
                   onChange={(e) =>
@@ -186,12 +227,12 @@ const Prescriptions = () => {
                 />
               </Form.Group>
             </Col>
+
             <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Предписващ лекар</Form.Label>
                 <Form.Control
                   type="text"
-                  name="doctor"
                   placeholder="Напр. личен лекар"
                   value={formData.doctor}
                   onChange={(e) =>
@@ -202,7 +243,7 @@ const Prescriptions = () => {
             </Col>
           </Row>
 
-          {/* Избор на дни */}
+          {/* ДНИ */}
           <Form.Group className="mb-3">
             <Form.Label>Изберете дни на прием</Form.Label>
             <Row>
@@ -219,7 +260,7 @@ const Prescriptions = () => {
             </Row>
           </Form.Group>
 
-          {/* Избор на часове */}
+          {/* ЧАСОВЕ */}
           <Form.Group className="mb-3">
             <Form.Label>Часове на прием</Form.Label>
             {formData.times.map((time, index) => (
@@ -253,12 +294,59 @@ const Prescriptions = () => {
           </Form.Group>
 
           <div className="text-center mt-4">
-            <Button variant="success" type="submit" className="px-4">
+            <Button variant="success" type="submit" className="px-4 me-2">
               💾 Запази
+            </Button>
+            <Button
+              variant="secondary"
+              type="button"
+              className="px-4 mx-4"
+              onClick={handleReset}
+            >
+              🗑️ Изчисти
             </Button>
           </div>
         </Form>
       </Card>
+
+      {/* ------------------------------------ */}
+      {/* 📌 СПИСЪК С ПРЕДПИСАНИЯ */}
+      {/* ------------------------------------ */}
+      <h4 className="mt-5 mb-3">📋 Вашите предписания</h4>
+
+      {loading ? (
+        <p>Зареждане...</p>
+      ) : prescriptions.length === 0 ? (
+        <Alert variant="info">Нямате добавени предписания.</Alert>
+      ) : (
+        <Row>
+          {prescriptions.map((item) => (
+            <Col md={6} lg={4} key={item.id} className="mb-4">
+              <Card className="shadow-sm">
+                <Card.Body>
+                  <Card.Title>💊 {item.medicationName}</Card.Title>
+
+                  <p>
+                    <strong>Доза:</strong> {item.dosage}
+                  </p>
+
+                  <p>
+                    <strong>Дни:</strong> {item.frequency}
+                  </p>
+
+                  <p>
+                    <strong>Часове:</strong> {item.takingHour}
+                  </p>
+
+                  <p>
+                    <strong>Лекар:</strong> {item.prescribingDoctor}
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 };
