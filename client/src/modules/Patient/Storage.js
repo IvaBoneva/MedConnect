@@ -1,12 +1,13 @@
-import { useState, useEffect, useRef } from "react";
 import { Container, Table, Button, Form } from "react-bootstrap";
 import { FileDown, FileText, Printer } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 const Storage = ({ userId }) => {
   const [files, setFiles] = useState(() => {
     const saved = localStorage.getItem(`patient_files-${userId}`);
     return saved ? JSON.parse(saved) : [];
   });
+
   const [newFiles, setNewFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -49,6 +50,7 @@ const Storage = ({ userId }) => {
             setNewFiles([]);
             if (fileInputRef.current) fileInputRef.current.value = "";
 
+            // ако всички файлове са качени, изчисти прогрес бара
             if (completedFiles === totalFiles) {
               setTimeout(() => setUploadProgress(0), 300);
             }
