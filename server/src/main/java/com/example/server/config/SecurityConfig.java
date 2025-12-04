@@ -54,6 +54,7 @@ public class SecurityConfig {
 //                        "/google",
 //                        "/google/callback",
 
+
                         "/google",
                         "/google/*",
                         "/google/**",
@@ -69,6 +70,8 @@ public class SecurityConfig {
                         "/api/calendar/doctor/*/exception",
 
                         "/api/appointments",
+                        "/api/appointments/pastUserAppointments",
+                        "/api/appointments/**",
 
                         "/guardians",
                         "/api/user/doctor/register",

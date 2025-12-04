@@ -1,22 +1,18 @@
 import { Button, Image } from "react-bootstrap";
 import DoctorReviews from "./DoctorReviews";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getAllWorkDays, getDoctorBySlug } from "../../api/doctorApi";
+import { useParams } from "react-router-dom";
+import { getAllWorkDays, getDoctorBySlug } from "../../../api/doctorApi";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { WorkingHoursGrid } from "./WorkingHoursGrid";
 import L from "leaflet";
 
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
+import { AppointmentsSwiper } from "./AppointmentsSwiper";
+import { DoctorMapLocation } from "./DoctorMapLocation";
+import { DoctorDetailsCard } from "./DoctorDetailsCard";
+import PersonalReview from "./PersonalReview";
 
 export const DoctorNewPersonalDetails = () => {
   const [coords, setCoords] = useState(null); //   doctor will be loaded through slug
@@ -25,9 +21,14 @@ export const DoctorNewPersonalDetails = () => {
   const [calendar, setCalendar] = useState([]); // Store the doctor's workdays
   const [loading, setLoading] = useState(false);
 
-  const doctorId = 2;
+  const [refreshReviewsTrigger, setRefreshReviewsTrigger] = useState(0);
 
-  // Търси координати на кабинета
+  const refreshDoctorReviews = () => {
+  setRefreshReviewsTrigger(prev => prev + 1);
+};
+
+  const doctorId = 6;
+
   useEffect(() => {
     if (!doctor?.hospital || !doctor?.city) return;
 
@@ -48,12 +49,6 @@ export const DoctorNewPersonalDetails = () => {
 
     fetchCoords();
   }, [doctor]);
-
-  const navigate = useNavigate();
-
-  const handleBack = () => {
-    navigate(`/dashboard/patient/appointments`);
-  };
 
   const refreshCalendar = async () => {
     const updatedDays = await getAllWorkDays(doctorId);
@@ -133,7 +128,6 @@ export const DoctorNewPersonalDetails = () => {
 
     fetchData();
   }, [slug]);
-  
 
   if (!doctor) {
     return <div>Loading...</div>;
@@ -141,94 +135,91 @@ export const DoctorNewPersonalDetails = () => {
 
   return (
     <>
-      <Button variant="secondary" className="mb-3" onClick={handleBack}>
-        ← Назад към търсачката
-      </Button>
+      <div
+        className="doctor-map-container"
+        style={{
+          display: "flex",
+          alignItems: "flex-start", // Align top for both sections
+          padding: "20px",
+          paddingTop: "50px", // Add upper padding of 50px
+          paddingBottom: "50px",
+          borderRadius: "10px",
+        marginBottom: "30px",
+          backgroundColor: "#f8f9fa",
+        }}
+      >
+        {/* Doctor Section (Left) */}
+        <DoctorDetailsCard doctor={doctor} />
 
-      <div className="p-4 bg-light rounded shadow-sm mb-4 d-flex align-items-center">
-        {/* Снимка на лекаря */}
-        <Image
-          src={doctor.photo}
-          alt={"Д-р " + doctor.fname + " " + doctor.lname}
-          rounded
+        {/* Map Section (Right) */}
+        <div
+          className="map-info"
           style={{
-            width: "120px",
-            height: "120px",
-            objectFit: "cover",
-            marginRight: "20px",
+            width: "700px", // Adjust map width
+            height: "350px", // Adjust map height
             borderRadius: "10px",
-            border: "3px solid #2E8B57",
-            backgroundColor: "#f8f9fa",
             overflow: "hidden",
+            marginRight: "20px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
-        />
-
-        <div>
-          <h4>{"Д-р " + doctor.firstName + " " + doctor.lastName}</h4>
-          <p>{doctor.specialization}</p>
-          <p>⭐ {doctor.rating}</p>
-          <p>📍 {doctor.city}</p>
-          <p>🏥 {doctor.hospital}</p>
-          <p>🩺 Опит: {doctor.yearsOfExperience} години</p>
-          <p>
-            📞 Контакти:
-            <br />
-            {doctor.email}
-            <br />
-            {doctor.phone}
-          </p>
+        >
+          {coords ? (
+            <DoctorMapLocation doctor={doctor} coords={coords} />
+          ) : (
+            <p>Зареждане на локацията…</p>
+          )}
         </div>
       </div>
 
+      {/* Main Content (Left and Right Columns) */}
+      <div
+        className="content-columns"
+        style={{
+          display: "flex",
+          gap: "20px", // Space between left and right columns
+          width: "100%",
+          paddingTop: "30px", // Space between doctor info and columns
+        }}
+      >
+        {/* Left Column (Comment Section) */}
+        <div
+          className="left-column"
+          style={{
+            width: "45%", // Adjust width as needed
+            backgroundColor: "#f8f9fa",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <DoctorReviews refreshTrigger={refreshReviewsTrigger}/>
+        </div>
+{/* 
+          <Button onClick={() => console.log(doctor)}>
 
-      <div className="mb-4">
-        <h5>🗺️ Местоположение на кабинета</h5>
+          </Button> */}
 
-        {coords ? (
-          <div
-            style={{
-              width: "100%",
-              height: "250px",
-              borderRadius: "10px",
-              overflow: "hidden",
-            }}
-          >
-            <MapContainer
-              center={[coords.lat, coords.lon]}
-              zoom={16}
-              style={{ width: "100%", height: "100%" }}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-              <Marker position={[coords.lat, coords.lon]}>
-                <Popup>
-                  <b>{doctor.hospital}</b> <br />
-                  {doctor.city} <br />
-                  <a
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${coords.lat},${coords.lon}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    ➜ Навигирай
-                  </a>
-                </Popup>
-              </Marker>
-            </MapContainer>
-          </div>
-        ) : (
-          <p>Зареждане на локацията…</p>
-        )}
+        {/* Right Column (TimeScheduler - Swiper) */}
+        <div
+          className="right-column"
+          style={{
+            width: "55%", // Adjust width as needed
+            backgroundColor: "#ffffff",
+            borderRadius: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          {/* TimeCarousel */}
+          {calendar.length > 0 && (
+            <AppointmentsSwiper
+              days={transformedCalendar}
+              refreshCalendar={refreshCalendar}
+            />
+          )}
+        </div>
       </div>
 
-      {calendar.length > 0 && (
-        <WorkingHoursGrid
-          days={transformedCalendar}
-          onSelect={(date, hour) => alert(`Selected: ${date} at ${hour}`)}
-          refreshCalendar={refreshCalendar}
-        />
-      )}
-
-      <DoctorReviews doctorId={doctor.id} />
+      <PersonalReview onFeedbackSubmitted={refreshDoctorReviews}/>
     </>
   );
 };

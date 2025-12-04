@@ -1,18 +1,20 @@
 import React, { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 import { Row, Col, Button, Card } from "react-bootstrap";
+import { createAppointmentRequest } from "../../../api/appointmentApi";
+import { normalizeDate } from "../../../utils/calendarUtils";
 
-import { splitInTwo, normalizeDate } from "../../utils/calendarUtils";
-import { createAppointmentRequest } from "../../api/appointmentApi";
 
-export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
-  const DAYS_PER_SLIDE = 3; // Show 3 days at once
-
+export const AppointmentsSwiper = ({ days, refreshCalendar }) => {
+  const [selected, setSelected] = useState(null); // Track the selected date and time
+  const [comment, setComment] = useState(""); // Track the comment entered by the user
   const token = localStorage.getItem("token");
-  const [index, setIndex] = useState(0);
 
-  const [selected, setSelected] = useState(null);
-  const [comment, setComment] = useState("");
 
+  // Handle hour selection
   const handleHourClick = (date, hour) => {
     setSelected({ date, hour });
   };
@@ -20,20 +22,21 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
   const createAppointment = async () => {
     try {
       const payload = {
-        doctorId: 2,
-        patientId: 6,
+        doctorId: 6, // example doctorId
+        patientId: 5, // example patientId
         date: normalizeDate(selected.date),
         start: selected.hour,
         comment: comment,
       };
 
       console.log("Sending:", payload);
-
       await createAppointmentRequest(payload, token);
 
+      // Simulate an API call to create the appointment
       alert("Appointment created!");
       await refreshCalendar();
 
+      // Clear the selection and comment after success
       setSelected(null);
       setComment("");
     } catch (err) {
@@ -42,26 +45,15 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
     }
   };
 
+  // Cancel the appointment creation
   const cancel = () => {
     setSelected(null);
-    setComment(""); // reset
+    setComment("");
   };
-
-  const next = () => {
-    if (index + DAYS_PER_SLIDE < days.length) {
-      setIndex(index + DAYS_PER_SLIDE);
-    }
-  };
-  const prev = () => {
-    if (index - DAYS_PER_SLIDE >= 0) {
-      setIndex(index - DAYS_PER_SLIDE);
-    }
-  };
-
-  const visibleDays = days.slice(index, index + DAYS_PER_SLIDE);
 
   return (
-    <div className="mt-4">
+    <>
+      {/* Appointment Confirmation Modal */}
       {selected && (
         <div
           style={{
@@ -90,12 +82,9 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
             }}
           >
             <h5 className="mb-3 fw-bold">Confirm appointment?</h5>
-
             <p className="text-muted">
               {selected.date} at <strong>{selected.hour}</strong>
             </p>
-
-            {/* --- COMMENT TEXTAREA --- */}
             <textarea
               className="form-control mt-3"
               rows={3}
@@ -104,7 +93,6 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
               onChange={(e) => setComment(e.target.value)}
               style={{ resize: "none" }}
             />
-
             <div className="d-flex gap-3 mt-4 justify-content-center">
               <Button variant="secondary" onClick={cancel}>
                 Cancel
@@ -117,36 +105,28 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
         </div>
       )}
 
-      {/* Header Controls */}
-      <Row className="mb-2 align-items-center">
-        <Col xs="auto">
-          <Button variant="link" onClick={prev}>
-            ←
-          </Button>
-        </Col>
-
-        <Col xs="auto">
-          <Button variant="link" onClick={next}>
-            →
-          </Button>
-        </Col>
-      </Row>
-
-      {/* Day Columns */}
-      <Row className="g-3 flex-nowrap overflow-auto">
-        {visibleDays.map((day) => {
-          const [col1, col2] = splitInTwo(day.hours);
+      {/* Swiper Component for Day Sections */}
+      <Swiper
+        modules={[Navigation]}
+        spaceBetween={5} // Controls space between each slide
+        slidesPerView={3} // Show 3 slides at a time
+        navigation={true} // Enable Swiper's built-in navigation
+        pagination={{ clickable: true }} // Enable pagination if needed
+      >
+        {/* Mapping through the days to create slides */}
+        {days.map((day, index) => {
+          const col1 = day.hours.slice(0, Math.ceil(day.hours.length / 2));
+          const col2 = day.hours.slice(Math.ceil(day.hours.length / 2));
 
           return (
-            <Col key={day.date} xs={8} md={4} lg={3}>
-              <Card className="shadow-sm h-100">
+            <SwiperSlide key={index}>
+              <Card className="shadow-none">
                 <Card.Body className="text-center">
                   <Card.Title className="fw-bold">{day.weekday}</Card.Title>
                   <Card.Subtitle className="text-muted mb-3">
                     {day.date}
                   </Card.Subtitle>
 
-                  {/* If no hours → disabled box */}
                   {day.hours.length === 0 && (
                     <div
                       className="p-4 text-muted"
@@ -160,15 +140,14 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
                     </div>
                   )}
 
-                  {/* Hours Section */}
                   <Row className="g-2">
                     <Col>
                       {col1.map((hour) => (
                         <Button
                           key={hour}
-                          variant="outline-success"
-                          className="w-100 fw-bold d-flex justify-content-center gap-2"
+                          className="custom-time-slot-btn w-100 fw-bold d-flex justify-content-center gap-2"
                           onClick={() => handleHourClick(day.date, hour)}
+                          style={{ marginBottom: "5px" }}
                         >
                           {hour}
                         </Button>
@@ -179,9 +158,9 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
                       {col2.map((hour) => (
                         <Button
                           key={hour}
-                          variant="outline-success"
-                          className="w-100 fw-bold d-flex justify-content-center gap-2"
+                          className="custom-time-slot-btn w-100 fw-bold d-flex justify-content-center gap-2"
                           onClick={() => handleHourClick(day.date, hour)}
+                          style={{ marginBottom: "5px" }}
                         >
                           {hour}
                         </Button>
@@ -190,10 +169,10 @@ export const WorkingHoursGrid = ({ days, onSelect, refreshCalendar }) => {
                   </Row>
                 </Card.Body>
               </Card>
-            </Col>
+            </SwiperSlide>
           );
         })}
-      </Row>
-    </div>
+      </Swiper>
+    </>
   );
 };

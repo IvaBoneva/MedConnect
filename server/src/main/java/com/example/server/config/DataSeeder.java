@@ -92,6 +92,46 @@ public class DataSeeder {
                 patient2.setRole("patient");
                 patientRepository.save(patient2);
 
+                Patient patient3 = new Patient();
+                patient3.setFirstName("Bruce");
+                patient3.setLastName("Wayne");
+                patient3.setEmail("brucewayne@example.com");
+                patient3.setPassword(passwordEncoder.encode("bruce123"));
+                patient3.setAge(35);
+                patient3.setPhoneNumber("123123123");
+                patient3.setRole("patient");
+                patientRepository.save(patient3);
+
+                Patient patient4 = new Patient();
+                patient4.setFirstName("Clark");
+                patient4.setLastName("Kent");
+                patient4.setEmail("clarkkent@example.com");
+                patient4.setPassword(passwordEncoder.encode("clark123"));
+                patient4.setAge(33);
+                patient4.setPhoneNumber("234234234");
+                patient4.setRole("patient");
+                patientRepository.save(patient4);
+
+                Patient patient5 = new Patient();
+                patient5.setFirstName("Diana");
+                patient5.setLastName("Prince");
+                patient5.setEmail("dianaprince@example.com");
+                patient5.setPassword(passwordEncoder.encode("wonderwoman123"));
+                patient5.setAge(30);
+                patient5.setPhoneNumber("345345345");
+                patient5.setRole("patient");
+                patientRepository.save(patient5);
+
+                Patient patient6 = new Patient();
+                patient6.setFirstName("Barry");
+                patient6.setLastName("Allen");
+                patient6.setEmail("barryallen@example.com");
+                patient6.setPassword(passwordEncoder.encode("flash123"));
+                patient6.setAge(28);
+                patient6.setPhoneNumber("456456456");
+                patient6.setRole("patient");
+                patientRepository.save(patient6);
+
                 // ----- Doctors -----
                 Doctor doctor1 = new Doctor();
                 doctor1.setFirstName("Gregory");
@@ -103,9 +143,9 @@ public class DataSeeder {
                 doctor1.setRole("doctor");
                 doctor1.setSpecialization("Neurology");
                 doctor1.setRating(4.5F);
-                doctor1.setCity("Sofia");
                 doctor1.setYearsOfExperience(10);
-                doctor1.setHospital("Pirogov Hospital");
+                doctor1.setHospital("УМБАЛСМ Н.И.Пирогов"); // Neurology
+                doctor1.setCity("София");
                 doctorRepository.save(doctor1);
 
                 Doctor doctor2 = new Doctor();
@@ -118,8 +158,10 @@ public class DataSeeder {
                 doctor2.setRole("doctor");
                 doctor2.setSpecialization("Cardiology");
                 doctor2.setRating(4.2F);
-                doctor2.setCity("New York");
                 doctor2.setYearsOfExperience(8);
+
+                doctor2.setHospital("УМБАЛ Света Анна"); // Cardiology
+                doctor2.setCity("София");
 
                 Doctor doctor3 = new Doctor();
                 doctor3.setFirstName("Alice");
@@ -131,8 +173,11 @@ public class DataSeeder {
                 doctor3.setRole("doctor");
                 doctor3.setSpecialization("Orthopedics");
                 doctor3.setRating(4.8F);
-                doctor3.setCity("Los Angeles");
                 doctor3.setYearsOfExperience(20);
+
+                doctor3.setHospital("УМБАЛ Александровска"); // Orthopedics
+                doctor3.setCity("София");
+
 
                 Doctor doctor4 = new Doctor();
                 doctor4.setFirstName("Michael");
@@ -144,8 +189,10 @@ public class DataSeeder {
                 doctor4.setRole("doctor");
                 doctor4.setSpecialization("Pediatrics");
                 doctor4.setRating(4.7F);
-                doctor4.setCity("Chicago");
                 doctor4.setYearsOfExperience(12);
+
+                doctor4.setHospital("УМБАЛ „Св. Георги“"); // Pediatrics
+                doctor4.setCity("Пловдив");
 
                 Doctor doctor5 = new Doctor();
                 doctor5.setFirstName("Sarah");
@@ -157,8 +204,10 @@ public class DataSeeder {
                 doctor5.setRole("doctor");
                 doctor5.setSpecialization("Gynecology");
                 doctor5.setRating(4.3F);
-                doctor5.setCity("San Francisco");
                 doctor5.setYearsOfExperience(7);
+                doctor5.setHospital("УМБАЛ „Света Марина“"); // Gynecology
+                doctor5.setCity("Варна");
+
 
                 Doctor doctor6 = new Doctor();
                 doctor6.setFirstName("David");
@@ -170,8 +219,9 @@ public class DataSeeder {
                 doctor6.setRole("doctor");
                 doctor6.setSpecialization("Dermatology");
                 doctor6.setRating(4.6F);
-                doctor6.setCity("Miami");
                 doctor6.setYearsOfExperience(15);
+                doctor6.setHospital("УМБАЛ „Софиямед“"); // Dermatology
+                doctor6.setCity("София");
 
                 Doctor doctor7 = new Doctor();
                 doctor7.setFirstName("Eve");
@@ -183,8 +233,9 @@ public class DataSeeder {
                 doctor7.setRole("doctor");
                 doctor7.setSpecialization("Psychiatry");
                 doctor7.setRating(4.4F);
-                doctor7.setCity("Boston");
                 doctor7.setYearsOfExperience(5);
+                doctor7.setHospital("УМБАЛ „Софиямед“"); // Psychiatry
+                doctor7.setCity("София");
 
                 Doctor doctor8 = new Doctor();
                 doctor8.setFirstName("William");
@@ -196,8 +247,9 @@ public class DataSeeder {
                 doctor8.setRole("doctor");
                 doctor8.setSpecialization("Surgery");
                 doctor8.setRating(4.9F);
-                doctor8.setCity("Houston");
                 doctor8.setYearsOfExperience(25);
+                doctor8.setHospital("УМБАЛ „Токуда“"); // Surgery
+                doctor8.setCity("София");
 
                 Doctor doctor9 = new Doctor();
                 doctor9.setFirstName("Olivia");
@@ -209,8 +261,9 @@ public class DataSeeder {
                 doctor9.setRole("doctor");
                 doctor9.setSpecialization("Anesthesia");
                 doctor9.setRating(4.6F);
-                doctor9.setCity("Dallas");
                 doctor9.setYearsOfExperience(10);
+                doctor9.setHospital("УМБАЛ „Медика“"); // Anesthesia
+                doctor9.setCity("Русе");
 
                 Doctor doctor10 = new Doctor();
                 doctor10.setFirstName("James");
@@ -222,8 +275,9 @@ public class DataSeeder {
                 doctor10.setRole("doctor");
                 doctor10.setSpecialization("Radiology");
                 doctor10.setRating(4.3F);
-                doctor10.setCity("Seattle");
                 doctor10.setYearsOfExperience(13);
+                doctor10.setHospital("УМБАЛ „Лозенец“"); // Radiology
+                doctor10.setCity("София");
 
                 // ----- Guardian -----
                 Guardian guardian = new Guardian();
@@ -326,7 +380,7 @@ public class DataSeeder {
                 a1.setPatient(patient);
                 a1.setStartingTime(LocalDateTime.of(2025, 11, 10, 10, 0));
                 a1.setDurationInMinutes(30L);  // REQUIRED to avoid crash
-                a1.setStatus(Appointment.Status.Cancelled);
+                a1.setStatus(Appointment.Status.Completed);
                 a1.setComment("Fairly Ill but still walking like a teen");
 
                 Appointment a2 = new Appointment();
@@ -336,6 +390,87 @@ public class DataSeeder {
                 a2.setDurationInMinutes(30L);  // REQUIRED to avoid crash
                 a2.setStatus(Appointment.Status.Booked);
                 a2.setComment("I am really Ill brother");
+//
+                Appointment a4 = new Appointment();
+                a4.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a4.setPatient(patient5);  // You can assign any patient here
+                a4.setStartingTime(LocalDateTime.of(2025, 11, 11, 15, 0));
+                a4.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a4.setStatus(Appointment.Status.Completed);
+                a4.setComment("The patient had a headache and mild fever. Doctor administered treatment and gave guidelines.");
+                a4.setFeedback("The headache reduced within an hour, and the fever subsided by evening. Very helpful!");
+                appointmentRepo.save(a4);
+
+                Appointment a5 = new Appointment();
+                a5.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a5.setPatient(patient4);  // You can assign any patient here
+                a5.setStartingTime(LocalDateTime.of(2025, 11, 12, 9, 0));
+                a5.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a5.setStatus(Appointment.Status.Completed);
+                a5.setComment("Patient arrived with a stomach ache. After diagnosis, prescribed medication for relief.");
+                a5.setFeedback("The stomach ache reduced after taking the prescribed medications. I am feeling better.");
+                appointmentRepo.save(a5);
+
+                Appointment a6 = new Appointment();
+                a6.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a6.setPatient(patient2);  // You can assign any patient here
+                a6.setStartingTime(LocalDateTime.of(2025, 11, 13, 13, 0));
+                a6.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a6.setStatus(Appointment.Status.Completed);
+                a6.setComment("The patient complained about chest tightness. After examination, prescribed medication for relief.");
+                a6.setFeedback("The medication helped relieve the chest tightness. I am able to breathe easily now.");
+                appointmentRepo.save(a6);
+
+
+                Appointment a7 = new Appointment();
+                a7.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a7.setPatient(patient6);  // You can assign any patient here
+                a7.setStartingTime(LocalDateTime.of(2025, 11, 15, 10, 0));
+                a7.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a7.setStatus(Appointment.Status.Completed);
+                a7.setComment("Patient came in with mild pain in the lower back. After assessment, prescribed treatment.");
+                a7.setFeedback("Pain relief was immediate, and patient felt better after following treatment instructions.");
+                appointmentRepo.save(a7);
+
+                Appointment a8 = new Appointment();
+                a8.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a8.setPatient(patient2);  // You can assign any patient here
+                a8.setStartingTime(LocalDateTime.of(2025, 11, 16, 14, 30));
+                a8.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a8.setStatus(Appointment.Status.Completed);
+                a8.setComment("Patient had an eye infection, prescribed eye drops and oral antibiotics.");
+                a8.setFeedback("The infection reduced significantly, and I’m feeling much better.");
+                appointmentRepo.save(a8);
+
+                Appointment a9 = new Appointment();
+                a9.setDoctor(doctor1);  // doctor1 is assumed to be Doctor House
+                a9.setPatient(patient2);  // You can assign any patient here
+                a9.setStartingTime(LocalDateTime.of(2025, 11, 17, 16, 0));
+                a9.setDurationInMinutes(30L);  // REQUIRED to avoid crash
+                a9.setStatus(Appointment.Status.Completed);
+                a9.setComment("Patient had symptoms of food poisoning. Prescribed medication and hydration guidelines.");
+                a9.setFeedback("Symptoms improved after a few hours, and I followed the doctor’s instructions.");
+                appointmentRepo.save(a9);
+
+                Appointment a10 = new Appointment();
+                a10.setDoctor(doctor1);
+                a10.setPatient(patient);
+                a10.setStartingTime(LocalDateTime.of(2025, 11, 5, 11, 0));
+                a10.setDurationInMinutes(30L);
+                a10.setStatus(Appointment.Status.Completed);
+                a10.setComment("Routine check-up. Recommended vitamins and regular exercise.");
+// No feedback → eligible for review
+                appointmentRepo.save(a10);
+
+                Appointment a11 = new Appointment();
+                a11.setDoctor(doctor1);
+                a11.setPatient(patient);
+                a11.setStartingTime(LocalDateTime.of(2025, 11, 7, 16, 30));
+                a11.setDurationInMinutes(30L);
+                a11.setStatus(Appointment.Status.Completed);
+                a11.setComment("Follow-up consultation. Symptoms improving. Scheduled next visit.");
+// No feedback → eligible for review
+                appointmentRepo.save(a11);
 
                 appointmentRepo.save(a1);
                 appointmentRepo.save(a2);
@@ -345,4 +480,6 @@ public class DataSeeder {
             }
         };
     }
+
+
 }

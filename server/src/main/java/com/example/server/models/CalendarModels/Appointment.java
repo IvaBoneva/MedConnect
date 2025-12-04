@@ -52,4 +52,6 @@ public class Appointment {
     }
 
     private String comment;
+
+    private String feedback;
 }

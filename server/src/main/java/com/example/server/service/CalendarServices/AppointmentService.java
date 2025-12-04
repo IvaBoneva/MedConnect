@@ -10,6 +10,7 @@ import com.example.server.repository.UserRepositories.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class AppointmentService {
@@ -55,5 +56,21 @@ public class AppointmentService {
         appt.setComment(dto.getComment());
 
         return appointmentRepository.save(appt);
+    }
+
+    public List<Appointment> getDoctorAppointments(Long doctorId, Appointment.Status status){
+        return appointmentRepository.findByDoctorIdAndStatusAndFeedbackIsNotNull(doctorId, status);
+    }
+
+    public List<Appointment> getDoctorAppointmentToUser(Long doctorId, Appointment.Status status, Long patientId){
+        return appointmentRepository.findByDoctorIdAndPatientIdAndStatusNullCustomQuery(doctorId, status, patientId);
+    }
+
+    public void updateFeedback(Long id, String feedback) {
+        Appointment a = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        a.setFeedback(feedback);
+        appointmentRepository.save(a);
     }
 }
