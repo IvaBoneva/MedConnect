@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Form, Row, Col, InputGroup, Container } from "react-bootstrap";
-import DoctorCard from "./DoctorCard";
+import { Form, Row, Col, InputGroup, Container, Button } from "react-bootstrap";
+import DoctorCard from "./DoctorCards";
 import doctor1 from "../../images/doctor1.jpg";
 import doctor2 from "../../images/doctor2.jpg";
 import doctor3 from "../../images/doctor3.jpg";
@@ -12,42 +12,49 @@ const DoctorSearch = () => {
   const [cityFilter, setCityFilter] = useState("");
   const [sort, setSort] = useState("");
   const [doctors, setDoctors] = useState([]);
+  const [cities, setCities] = useState([]); // New state for cities
+  const [specialties, setSpecialties] = useState([]); // State for doctor specializations
 
   const fetchDoctors = async () => {
     try {
-      setDoctors(await getDoctors());
+      const doctorsData = await getDoctors();
+      setDoctors(doctorsData);
+      const topCities = [
+        ...new Set(doctorsData.map((doc) => doc.city).filter((city) => city)), // Remove any null or undefined cities
+      ];
+      setCities(topCities.slice(0, 5));
+
+      const topSpecialities = [
+        ...new Set(
+          doctorsData
+            .map((doc) => doc.specialization)
+            .filter((specialty) => specialty)
+        ), // Remove any null or undefined cities
+      ];
+      setSpecialties(topSpecialities.slice(0, 5));
     } catch (error) {
       console.error("Error fetching doctors:", error);
     }
   };
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const data = await getDoctors();
-        setDoctors(data);
-      } catch (err) {
-        console.error("Error fetching doctors:", err);
-        setDoctors([]);
-      }
-    };
     fetchDoctors();
   }, []);
 
   const filteredDoctors = doctors
     .filter((doc) =>
-      ("Д-р " + doc.fname + " " + doc.lname)
+      `${doc.firstName} ${doc.lastName}`
         .toLowerCase()
         .includes(query.toLowerCase())
     )
     .filter((doc) =>
-      specialtyFilter ? doc.specialty === specialtyFilter : true
+      specialtyFilter ? doc.specialization === specialtyFilter : true
     )
     .filter((doc) => (cityFilter ? doc.city === cityFilter : true))
     .sort((a, b) => {
       if (sort === "rating") return b.rating - a.rating;
-      if (sort === "fname") return a.fname.localeCompare(b.fname);
-      if (sort === "lname") return a.lname.localeCompare(b.lname);
+      if (sort === "fname") return a.firstName.localeCompare(b.firstName);
+      if (sort === "lname") return a.lastName.localeCompare(b.lastName);
       return 0;
     });
 
@@ -81,11 +88,17 @@ const DoctorSearch = () => {
               onChange={(e) => setSpecialtyFilter(e.target.value)}
             >
               <option value="">Всички специалности</option>
-              <option value="Кардиолог">Кардиолог</option>
-              <option value="Невролог">Невролог</option>
-              <option value="Дерматолог">Дерматолог</option>
+              {specialties.map((speciality, index) => (
+                <option key={index} value={speciality}>
+                  {speciality}
+                </option>
+              ))}
+              {specialties.length > 5 && (
+                <option value="other">Други...</option>
+              )}
             </Form.Select>
           </Col>
+
 
           {/* Филтър по град */}
           <Col md={3}>
@@ -94,9 +107,12 @@ const DoctorSearch = () => {
               onChange={(e) => setCityFilter(e.target.value)}
             >
               <option value="">Всички градове</option>
-              <option value="София">София</option>
-              <option value="Пловдив">Пловдив</option>
-              <option value="Варна">Варна</option>
+              {cities.map((city, index) => (
+                <option key={index} value={city}>
+                  {city}
+                </option>
+              ))}
+              {cities.length > 5 && <option value="other">Други...</option>}
             </Form.Select>
           </Col>
 

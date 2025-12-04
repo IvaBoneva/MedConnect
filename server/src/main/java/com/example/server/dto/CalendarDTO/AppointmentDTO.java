@@ -24,7 +24,6 @@ public class AppointmentDTO {
 
     private Patient patient;
 
-
     private String comment;
 
 

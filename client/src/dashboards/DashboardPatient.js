@@ -1,7 +1,7 @@
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorNewPersonalDetails";
+
 
 import Home from "../modules/Patient/Home";
 import PersonalInformation from "../modules/Patient/PersonalInformation";
@@ -16,6 +16,7 @@ import PharmacyMap from "../modules/Patient/Pharmacies";
 import "../App.css";
 import VaccinesAndProfilactics from "../modules/Patient/VaccinesAndProfilactics";
 import { useAuth } from "../context/AuthContext";
+import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorPersonalDetailsComponents/DoctorNewPersonalDetails";
 
 const DashboardPatient = () => {
   const location = useLocation();

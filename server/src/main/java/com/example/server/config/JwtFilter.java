@@ -73,6 +73,11 @@ public class JwtFilter extends GenericFilterBean {
 
                 servletPath.equals("/auth/me") ||
 
+                servletPath.matches("/api/appointments/doctor") ||
+                servletPath.matches("/api/appointments/pastUserAppointments") ||
+                servletPath.matches("/api/appointments/\\d+/feedback") ||
+
+
                 servletPath.equals("/api/stripe/webhook") ||
                 servletPath.startsWith("/api/stripe/")) {
 

@@ -1,7 +1,7 @@
 const DOCTOR_API_ENPOINT = "http://localhost:8080/api/user/doctors";
 
 const DOCTOR_ALL_WORKDAYS =
-  "http://localhost:8080/api/calendar/doctor?doctorId=2&from=2025-11-01&to=2025-11-30";
+  "http://localhost:8080/api/calendar/doctor?doctorId=6&from=2025-11-01&to=2025-11-30";
 
 function formatDate(date) {
   return date.toISOString().split("T")[0];
@@ -45,7 +45,7 @@ export const getDoctorBySlug = async (slug) => {
   }
 };
 
-export const getAllWorkDays = async (doctorId = 2, startDate, endDate) => {
+export const getAllWorkDays = async (doctorId, startDate, endDate) => {
   try {
     const response = await fetch(DOCTOR_ALL_WORKDAYS); // Wait for fetch to resolve
     const data = await response.json(); // Wait for the data to be parsed

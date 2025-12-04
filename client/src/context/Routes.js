@@ -16,7 +16,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import { useEffect, useState } from "react";
 import PaymentSuccess from "../pages/PaymentSuccess";
-import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorNewPersonalDetails";
+import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorPersonalDetailsComponents/DoctorNewPersonalDetails";
 
 
 const Routes = () => {
