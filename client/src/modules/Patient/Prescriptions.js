@@ -92,9 +92,17 @@ const Prescriptions = () => {
   };
 
   const handleTimeChange = (index, value) => {
+    // Проверка дали този час вече съществува (на друго място)
+    if (formData.times.includes(value)) {
+      setMessage("❌ Този час вече е добавен!");
+      return;
+    }
+
     const updatedTimes = [...formData.times];
     updatedTimes[index] = value;
+
     setFormData({ ...formData, times: updatedTimes });
+    setMessage(""); // изчистваме стара грешка
   };
 
   // Добавете тази функция в компонентa Prescriptions

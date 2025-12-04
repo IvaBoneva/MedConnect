@@ -27,6 +27,8 @@ const selectedIcon = new L.Icon({
 });
 
 const PharmacyMap = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
   const [coords, setCoords] = useState({ lat: 42.6977, lng: 23.3219 }); // Default София
   const [pharmacies, setPharmacies] = useState([]);
   const [hospitals, setHospitals] = useState([]);
@@ -222,6 +224,23 @@ const PharmacyMap = () => {
             {gpsEnabled ? "Спри GPS" : "Активирай GPS"}
           </button>
 
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            style={{
+              display: "block",
+              backgroundColor: darkMode ? "#333" : "#ddd",
+              color: darkMode ? "#fff" : "#000",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 14px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              marginBottom: "10px",
+            }}
+          >
+            {darkMode ? "🌞 Светла карта" : "🌙  Тъмна карта"}
+          </button>
+
           {!gpsEnabled && (
             <p>Активирай GPS, за да видиш близките аптеки и болници.</p>
           )}
@@ -301,7 +320,14 @@ const PharmacyMap = () => {
             zoom={14}
             style={{ width: "100%", height: "100%" }}
           >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <TileLayer
+              url={
+                darkMode
+                  ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              }
+            />
+
             <Marker position={coords} icon={pharmacyIcon}>
               <Popup>Ти си тук</Popup>
             </Marker>
