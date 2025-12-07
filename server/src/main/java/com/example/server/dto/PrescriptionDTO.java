@@ -41,7 +41,9 @@ public class PrescriptionDTO {
 
     private String dosage;
 
-    private String frequency;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private String prescribingDoctor;
 
@@ -50,4 +52,3 @@ public class PrescriptionDTO {
     private Long userId;
 
 }
-

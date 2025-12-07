@@ -326,13 +326,15 @@ const Prescriptions = () => {
                   </p>
 
                   <p>
-                    <strong>Начална дата:</strong> {item.startDate}
+                    <strong>Начална дата:</strong>{" "}
+                    {new Date(item.startDate).toLocaleDateString("bg-BG")}
                   </p>
 
                   <p>
-                    <strong>Крайна дата:</strong> {item.endDate}
+                    <strong>Крайна дата:</strong>{" "}
+                    {new Date(item.endDate).toLocaleDateString("bg-BG")}
                   </p>
-
+                  
                   <p>
                     <strong>Часове:</strong> {item.takingHour}
                   </p>
