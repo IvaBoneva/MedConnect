@@ -1,21 +1,22 @@
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { RegisterInput } from "./RegisterInput";
-import { PasswordInput } from "./PasswordInput";
+import { RegisterInput } from "./RegisterInput"; // Увери се, че е Named Export
+import { PasswordInput } from "./PasswordInput"; // Увери се, че е Named Export
 
 export const RegisterFormLayout = ({
   formData,
   handleChange,
   handleSubmit,
+  handleImageChange,
   loading,
   message,
-  errors, 
-  toggles, 
+  errors,
+  toggles,
   toggleHandlers
 }) => {
   const { 
-    fnameError, lnameError, ageError, emailError, phoneError, 
-    experienceError, patientfnameError, patientlnameError, patientAgeError, 
+    fnameError, lnameError, birthDateError, emailError, phoneError, 
+    experienceError, patientfnameError, patientlnameError, patientBirthDateError, 
     passwordErrors, confirmPasswordError 
   } = errors;
 
@@ -30,9 +31,7 @@ export const RegisterFormLayout = ({
 
       {message && (
         <Alert variant="info" className="d-flex align-items-center">
-          {loading && (
-            <Spinner animation="border" size="sm" className="me-2" role="status" />
-          )}
+          {loading && <Spinner animation="border" size="sm" className="me-2" />}
           <span>{message}</span>
         </Alert>
       )}
@@ -46,29 +45,31 @@ export const RegisterFormLayout = ({
           onChange={handleChange}
           error={fnameError}
         />
-
         <RegisterInput
           label="Фамилия"
-          type="text"
           name="lname"
           placeholder="Въведете вашата фамилия"
           value={formData.lname}
           onChange={handleChange}
           error={lnameError}
         />
-
         <RegisterInput
-          label="Възраст"
-          type="number"
-          name="age"
-          placeholder="Въведете вашата възраст"
-          value={formData.age}
+          label="Дата на раждане"
+          type="date"
+          name="birthDate"
+          value={formData.birthDate}
           onChange={handleChange}
-          min="18"
-          max="120"
-          error={ageError}
+          error={birthDateError}
         />
-
+        <Form.Group className="mb-3">
+          <Form.Label>Възраст</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Вашата възраст"
+            value={formData.age || ""}
+            readOnly
+          />
+        </Form.Group>
         <RegisterInput
           label="Имейл"
           type="email"
@@ -78,15 +79,13 @@ export const RegisterFormLayout = ({
           onChange={handleChange}
           error={emailError}
         />
-
         <RegisterInput
           label="Телефонен номер"
           type="text"
           name="phone"
-          placeholder="Въведете вашия телефонен номер"
+          placeholder="Въведете вашия телефон"
           value={formData.phone}
           onChange={handleChange}
-          required
           error={phoneError}
         />
 
@@ -96,8 +95,7 @@ export const RegisterFormLayout = ({
             <Form.Control
               type="file"
               accept="image/*"
-              name="photo"
-              onChange={handleChange} 
+              onChange={handleImageChange}
             />
           </Form.Group>
         )}
@@ -111,7 +109,6 @@ export const RegisterFormLayout = ({
           toggleShowPassword={toggleShowPassword}
           passwordErrors={passwordErrors}
         />
-
         <PasswordInput
           label="Потвърдете паролата"
           name="confirmPassword"
@@ -124,13 +121,18 @@ export const RegisterFormLayout = ({
 
         <Form.Group className="mb-3">
           <Form.Label>Роля</Form.Label>
-          <Form.Select name="role" value={formData.role} onChange={handleChange}>
+          <Form.Select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+          >
             <option value="patient">Пациент</option>
             <option value="guardian">Настойник</option>
             <option value="doctor">Лекар</option>
           </Form.Select>
         </Form.Group>
 
+        {/* GUARDIAN FIELDS */}
         {showPatientFields && (
           <>
             <h6 className="mt-3 text-secondary">Детайли за пациента</h6>
@@ -145,7 +147,7 @@ export const RegisterFormLayout = ({
                 required
               />
               {patientfnameError && (
-                <p className="text-danger small mt-1">{patientfnameError}</p>
+                <p className="text-danger small">{patientfnameError}</p>
               )}
             </Form.Group>
 
@@ -160,7 +162,21 @@ export const RegisterFormLayout = ({
                 required
               />
               {patientlnameError && (
-                <p className="text-danger small mt-1">{patientlnameError}</p>
+                <p className="text-danger small">{patientlnameError}</p>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Дата на раждане на пациента</Form.Label>
+              <Form.Control
+                type="date"
+                name="patientBirthDate"
+                value={formData.patientBirthDate}
+                onChange={handleChange}
+                required
+              />
+              {patientBirthDateError && (
+                <p className="text-danger small">{patientBirthDateError}</p>
               )}
             </Form.Group>
 
@@ -168,17 +184,10 @@ export const RegisterFormLayout = ({
               <Form.Label>Възраст на пациента</Form.Label>
               <Form.Control
                 type="number"
-                name="patientAge"
-                placeholder="Въведете възрастта на пациента"
-                min="0"
-                max="120"
-                value={formData.patientAge}
-                onChange={handleChange}
-                required
+                placeholder="Възраст на пациента"
+                value={formData.patientAge || ""}
+                readOnly
               />
-              {patientAgeError && (
-                <p className="text-danger small mt-1">{patientAgeError}</p>
-              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -186,8 +195,7 @@ export const RegisterFormLayout = ({
               <Form.Control
                 type="file"
                 accept="image/*"
-                name="photo"
-                onChange={handleChange}
+                onChange={handleImageChange}
               />
             </Form.Group>
 
@@ -220,7 +228,6 @@ export const RegisterFormLayout = ({
                 <Form.Label>Описание на увреждането</Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={2}
                   name="disabilityDetails"
                   placeholder="Опишете увреждането на пациента"
                   value={formData.disabilityDetails}
@@ -231,6 +238,7 @@ export const RegisterFormLayout = ({
           </>
         )}
 
+        {/* DOCTOR FIELDS */}
         {showDoctorFields && (
           <>
             <h6 className="mt-3 text-secondary">Детайли за лекар</h6>
@@ -255,11 +263,9 @@ export const RegisterFormLayout = ({
                 value={formData.experience}
                 onChange={handleChange}
                 required
-                min="1"
-                max="50"
               />
               {experienceError && (
-                <p className="text-danger small mt-1">{experienceError}</p>
+                <p className="text-danger small">{experienceError}</p>
               )}
             </Form.Group>
 
@@ -268,7 +274,7 @@ export const RegisterFormLayout = ({
               <Form.Control
                 type="text"
                 name="city"
-                placeholder="Въведете вашия град"
+                placeholder="Въведете града, в който работите"
                 value={formData.city}
                 onChange={handleChange}
                 required
@@ -280,7 +286,7 @@ export const RegisterFormLayout = ({
               <Form.Control
                 type="text"
                 name="hospital"
-                placeholder="Въведете вашето работно място"
+                placeholder="Въведете работното си място"
                 value={formData.hospital}
                 onChange={handleChange}
                 required
