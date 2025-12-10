@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import profileImage from "../../images/profile.png";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useState, useEffect } from "react";
 
 const PersonalInformation = () => {
   const navigate = useNavigate();
@@ -12,6 +13,35 @@ const PersonalInformation = () => {
     : "/dashboard/patient";
 
   const { user } = useAuth();
+  const [displayUser, setDisplayUser] = useState(user || {});
+
+  useEffect(() => {
+    const fetchLatestData = async () => {
+      const token = localStorage.getItem("token");
+      
+      if (!user?.id || !token) return;
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/user/patient/${user.id}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          setDisplayUser(data);
+        }
+      } catch (error) {
+        console.error("Грешка при зареждане на профила:", error);
+      }
+    };
+
+    fetchLatestData();
+  }, [user?.id]);
 
   return (
     <Container className="mt-4">
@@ -36,7 +66,7 @@ const PersonalInformation = () => {
               }}
             >
               <Image
-                src={user?.photoURL || profileImage}
+                src={displayUser?.photoURL || profileImage}
                 alt="Пациент"
                 fluid
                 style={{
@@ -48,34 +78,31 @@ const PersonalInformation = () => {
             </div>
           </Col>
 
-          {/* Основни данни */}
           <Col md={8}>
             <p>
-              <strong>Име:</strong> {user?.firstName || "—"}
+              <strong>Име:</strong> {displayUser?.firstName || "—"}
             </p>
             <p>
-              <strong>Фамилия:</strong> {user?.lastName || "—"}
+              <strong>Фамилия:</strong> {displayUser?.lastName || "—"}
             </p>
             <p>
-              <strong>Възраст:</strong> {user?.age || "—"}
+              <strong>Възраст:</strong> {displayUser?.age || "—"}
             </p>
             <p>
-              <strong>Имейл:</strong> {user?.email || "—"}
+              <strong>Имейл:</strong> {displayUser?.email || "—"}
             </p>
             <p>
-              <strong>Телефон:</strong> {user?.phoneNumber || "—"}
+              <strong>Телефон:</strong> {displayUser?.phoneNumber || "—"}
             </p>
           </Col>
         </Row>
 
         <hr />
-
-        {/* Медицински детайли */}
         <p>
-          <strong>Алергии:</strong> {user?.allergies || "—"}
+          <strong>Алергии:</strong> {displayUser?.allergies || "—"}
         </p>
         <p>
-          <strong>Заболявания:</strong> {user?.diseases || "—"}
+          <strong>Заболявания:</strong> {displayUser?.diseases || "—"}
         </p>
 
         <div className="text-center mt-4">

@@ -11,11 +11,17 @@ import {
 import profileImage from "../../images/profile.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react"; 
 import { useAuth } from "../../context/AuthContext";
 
 const EditPersonalInformation = () => {
   const { user } = useAuth();
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/test")
+    ? "/test/patient"
+    : "/dashboard/patient";
 
   const [formData, setFormData] = useState({
     photo: user.photoURL,
@@ -27,13 +33,7 @@ const EditPersonalInformation = () => {
     allergies: user.allergies,
     diseases: user.diseases,
   });
-  const navigate = useNavigate();
-  const location = useLocation();
-  const basePath = location.pathname.startsWith("/test")
-    ? "/test/patient"
-    : "/dashboard/patient";
 
-  // Грешки
   const [ageError, setAgeError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
@@ -41,7 +41,44 @@ const EditPersonalInformation = () => {
   const [lnameError, setLNameError] = useState("");
   const [message, setMessage] = useState("");
 
-  // Смяна на снимка
+  useEffect(() => {
+    const fetchLatestData = async () => {
+      const token = localStorage.getItem("token");
+      if (!user?.id || !token) return;
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/user/patient/${user.id}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          setFormData((prev) => ({
+            ...prev,
+            photo: data.photoURL, 
+            fname: data.firstName, 
+            lname: data.lastName,  
+            age: data.age,
+            email: data.email,
+            phone: data.phoneNumber,
+            allergies: data.allergies,
+            diseases: data.diseases,
+          }));
+        }
+      } catch (error) {
+        console.error("Грешка при зареждане на данни:", error);
+      }
+    };
+
+    fetchLatestData();
+  }, [user.id]); 
+
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -49,70 +86,49 @@ const EditPersonalInformation = () => {
     }
   };
 
-  // Промяна на полета с валидации
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
 
-    // Възраст
     if (name === "age") {
-      newValue = value.replace(/\D/g, ""); // само цифри
+      newValue = value.replace(/\D/g, ""); 
       const num = parseInt(newValue, 10);
       if (num < 18) setAgeError("Възрастта трябва да е поне 18 години.");
-      else if (num > 120)
-        setAgeError("Възрастта не може да надвишава 120 години.");
+      else if (num > 120) setAgeError("Възрастта не може да надвишава 120 години.");
       else setAgeError("");
     }
 
-    // Имейл
     if (name === "email") {
       const latinOnly = /^[A-Za-z0-9@._-]+$/;
       const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!latinOnly.test(value))
-        setEmailError("Имейлът трябва да съдържа само латински букви.");
-      else if (!emailFormat.test(value))
-        setEmailError("Моля, въведете валиден имейл адрес.");
+      if (!latinOnly.test(value)) setEmailError("Имейлът трябва да съдържа само латински букви.");
+      else if (!emailFormat.test(value)) setEmailError("Моля, въведете валиден имейл адрес.");
       else setEmailError("");
     }
 
-    // Телефон
     if (name === "phone") {
       const onlyDigitsOrPlus = /^[0-9+]+$/;
       const bgMobileRegex = /^(\+359|0)8[7-9][0-9]{7}$/;
-
       if (!onlyDigitsOrPlus.test(value)) {
         setPhoneError("Телефонният номер трябва да съдържа само цифри.");
       } else if (!bgMobileRegex.test(value)) {
-        setPhoneError(
-          "Моля, въведете валиден български мобилен номер (напр. 08[7-9]******* или +3598[7-9]*******)."
-        );
+        setPhoneError("Моля, въведете валиден български мобилен номер.");
       } else {
         setPhoneError("");
       }
     }
 
-    // Проверка имена – само кирилица, без интервали, с възможно тире,
-    // започва с главна буква, следват малки
     const namePattern = /^[А-Я][а-я]+(-[А-Я][а-я]+)?$/;
-
     if (name === "fname") {
       if (value && !namePattern.test(value)) {
-        setFNameError(
-          "Името трябва да започва с главна буква и да съдържа само кирилица. " +
-            "Позволено е едно тире (напр. 'Анна-Мария'). Без интервали и цифри."
-        );
+        setFNameError("Името трябва да започва с главна буква (Кирилица).");
       } else {
         setFNameError("");
       }
     }
-
     if (name === "lname") {
       if (value && !namePattern.test(value)) {
-        setLNameError(
-          "Фамилията трябва да започва с главна буква и да съдържа само кирилица. " +
-            "Позволено е едно тире (напр. 'Петров-Павлов'). Без интервали и цифри."
-        );
+        setLNameError("Фамилията трябва да започва с главна буква (Кирилица).");
       } else {
         setLNameError("");
       }
@@ -121,22 +137,55 @@ const EditPersonalInformation = () => {
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  // Запазване
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
     if (ageError || emailError || phoneError || fnameError || lnameError) {
       setMessage("Моля, коригирайте грешките във формата.");
       return;
     }
 
-    setMessage("✅ Информацията е успешно запазена!");
+    const payload = {
+      firstName: formData.fname,
+      lastName: formData.lname,
+      age: formData.age,
+      email: formData.email,
+      phoneNumber: formData.phone,
+      allergies: formData.allergies,
+      diseases: formData.diseases,
+    }
 
-    // Пренасочване след кратка пауза (примерно 2 секунди)
-    setTimeout(() => navigate(`${basePath}/personal_information`), 2000);
+    try {
+        const response = await fetch(`http://localhost:8080/api/user/patient/update/${user.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`, 
+            },
+            body: JSON.stringify(payload),
+        }); 
+
+        if (!response.ok) {
+            const errorData = await response.text(); 
+            throw new Error(errorData || "Грешка при обновяване на данните.");
+        }
+        
+        const updatedUser = await response.json();
+
+        const newUserData = { ...user, ...updatedUser };
+        localStorage.setItem("user", JSON.stringify(newUserData));
+
+        setMessage("✅ Информацията е успешно запазена!");
+
+        setTimeout(() => navigate(`${basePath}/personal_information`), 1000);
+
+    } catch (error) {
+        console.error(error);
+        setMessage("❌ Грешка: " + error.message);
+    }
   };
 
-  // Изчистване
   const handleClear = () => {
     setFormData({
       photo: null,
@@ -172,7 +221,6 @@ const EditPersonalInformation = () => {
 
         <Form onSubmit={handleSubmit}>
           <Row>
-            {/* Фото */}
             <Col md={4} className="text-center mb-3 mt-4">
               <div className="d-flex flex-column align-items-center">
                 <div
@@ -218,7 +266,6 @@ const EditPersonalInformation = () => {
               </div>
             </Col>
 
-            {/* Основни данни */}
             <Col md={8}>
               <Form.Group className="mb-3">
                 <Form.Label>Име</Form.Label>
@@ -296,7 +343,6 @@ const EditPersonalInformation = () => {
 
           <hr />
 
-          {/* Медицински детайли */}
           <Form.Group className="mb-3">
             <Form.Label>Алергии</Form.Label>
             <Form.Control
@@ -321,7 +367,6 @@ const EditPersonalInformation = () => {
             />
           </Form.Group>
 
-          {/* Бутони */}
           <div className="text-center">
             <Button variant="success" type="submit" className="px-4 me-2">
               💾 Запази
