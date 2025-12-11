@@ -203,13 +203,8 @@ public class CalendarService {
         } else {
             // If the exception does not exist, create a new one
 
-            if (isAppointmentInRange(doctorId, startOfWorkingDay.atDate(date), newStartDateTime)) {
+            if (!isAppointmentInRange(doctorId, newStartDateTime,newEndDateTime )) {
                 throw new RuntimeException("Cannot set the new working hours because there are existing appointments before the new start time.");
-            }
-
-            // Check for appointments between the new end time and 5 PM
-            if (isAppointmentInRange(doctorId, newEndDateTime, endOfWorkingDay.atDate(date))) {
-                throw new RuntimeException("Cannot set the new working hours because there are existing appointments after the new end time.");
             }
 
             WorkDayException newException = new WorkDayException();
@@ -228,9 +223,15 @@ public class CalendarService {
             return false;
         }
 
+        LocalDate startDate = start.toLocalDate();  // Extract date from the start LocalDateTime
+        LocalDateTime startOfDay = startDate.atTime(0, 0);  // 00:00:00
+        LocalDateTime endOfDay = startDate.atTime(23, 59, 59);
         // Check for appointments within the specified range
         List<Appointment> appointments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(doctorId, start, end);
-        return !appointments.isEmpty();
+        List<Appointment> allDayAppoinments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(doctorId, startOfDay, endOfDay);
+
+        System.out.println(appointments);
+        return appointments.size() == allDayAppoinments.size();
     }
 
 }

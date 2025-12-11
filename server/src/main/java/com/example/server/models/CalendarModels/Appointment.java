@@ -18,6 +18,16 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", startingTime=" + startingTime +
+                ", durationInMinutes=" + durationInMinutes +
+                ", endTime=" + endTime +
+                '}';
+    }
+
     // The exact start date + time
     private LocalDateTime startingTime;
 

@@ -1,64 +1,91 @@
 import { Container, Table, Button, Form } from "react-bootstrap";
 import { FileDown, FileText, Printer } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { uploadToCloudinary } from "../../api/cloudinaryApi";
+import { useAuth } from "../../context/AuthContext";
+import { fetchFiles, saveFileToDatabase } from "../../api/storageApi";
 
 const Storage = ({ userId }) => {
-  const [files, setFiles] = useState(() => {
-    const saved = localStorage.getItem(`patient_files-${userId}`);
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  const [files, setFiles] = useState([]);
   const [newFiles, setNewFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [droppedFilesNames, setDroppedFilesNames] = useState([]);
   const [dropSuccess, setDropSuccess] = useState(false);
+  const { token, user } = useAuth();
 
-  // Запис в localStorage само за текущия user
   useEffect(() => {
-    localStorage.setItem(`patient_files-${userId}`, JSON.stringify(files));
-  }, [files, userId]);
+    fetchFiles(user.id, token).then((fetchedFiles) => {
+      setFiles(fetchedFiles); // Update the state with the fetched files
+    });
+  }, []);
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!newFiles || newFiles.length === 0) return;
 
     const filesArray = Array.from(newFiles);
     const totalFiles = filesArray.length;
     let completedFiles = 0;
 
-    filesArray.forEach((file) => {
+    filesArray.forEach(async (file) => {
       const id = Date.now() + Math.random();
 
       const interval = setInterval(() => {
         setUploadProgress((prev) => {
           const newValue = Math.min(prev + 10 / totalFiles, 100);
 
-          if (newValue >= ((completedFiles + 1) / totalFiles) * 100) {
+          if (newValue === 100) {
             clearInterval(interval);
             completedFiles++;
-
-            const entry = {
-              id,
-              name: file.name,
-              size: file.size,
-              type: file.type,
-              date: new Date().toLocaleDateString(),
-              content: URL.createObjectURL(file),
-            };
-            setFiles((prevFiles) => [...prevFiles, entry]);
-            setNewFiles([]);
-            if (fileInputRef.current) fileInputRef.current.value = "";
-
-            // ако всички файлове са качени, изчисти прогрес бара
-            if (completedFiles === totalFiles) {
-              setTimeout(() => setUploadProgress(0), 300);
-            }
           }
 
           return newValue;
         });
       }, 120);
+
+      try {
+        // Upload the file to Cloudinary
+        const cloudinaryUrl = await uploadToCloudinary(file);
+        console.log(cloudinaryUrl);
+
+        const localDate = new Date().toISOString().split("T")[0]; // "yyyy-MM-dd" format
+
+        // Collect file metadata
+        const fileName = file.name;
+        const fileSize = (file.size / 1024).toFixed(2); // Size in KB, with 2 decimal places
+        const fileType = file.type;
+
+        const entry = {
+          id,
+          name: fileName,
+          size: fileSize, // Size in MB
+          type: fileType,
+          dateOfUpload: localDate,
+          fileCloudinaryUrl: cloudinaryUrl, // Cloudinary URL
+        };
+
+        // Save the file info to the database
+        await saveFileToDatabase(entry, user.id, token);
+
+        // Add the file to the files state
+        setFiles((prevFiles) => [...prevFiles, entry]);
+
+        // Reset the file input and progress state
+        setNewFiles([]); // Reset the newFiles state
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset the file input
+
+        if (completedFiles === totalFiles) {
+          setTimeout(() => setUploadProgress(0), 300); // Reset progress bar
+        }
+
+        // Re-fetch the files to update the UI
+        fetchFiles(user.id, token).then((fetchedFiles) => {
+          setFiles(fetchedFiles);
+        });
+      } catch (error) {
+        console.error("Error uploading to Cloudinary", error);
+      }
     });
   };
 
@@ -121,7 +148,7 @@ const Storage = ({ userId }) => {
   };
 
   const isPreviewable = (type) =>
-    type.startsWith("image/") || type === "application/pdf";
+    type?.startsWith("image/") || type === "application/pdf";
 
   return (
     <Container className="py-5">
@@ -174,6 +201,14 @@ const Storage = ({ userId }) => {
           </h5>
         )}
       </div>
+      {/* 
+      <Button
+        onClick={() => {
+          console.log(files);
+        }}
+      >
+        I want files niggas
+      </Button> */}
 
       <Form className="mb-3 d-flex">
         <Form.Control
@@ -192,6 +227,7 @@ const Storage = ({ userId }) => {
         </Button>
       </Form>
 
+      {/* PROGRESS BAR */}
       {uploadProgress > 0 && (
         <div className="mb-4">
           <h6>Качване... {Math.round(uploadProgress)}%</h6>
@@ -215,6 +251,7 @@ const Storage = ({ userId }) => {
         </div>
       )}
 
+      {/* FILE TABLE */}
       {files.length === 0 ? (
         <p>Все още няма документи.</p>
       ) : (
@@ -234,7 +271,7 @@ const Storage = ({ userId }) => {
                 <td>{file.name}</td>
                 <td>{file.type}</td>
                 <td>{(file.size / 1024).toFixed(2)} KB</td>
-                <td>{file.date}</td>
+                <td>{file.dateOfUpload}</td>
                 <td className="d-flex gap-2 align-items-center">
                   <Button
                     variant="outline-primary"
@@ -248,7 +285,9 @@ const Storage = ({ userId }) => {
                     <>
                       <Button
                         variant="outline-secondary"
-                        onClick={() => window.open(file.content, "_blank")}
+                        onClick={() =>
+                          window.open(file.fileCloudinaryUrl, "_blank")
+                        }
                         title="Преглед"
                       >
                         <FileText size={16} />
@@ -279,7 +318,7 @@ const Storage = ({ userId }) => {
       )}
 
       {/* Галерия за изображения */}
-      {files.some((file) => file.type.startsWith("image/")) && (
+      {/* {files.some((file) => file.type.startsWith("image/")) && (
         <div style={{ marginTop: "40px" }}>
           <h4 style={{ color: "#2E8B57", marginBottom: "20px" }}>🖼️ Галерия</h4>
 
@@ -336,7 +375,7 @@ const Storage = ({ userId }) => {
               ))}
           </div>
         </div>
-      )}
+      )} */}
     </Container>
   );
 };
