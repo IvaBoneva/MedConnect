@@ -27,6 +27,7 @@
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "geolib": "^3.3.4",
+    "js-file-download": "^0.4.12",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.552.0",

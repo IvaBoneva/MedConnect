@@ -4,6 +4,8 @@ import com.example.server.dto.FileUploadRequest;
 import com.example.server.dto.UserFileExtractDTO;
 import com.example.server.models.StorageModels.UserFile;
 import com.example.server.service.StorageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,5 +53,15 @@ public class StorageController {
                 fileUploadRequest.getType(),
                 fileUploadRequest.getDateOfUpload()
         );
+    }
+
+    @DeleteMapping("/files/{fileId}")
+    public ResponseEntity<String> deleteFile(@PathVariable Long fileId) {
+        try {
+            storageService.deleteFile(fileId);
+            return ResponseEntity.ok("File deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

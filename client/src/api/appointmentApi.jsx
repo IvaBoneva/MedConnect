@@ -1,3 +1,4 @@
+
 export async function createAppointmentRequest(payload, token) {
   const res = await fetch("http://localhost:8080/api/appointments", {
     method: "POST",

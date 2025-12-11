@@ -61,12 +61,14 @@ public class JwtFilter extends GenericFilterBean {
 
                 servletPath.startsWith("/api/calendar/doctor") ||
 
+
                 servletPath.startsWith("/api/storage/files") ||  // <-- This is the public file endpoint
 
                 servletPath.startsWith("/api/storage/getFiles/") ||  // <-- Add this line to allow this URL
                 servletPath.startsWith("/api/storage/**") ||  //
 
-                servletPath.startsWith("/api/calendar/doctor/off") ||
+
+            servletPath.startsWith("/api/calendar/doctor/off") ||
 
                 servletPath.matches("/api/calendar/doctor/\\d+/exception") ||
 

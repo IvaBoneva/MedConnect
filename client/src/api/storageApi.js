@@ -50,3 +50,25 @@ export const saveFileToDatabase = async (file, userId, token) => {
     throw error; // Rethrow the error to be handled by the calling component
   }
 };
+
+
+export const deleteFileFromDatabase = async (fileId, token) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/storage/files/${fileId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error deleting the file");
+    }
+
+    return "File deleted successfully"; // Return success message
+  } catch (error) {
+    console.error("Error deleting the file:", error);
+    throw error; // Rethrow the error to be handled by the calling component
+  }
+};

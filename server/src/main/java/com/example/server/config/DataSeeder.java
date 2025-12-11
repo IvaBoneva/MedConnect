@@ -89,12 +89,9 @@ public class DataSeeder {
                 patient.setRole("patient");
                 patientRepository.save(patient);
 
-
-
                 Storage storage = new Storage();
                 storage.setUser(patient); // Associate the storage with the patient
 
-// Save the Storage to the database
                 storageRepository.save(storage);
 
                 UserFile file1 = new UserFile();

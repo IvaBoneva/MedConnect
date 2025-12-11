@@ -3,7 +3,12 @@ import { FileDown, FileText, Printer } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { uploadToCloudinary } from "../../api/cloudinaryApi";
 import { useAuth } from "../../context/AuthContext";
-import { fetchFiles, saveFileToDatabase } from "../../api/storageApi";
+import {
+  deleteFileFromDatabase,
+  fetchFiles,
+  saveFileToDatabase,
+} from "../../api/storageApi";
+import fileDownload from "js-file-download";
 
 const Storage = ({ userId }) => {
   const [files, setFiles] = useState([]);
@@ -22,80 +27,80 @@ const Storage = ({ userId }) => {
   }, []);
 
   const handleUpload = async () => {
-  if (!newFiles || newFiles.length === 0) return;
+    if (!newFiles || newFiles.length === 0) return;
 
-  const filesArray = Array.from(newFiles);
-  const totalFiles = filesArray.length;
-  let completedFiles = 0;
+    const filesArray = Array.from(newFiles);
+    const totalFiles = filesArray.length;
+    let completedFiles = 0;
 
-  // Reset progress before starting the upload
-  setUploadProgress(0);
+    // Reset progress before starting the upload
+    setUploadProgress(0);
 
-  filesArray.forEach(async (file) => {
-    const id = Date.now() + Math.random();
+    filesArray.forEach(async (file) => {
+      const id = Date.now() + Math.random();
 
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        const newValue = Math.min(prev + 10 / totalFiles, 100);
+      const interval = setInterval(() => {
+        setUploadProgress((prev) => {
+          const newValue = Math.min(prev + 10 / totalFiles, 100);
 
-        if (newValue === 100) {
-          clearInterval(interval);
-          completedFiles++;
+          if (newValue === 100) {
+            clearInterval(interval);
+            completedFiles++;
+          }
+
+          return newValue;
+        });
+      }, 120);
+
+      try {
+        // Upload the file to Cloudinary
+        const cloudinaryUrl = await uploadToCloudinary(file);
+        if (!cloudinaryUrl) throw new Error("Upload failed, please try again."); // If cloudinaryUrl is null, throw error
+
+        const localDate = new Date().toISOString().split("T")[0]; // "yyyy-MM-dd" format
+
+        // Collect file metadata
+        const fileName = file.name;
+        const fileSize = (file.size / 1024).toFixed(2); // Size in KB, with 2 decimal places
+        const fileType = file.type;
+
+        const entry = {
+          id,
+          name: fileName,
+          size: fileSize, // Size in KB
+          type: fileType,
+          dateOfUpload: localDate,
+          fileCloudinaryUrl: cloudinaryUrl, // Cloudinary URL
+        };
+
+        // Save the file info to the database
+        await saveFileToDatabase(entry, user.id, token);
+
+        // Add the file to the files state
+        setFiles((prevFiles) => [...prevFiles, entry]);
+
+        // Reset the file input state
+        setNewFiles([]);
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset the file input
+
+        // If all files have completed, reset the progress bar
+        if (completedFiles === totalFiles) {
+          setTimeout(() => setUploadProgress(0), 300); // Reset progress bar after all files are uploaded
         }
 
-        return newValue;
-      });
-    }, 120);
+        // Re-fetch the files to update the UI
+        fetchFiles(user.id, token).then((fetchedFiles) => {
+          setFiles(fetchedFiles);
+        });
+      } catch (error) {
+        console.error("Error uploading to Cloudinary", error);
+        alert(`Upload failed: ${error.message}`);
 
-    try {
-      // Upload the file to Cloudinary
-      const cloudinaryUrl = await uploadToCloudinary(file);
-      if (!cloudinaryUrl) throw new Error("Upload failed, please try again."); // If cloudinaryUrl is null, throw error
-
-      const localDate = new Date().toISOString().split("T")[0]; // "yyyy-MM-dd" format
-
-      // Collect file metadata
-      const fileName = file.name;
-      const fileSize = (file.size / 1024).toFixed(2); // Size in KB, with 2 decimal places
-      const fileType = file.type;
-
-      const entry = {
-        id,
-        name: fileName,
-        size: fileSize, // Size in KB
-        type: fileType,
-        dateOfUpload: localDate,
-        fileCloudinaryUrl: cloudinaryUrl, // Cloudinary URL
-      };
-
-      // Save the file info to the database
-      await saveFileToDatabase(entry, user.id, token);
-
-      // Add the file to the files state
-      setFiles((prevFiles) => [...prevFiles, entry]);
-
-      // Reset the file input state
-      setNewFiles([]); 
-      if (fileInputRef.current) fileInputRef.current.value = ""; // Reset the file input
-
-      // If all files have completed, reset the progress bar
-      if (completedFiles === totalFiles) {
-        setTimeout(() => setUploadProgress(0), 300); // Reset progress bar after all files are uploaded
+        // Reset progress to 0 if there's an error
+        setUploadProgress(0); // Ensure the progress resets to 0 if there's an error
       }
-
-      // Re-fetch the files to update the UI
-      fetchFiles(user.id, token).then((fetchedFiles) => {
-        setFiles(fetchedFiles);
-      });
-    } catch (error) {
-      console.error("Error uploading to Cloudinary", error);
-      alert(`Upload failed: ${error.message}`);
-      
-      // Reset progress to 0 if there's an error
-      setUploadProgress(0); // Ensure the progress resets to 0 if there's an error
-    }
-  });
-};
+    });
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -122,36 +127,123 @@ const Storage = ({ userId }) => {
     }
   };
 
+  //   const handleDownload = (url, filename) => {
+  //     fetch(url)
+  //       .then((response) => {
+  //         if (response.ok) {
+  //           return response.blob(); // Convert the response to a blob
+  //         }
+  //         throw new Error("Failed to download file");
+  //       })
+  //       .then((blob) => {
+  //         fileDownload(blob, filename); // Trigger the file download
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error downloading the file:", error);
+  //       });
+  //   };
+
   const handleDownload = (file) => {
-    const link = document.createElement("a");
-    link.href = file.content;
-    link.download = file.name;
-    link.click();
+    const url = file.fileCloudinaryUrl; // Use the Cloudinary file URL
+    const filename = file.name; // The name of the file you want to download
+
+    fetch(url)
+      .then((response) => response.blob()) // Fetch the file as a blob
+      .then((blob) => {
+        fileDownload(blob, filename); // Trigger the download
+      })
+      .catch((error) => {
+        console.error("Error downloading the file:", error);
+      });
   };
 
-  const handlePrint = async (file) => {
+const handlePrint = (file) => {
+  const fileURL = file.fileCloudinaryUrl;
+
+  // If it's an image, open it in a new window and print it
+  const isImage = file.type?.startsWith("image/");
+
+  if (isImage) {
+    // Open the image in a new window
+    const printWindow = window.open("", "_blank");
+
+    // Create a temporary HTML content with the image and a print button
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Image</title>
+          <style>
+            body {
+              text-align: center;
+              margin: 0;
+            }
+            img {
+              max-width: 100%;
+              max-height: 90vh;
+              object-fit: contain;
+              margin-top: 20px;
+            }
+            @media print {
+              body {
+                margin: 0;
+              }
+              img {
+                width: 100%;
+                height: auto;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <img id="imageToPrint" src="${fileURL}" alt="Image for printing" style="max-width: 100%; max-height: 90vh; object-fit: contain;" />
+        </body>
+      </html>
+    `);
+
+    // Wait for the image to load before printing
+    const image = printWindow.document.getElementById("imageToPrint");
+
+    image.onload = () => {
+      // After the image is loaded, trigger the print dialog
+      printWindow.focus();
+      printWindow.print();
+
+      // Close the print window after printing
+      printWindow.onafterprint = function () {
+        printWindow.close();
+      };
+    };
+
+    // In case the image fails to load (error handling)
+    image.onerror = () => {
+      console.error("Failed to load the image for printing.");
+      printWindow.close();
+    };
+  } else if (file.type === "application/pdf") {
+    // For PDF files, open in the browser viewer
+    const printWindow = window.open(fileURL, "_blank");
+    printWindow.focus();
+    printWindow.print();
+  } else {
+    console.error("Unsupported file type for printing:", file.type);
+  }
+};
+
+  const handleRemove = async (fileId) => {
     try {
-      let fileURL = file.content;
+      // Call delete function from fileApi.js
+      const successMessage = await deleteFileFromDatabase(fileId, token);
+      alert(successMessage); // Show success message
 
-      if (!fileURL && file.rawFile) {
-        fileURL = URL.createObjectURL(file.rawFile);
+      // Remove the file from the state to update the UI
+      setFiles(files.filter((f) => f.id !== fileId));
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""; // Reset file input
       }
-
-      if (!fileURL) return;
-
-      const win = window.open(fileURL, "_blank");
-      win?.focus();
-      win?.print();
-    } catch (err) {
-      console.error("Не може да се принтира:", err);
-    }
-  };
-
-  const handleRemove = (fileId) => {
-    setFiles(files.filter((f) => f.id !== fileId));
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    } catch (error) {
+      console.error("Error deleting the file:", error);
+      alert("Failed to delete the file");
     }
   };
 

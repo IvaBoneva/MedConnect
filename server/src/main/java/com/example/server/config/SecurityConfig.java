@@ -65,6 +65,9 @@ public class SecurityConfig {
 
                         "/api/storage/files",      // Public file upload endpoint
                         "/api/storage/getFiles/**",
+                        "/api/storage/files/{fileId}", // Protected file deletion endpoint (JWT required)
+
+
 
                         "/api/calendar/doctor",
                         "/api/calendar/doctor/off",

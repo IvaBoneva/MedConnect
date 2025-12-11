@@ -33,36 +33,39 @@ public class StorageService {
     }
 
     public void saveFile(Long userId, String fileCloudinaryUrl, String name, Double size, String type, String dateOfUpload) {
-        // Find the storage associated with the user
         Storage storage = storageRepository.findByUserId(userId);
 
         if (storage == null) {
             throw new RuntimeException("Storage not found for user ID: " + userId);
         }
 
-        User user = storage.getUser(); // Assuming storage has a reference to the User object
+        User user = storage.getUser();
 
-        // Determine the maximum allowed files based on subscription type
         int maxFiles = user.getSubscription().equals("free") ? 5 : 15;
 
-        // Check how many files the user already has
         long currentFileCount = userFileRepository.countByStorageId(storage.getId()); // Assuming you have a method to count files by storage ID
 
-        // If the user has reached or exceeded the file limit, throw an exception
         if (currentFileCount >= maxFiles) {
             throw new RuntimeException("File limit exceeded for user ID: " + userId + ". Maximum allowed files: " + maxFiles);
         }
 
-        // Create a new user file entity
         UserFile userFile = new UserFile();
         userFile.setFileCloudinaryUrl(fileCloudinaryUrl);
         userFile.setName(name);
         userFile.setSize(size);
         userFile.setType(type);
         userFile.setDateOfUpload(LocalDate.parse(dateOfUpload));
-        userFile.setStorage(storage); // Link to storage
+        userFile.setStorage(storage);
 
-        // Save the user file
         userFileRepository.save(userFile);
     }
+
+    public void deleteFile(Long fileId) {
+        UserFile userFile = userFileRepository.findById(fileId)
+                .orElseThrow(() -> new RuntimeException("File not found for ID: " + fileId));
+
+        userFileRepository.delete(userFile);
+    }
+
+
 }
