@@ -67,13 +67,11 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatientWithAppointments(@PathVariable Long id) {
-        // Fetch the patient from the service
+        
         Patient patient = patientService.findById(id);
 
-        // Map the patient entity to PatientWithAppointmentsDTO
         PatientDTO patientDTO = patientMapper.convertToDTO(patient);
 
-        // Return the mapped DTO in the response
         return ResponseEntity.ok(patientDTO);
     }
 
