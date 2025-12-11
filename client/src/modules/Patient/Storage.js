@@ -22,72 +22,80 @@ const Storage = ({ userId }) => {
   }, []);
 
   const handleUpload = async () => {
-    if (!newFiles || newFiles.length === 0) return;
+  if (!newFiles || newFiles.length === 0) return;
 
-    const filesArray = Array.from(newFiles);
-    const totalFiles = filesArray.length;
-    let completedFiles = 0;
+  const filesArray = Array.from(newFiles);
+  const totalFiles = filesArray.length;
+  let completedFiles = 0;
 
-    filesArray.forEach(async (file) => {
-      const id = Date.now() + Math.random();
+  // Reset progress before starting the upload
+  setUploadProgress(0);
 
-      const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          const newValue = Math.min(prev + 10 / totalFiles, 100);
+  filesArray.forEach(async (file) => {
+    const id = Date.now() + Math.random();
 
-          if (newValue === 100) {
-            clearInterval(interval);
-            completedFiles++;
-          }
+    const interval = setInterval(() => {
+      setUploadProgress((prev) => {
+        const newValue = Math.min(prev + 10 / totalFiles, 100);
 
-          return newValue;
-        });
-      }, 120);
-
-      try {
-        // Upload the file to Cloudinary
-        const cloudinaryUrl = await uploadToCloudinary(file);
-        console.log(cloudinaryUrl);
-
-        const localDate = new Date().toISOString().split("T")[0]; // "yyyy-MM-dd" format
-
-        // Collect file metadata
-        const fileName = file.name;
-        const fileSize = (file.size / 1024).toFixed(2); // Size in KB, with 2 decimal places
-        const fileType = file.type;
-
-        const entry = {
-          id,
-          name: fileName,
-          size: fileSize, // Size in MB
-          type: fileType,
-          dateOfUpload: localDate,
-          fileCloudinaryUrl: cloudinaryUrl, // Cloudinary URL
-        };
-
-        // Save the file info to the database
-        await saveFileToDatabase(entry, user.id, token);
-
-        // Add the file to the files state
-        setFiles((prevFiles) => [...prevFiles, entry]);
-
-        // Reset the file input and progress state
-        setNewFiles([]); // Reset the newFiles state
-        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset the file input
-
-        if (completedFiles === totalFiles) {
-          setTimeout(() => setUploadProgress(0), 300); // Reset progress bar
+        if (newValue === 100) {
+          clearInterval(interval);
+          completedFiles++;
         }
 
-        // Re-fetch the files to update the UI
-        fetchFiles(user.id, token).then((fetchedFiles) => {
-          setFiles(fetchedFiles);
-        });
-      } catch (error) {
-        console.error("Error uploading to Cloudinary", error);
+        return newValue;
+      });
+    }, 120);
+
+    try {
+      // Upload the file to Cloudinary
+      const cloudinaryUrl = await uploadToCloudinary(file);
+      if (!cloudinaryUrl) throw new Error("Upload failed, please try again."); // If cloudinaryUrl is null, throw error
+
+      const localDate = new Date().toISOString().split("T")[0]; // "yyyy-MM-dd" format
+
+      // Collect file metadata
+      const fileName = file.name;
+      const fileSize = (file.size / 1024).toFixed(2); // Size in KB, with 2 decimal places
+      const fileType = file.type;
+
+      const entry = {
+        id,
+        name: fileName,
+        size: fileSize, // Size in KB
+        type: fileType,
+        dateOfUpload: localDate,
+        fileCloudinaryUrl: cloudinaryUrl, // Cloudinary URL
+      };
+
+      // Save the file info to the database
+      await saveFileToDatabase(entry, user.id, token);
+
+      // Add the file to the files state
+      setFiles((prevFiles) => [...prevFiles, entry]);
+
+      // Reset the file input state
+      setNewFiles([]); 
+      if (fileInputRef.current) fileInputRef.current.value = ""; // Reset the file input
+
+      // If all files have completed, reset the progress bar
+      if (completedFiles === totalFiles) {
+        setTimeout(() => setUploadProgress(0), 300); // Reset progress bar after all files are uploaded
       }
-    });
-  };
+
+      // Re-fetch the files to update the UI
+      fetchFiles(user.id, token).then((fetchedFiles) => {
+        setFiles(fetchedFiles);
+      });
+    } catch (error) {
+      console.error("Error uploading to Cloudinary", error);
+      alert(`Upload failed: ${error.message}`);
+      
+      // Reset progress to 0 if there's an error
+      setUploadProgress(0); // Ensure the progress resets to 0 if there's an error
+    }
+  });
+};
 
   const handleDragOver = (e) => {
     e.preventDefault();
