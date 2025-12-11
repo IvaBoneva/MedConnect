@@ -3,6 +3,8 @@ package com.example.server.config;
 import com.example.server.models.CalendarModels.Appointment;
 import com.example.server.models.CalendarModels.WeeklyScheduleTemplate;
 import com.example.server.models.CalendarModels.WorkDayException;
+import com.example.server.models.StorageModels.Storage;
+import com.example.server.models.StorageModels.UserFile;
 import com.example.server.models.UserModels.Doctor;
 import com.example.server.models.UserModels.Guardian;
 import com.example.server.models.UserModels.Patient;
@@ -10,6 +12,8 @@ import com.example.server.models.UserModels.User;
 import com.example.server.repository.CalendarRepositories.AppointmentRepository;
 import com.example.server.repository.CalendarRepositories.WeeklyScheduleTemplateRepository;
 import com.example.server.repository.CalendarRepositories.WorkDayExceptionRepository;
+import com.example.server.repository.StorageRepositories.StorageRepository;
+import com.example.server.repository.StorageRepositories.UserFileRepository;
 import com.example.server.repository.UserRepositories.DoctorRepository;
 import com.example.server.repository.UserRepositories.GuardianRepository;
 import com.example.server.repository.UserRepositories.PatientRepository;
@@ -38,7 +42,9 @@ public class DataSeeder {
             PasswordEncoder passwordEncoder,
             WeeklyScheduleTemplateRepository weeklyRepo,
             WorkDayExceptionRepository exceptionRepo,
-            AppointmentRepository appointmentRepo
+            AppointmentRepository appointmentRepo,
+            StorageRepository storageRepository,
+            UserFileRepository userFileRepository
     ) {
         return args -> {
 
@@ -81,6 +87,36 @@ public class DataSeeder {
                 patient.setAge(22);
                 patient.setPhoneNumber("111222333");
                 patient.setRole("patient");
+                patientRepository.save(patient);
+
+
+
+                Storage storage = new Storage();
+                storage.setUser(patient); // Associate the storage with the patient
+
+// Save the Storage to the database
+                storageRepository.save(storage);
+
+                UserFile file1 = new UserFile();
+                file1.setName("samplefile1.jpg");
+                file1.setSize(2048.0); // Size in KB (example 2MB)
+                file1.setType("image/jpeg");
+                file1.setDateOfUpload(LocalDate.now());
+                file1.setFileCloudinaryUrl("https://res.cloudinary.com/demo/image/upload/v1/samplefile1"); // Example Cloudinary URL
+                file1.setStorage(storage); // Link the file to the storage
+
+                // Create a sample file2
+                UserFile file2 = new UserFile();
+                file2.setName("samplefile2.jpg");
+                file2.setSize(1024.0); // Size in KB (example 1MB)
+                file2.setType("image/jpeg");
+                file2.setDateOfUpload(LocalDate.now());
+                file2.setFileCloudinaryUrl("https://res.cloudinary.com/demo/image/upload/v1/samplefile2"); // Example Cloudinary URL
+                file2.setStorage(storage); // Link the file to the storage
+
+                // Save the files to the database
+                userFileRepository.save(file1);
+                userFileRepository.save(file2);
 
                 Patient patient2 = new Patient();
                 patient2.setFirstName("Tony");
@@ -298,7 +334,6 @@ public class DataSeeder {
                 userRepository.save(user1);
                 userRepository.save(user2);
                 userRepository.save(user3);
-                patientRepository.save(patient);
 
                 doctorRepository.save(doctor2);
                 doctorRepository.save(doctor3);

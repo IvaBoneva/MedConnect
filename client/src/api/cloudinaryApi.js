@@ -4,7 +4,7 @@ export async function uploadToCloudinary(file) {
   data.append("upload_preset", "userPhoto");
 
   const res = await fetch(
-    "https://api.cloudinary.com/v1_1/dfnja74fz/image/upload",
+    "https://api.cloudinary.com/v1_1/dfnja74fz/raw/upload",
     {
       method: "POST",
       body: data,
@@ -14,3 +14,4 @@ export async function uploadToCloudinary(file) {
   const json = await res.json();
   return json.secure_url;
 }
+

@@ -63,7 +63,8 @@ public class SecurityConfig {
 
                         "/auth/me",
 
-
+                        "/api/storage/files",      // Public file upload endpoint
+                        "/api/storage/getFiles/**",
 
                         "/api/calendar/doctor",
                         "/api/calendar/doctor/off",
