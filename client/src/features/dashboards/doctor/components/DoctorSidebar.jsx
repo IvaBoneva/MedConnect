@@ -21,7 +21,7 @@ export const DoctorSidebar = ({ basePath }) => {
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/personal_information`}>
-            Лични данни
+            👤Лични данни
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

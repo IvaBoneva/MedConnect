@@ -12,7 +12,7 @@ export const HomePageLayout = ({ user }) => {
       <Row className="align-items-center">
         {isPremium ? (
           <WelcomeSection
-            title={" Добре дошли в MedConnect+ Premium"}
+            title={" Добре дошли в MedConnect+"}
             description={
               "Вашият личен здравен асистент — управлявайте прегледи, лекарства, имунизации, профилактики и медицински досиета на едно сигурно място."
             }
@@ -20,7 +20,7 @@ export const HomePageLayout = ({ user }) => {
           />
         ) : (
           <WelcomeSection
-            title={" Добре дошли в MedConnect+"}
+            title={" Добре дошли в MedConnect"}
             description={
               "Вашият личен здравен асистент — управлявайте прегледи, лекарства и медицински досиета на едно сигурно място."
             }
