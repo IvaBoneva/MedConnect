@@ -1,13 +1,13 @@
 import { Container, Table, Button, Form } from "react-bootstrap";
 import { FileDown, FileText, Printer } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { uploadToCloudinary } from "../../api/cloudinaryApi";
-import { useAuth } from "../../context/AuthContext";
+import { uploadToCloudinary } from "../../../../api/cloudinaryApi";
+import { useAuth } from "../../../../context/AuthContext";
 import {
   deleteFileFromDatabase,
   fetchFiles,
   saveFileToDatabase,
-} from "../../api/storageApi";
+} from "../../../../api/storageApi";
 import fileDownload from "js-file-download";
 
 const StoragePage = ({ userId }) => {

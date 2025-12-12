@@ -8,11 +8,11 @@ import {
   Image,
   Alert,
 } from "react-bootstrap";
-import profileImage from "../../images/profile.png";
+import profileImage from "../../../../images/profile.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../../context/AuthContext";
 
 const EditPersonalInformation = () => {
   const { user } = useAuth();

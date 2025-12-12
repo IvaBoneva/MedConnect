@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { currentUser, logIn, register } from "../../api/userApi";
 import { uploadToCloudinary } from "../../api/cloudinaryApi";
 import { useAuth } from "../../context/AuthContext";
-import { RegisterFormLayout } from "./components/RegisterFormLayout";
+import { RegisterFormLayout } from "./components/register/RegisterFormLayout";
 
 const calculateAge = (dateString) => {
   const today = new Date();
