@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+// Пътищата към API са 3 нива нагоре (../../api)
 import { currentUser, logIn, register } from "../../api/userApi";
 import { uploadToCloudinary } from "../../api/cloudinaryApi";
 import { useAuth } from "../../context/AuthContext";
