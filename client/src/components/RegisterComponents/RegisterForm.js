@@ -13,7 +13,8 @@ const transformFormToBackend = (form) => {
     password: form.password,
     firstName: form.fname,
     lastName: form.lname,
-    age: Number(form.age) || null,
+    birthDate: form.birthDate || null,
+    age: form.age || null, // <-- ADD THIS
     phoneNumber: form.phone,
     role: form.role || "",
     photoURL: form.photoURL || null,
@@ -31,7 +32,8 @@ const transformFormToBackend = (form) => {
         ...baseUser,
         wardFirstName: form.patientFName || null,
         wardLastName: form.patientLName || null,
-        wardAge: form.patientAge ? Number(form.patientAge) : null,
+        wardBirthDate: form.patientBirthDate || null,
+        wardAge: form.patientAge || null,
         isWardDisabled: form.hasDisability === "yes",
         wardDisabilityDescription:
           form.hasDisability === "yes" ? form.disabilityDetails || null : null,

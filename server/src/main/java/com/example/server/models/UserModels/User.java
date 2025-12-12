@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Set;
 
 @Getter
@@ -32,7 +33,11 @@ public class User {
     private String email;
     private String password;
 
-    private int age;
+    private Integer age;
+
+    @Column
+    private LocalDate birthDate;
+
     private String phoneNumber;
     private String role;
 
