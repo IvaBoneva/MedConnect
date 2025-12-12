@@ -1,14 +1,15 @@
 package com.example.server.service.UserServices;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.server.dto.ExposedUserDTO.DoctorDTO;
 import com.example.server.mappers.UserMappers.DoctorMapper;
 import com.example.server.models.UserModels.Doctor;
 import com.example.server.repository.UserRepositories.DoctorRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DoctorService extends BaseUserServiceImpl<Doctor> {

@@ -60,3 +60,4 @@ twilio:
     sid: ${TWILIO_ACCOUNT_SID:ACaae86548392419ad5c02c6764615c428}
     auth-token: ${TWILIO_AUTH_TOKEN:d5c58b8cd456a0951fd44e608cbe4262}
     phone-number: ${TWILIO_PHONE_NUMBER:+16594002450}
+    messaging-service-sid: ${TWILIO_MESSAGING_SERVICE_SID:MG24c9eb5e4bd2d5ec30daf42322b2cae7}

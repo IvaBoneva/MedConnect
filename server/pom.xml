@@ -92,7 +92,7 @@
 		<dependency>
   			<groupId>com.twilio.sdk</groupId>
   			<artifactId>twilio</artifactId>
-  			<version>8.0.0</version>
+  			<version>11.0.0</version>
 		</dependency>
 		
 <!--GOOGLE CALENDAR DEPENDENCIES-->

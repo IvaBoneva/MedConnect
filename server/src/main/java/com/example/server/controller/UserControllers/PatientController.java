@@ -1,12 +1,15 @@
 package com.example.server.controller.UserControllers;
 
 import com.example.server.dto.ExposedUserDTO.PatientDTO;
+import com.example.server.mappers.ModelMapperConfig;
 //import com.example.server.dto.ExposedUserDTO.PatientWithAppointmentsDTO;
 import com.example.server.mappers.UserMappers.PatientMapper;
 //import com.example.server.mappers.PatientWithAppointmentsMapper;
 import com.example.server.models.UserModels.Patient;
 import com.example.server.models.UserModels.User;
 import com.example.server.service.UserServices.PatientService;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +24,15 @@ public class PatientController {
 //    private final PatientWithAppointmentsMapper patientWithAppointmentsMapper;
     private final PatientMapper patientMapper;
     private final PatientService patientService;
+    private final ModelMapperConfig modelMapperConfig;
 
     public PatientController(
 //            PatientWithAppointmentsMapper patientWithAppointmentsMapper,
-            PatientMapper patientMapper, PatientService patientService) {
+            PatientMapper patientMapper, PatientService patientService, ModelMapperConfig modelMapperConfig) {
 //        this.patientWithAppointmentsMapper = patientWithAppointmentsMapper;
         this.patientMapper = patientMapper;
         this.patientService = patientService;
+        this.modelMapperConfig = modelMapperConfig;
     }
 
     @PostMapping("/register")
@@ -62,14 +67,19 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> getPatientWithAppointments(@PathVariable Long id) {
-        // Fetch the patient from the service
+        
         Patient patient = patientService.findById(id);
 
-        // Map the patient entity to PatientWithAppointmentsDTO
         PatientDTO patientDTO = patientMapper.convertToDTO(patient);
 
-        // Return the mapped DTO in the response
         return ResponseEntity.ok(patientDTO);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+        
+        PatientDTO updatedPatientDTO = patientService.updatePatient(id, patientDTO);
+        return ResponseEntity.ok(updatedPatientDTO);
     }
 
 }

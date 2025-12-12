@@ -1,0 +1,224 @@
+import React, { useEffect, useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import "./components/GoogleCalendarComponent.css";
+import {
+  getAllWorkDays,
+  updateWorkingHours,
+  setDayOff,
+} from "../../../api/doctorApi";
+import { PatientAccourdion } from "../calendar/components/PatientAccourdion"
+import { transformWorkDayToEvents } from "../../utils/calendarUtils";
+import { useAuth } from "../../../context/AuthContext";
+
+const DEFAULT_START = "09:00:00";
+const DEFAULT_END = "17:00:00";
+const DOCTOR_ID = 6;
+const CALENDAR_START_RENDER_DATE = "2025-09-01";
+const CALENDAR_END_RENDER_DATE = "2026-01-31";
+
+const GoogleCalendarComponent = () => {
+  const [dayEvents, setDayEvents] = useState([]);
+  const [nonWorkingDaysEvents, setNonWorkingDaysEvents] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [changedScheduleEvents, setChangedScheduleEvents] = useState([]);
+  const [events2, setEvents2] = useState([]);
+  const [allWorkDays, setAllWorkDays] = useState([]);
+  const [calendarKey, setCalendarKey] = useState(0);
+
+  const { user } = useAuth();
+
+  const loadData = async () => {
+    const data = await getAllWorkDays(
+      user.id,
+      CALENDAR_START_RENDER_DATE,
+      CALENDAR_END_RENDER_DATE
+    );
+    setAllWorkDays([...data]);
+
+    const allEvents = data.flatMap((wd) => transformWorkDayToEvents(wd));
+    setEvents2([...allEvents]);
+
+    const nonWorking = data
+      .filter((wd) => wd.working === false)
+      .map((wd) => {
+        const start = wd.date;
+        const end = new Date(wd.date);
+        end.setDate(end.getDate() + 1);
+
+        return {
+          start,
+          end: end.toISOString().split("T")[0],
+          display: "background",
+          backgroundColor: "#ED9A8A",
+          allDay: true,
+          id: `nonworking-${wd.date}`,
+        };
+      });
+    setNonWorkingDaysEvents([...nonWorking]);
+
+    const changedSchedule = data
+      .filter(
+        (wd) =>
+          wd.working === true &&
+          wd.startTime &&
+          wd.endTime &&
+          (wd.startTime !== DEFAULT_START || wd.endTime !== DEFAULT_END)
+      )
+      .map((wd) => ({
+        start: wd.date,
+        end: wd.date,
+        display: "background",
+        backgroundColor: "#FFB84D",
+        allDay: true,
+        id: `changed-${wd.date}`,
+      }));
+
+    setChangedScheduleEvents([...changedSchedule]);
+
+    setCalendarKey((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Fetched/Updated Events:", events2); 
+    console.log("All Work Days Updated:", allWorkDays); 
+  }, [events2, allWorkDays]);
+
+  const handleDateClick = (info) => {
+    const clickedDate = info.dateStr;
+    setSelectedDate(clickedDate);
+
+    const eventsForDay = events2.filter(
+      (ev) => ev.start.slice(0, 10) === clickedDate
+    );
+    setDayEvents(eventsForDay);
+  };
+
+  const getSelectedDayInfo = () => {
+    const selectedDay = allWorkDays.find((d) => d.date === selectedDate);
+
+    if (!selectedDay) {
+      return <p>No data for this day</p>;
+    }
+
+    if (selectedDay.working === false) {
+      return <p>Not working today</p>;
+    }
+
+    const { startTime, endTime } = selectedDay;
+    return (
+      <p>
+        Working hours: {startTime?.slice(0, 5)} → {endTime?.slice(0, 5)}
+      </p>
+    );
+  };
+
+  const handleSetDayOff = async () => {
+    if (!selectedDate) {
+      alert("Select a date first!");
+      return;
+    }
+
+    try {
+      await setDayOff(user.id, selectedDate);
+      await loadData();
+      alert(`Marked ${selectedDate} as a day off.`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to set day off.");
+    }
+  };
+
+  const handleChangeWorkingHours = async () => {
+    if (!selectedDate) {
+      alert("Select a date first!");
+      return;
+    }
+
+    const start = prompt("Enter start time (HH:MM):", "10:00");
+    const end = prompt("Enter end time (HH:MM):", "15:00");
+
+    if (!start || !end) return;
+
+    try {
+      await updateWorkingHours(
+        user.id,
+        selectedDate,
+        `${start}:00`,
+        `${end}:00`
+      );
+
+      await loadData();
+      alert(`Updated working hours for ${selectedDate}`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update working hours.");
+    }
+  };
+
+  return (
+    <div
+      style={{
+        backgroundColor: "white",
+        padding: "10px",
+        width: "80%",
+        margin: "0 auto",
+      }}
+    >
+      <FullCalendar
+        key={calendarKey}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        headerToolbar={{
+          start: "dayGridMonth,timeGridWeek,timeGridDay custom1",
+          center: "title",
+          end: "custom2 prevYear,prev,next,nextYear",
+        }}
+        footerToolbar={{
+          start: "custom1,custom2",
+          center: "",
+          end: "prev,next",
+        }}
+        events={[...events2, ...nonWorkingDaysEvents, ...changedScheduleEvents]}
+        dateClick={handleDateClick}
+        customButtons={{
+          custom1: {
+            text: "Set Day Off",
+            click: handleSetDayOff,
+          },
+          custom2: {
+            text: "Change Hours",
+            click: handleChangeWorkingHours,
+          },
+        }}
+      />
+
+      <div
+        style={{
+          flex: 1,
+          height: "80vh",
+          padding: "15px",
+          borderRadius: "8px",
+          backgroundColor: "#f5f5f5",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          overflowY: "auto",
+        }}
+      >
+        <h3 style={{ marginTop: 0 }}>
+          Events on {selectedDate ? selectedDate : "—"}
+        </h3>
+
+        {getSelectedDayInfo()}
+
+        <PatientAccourdion dayEvents={dayEvents} />
+      </div>
+    </div>
+  );
+};
+
+export default GoogleCalendarComponent;

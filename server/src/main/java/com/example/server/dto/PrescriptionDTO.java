@@ -41,13 +41,14 @@ public class PrescriptionDTO {
 
     private String dosage;
 
-    private String frequency;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private String prescribingDoctor;
 
-    private String takingHour; // променено на String
+    private String takingHour; 
 
     private Long userId;
 
 }
-

@@ -13,7 +13,6 @@ import java.util.Optional;
 @Service
 public abstract class BaseUserServiceImpl<T extends User> implements BaseUserService<T> {
 
-    // private final UserRepository userRepository;
     private final BaseUserRepository<T> repository;
     private final PasswordEncoder passwordEncoder;
 
@@ -62,7 +61,7 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
 
     @Override
     public void upgradeSubscription(String email, String planId) {
-        // Find the user
+        
         Optional<T> optionalUser = Optional.ofNullable(repository.findByEmail(email));
         if (optionalUser.isEmpty()) {
             System.out.println("No user found with email: " + email);

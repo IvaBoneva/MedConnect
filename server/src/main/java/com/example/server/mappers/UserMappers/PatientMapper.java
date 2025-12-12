@@ -16,13 +16,21 @@ public class PatientMapper {
         this.modelMapper = modelMapper;
     }
 
-    public PatientDTO convertToDTO(Patient patient){
-        return modelMapper.map(patient,PatientDTO.class);
+    public PatientDTO convertToDTO(Patient patient) {
+        PatientDTO dto = modelMapper.map(patient, PatientDTO.class);
+
+        if (patient.getAllergies() != null) {
+            dto.setAllergies(patient.getAllergies());
+        }
+        if (patient.getDiseases() != null) {
+            dto.setDiseases(patient.getDiseases());
+        }
+
+        return dto;
     }
 
     public Patient convertToEntity(PatientDTO patientDTO) {
         return modelMapper.map(patientDTO, Patient.class);
     }
-
 
 }

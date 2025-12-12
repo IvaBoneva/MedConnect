@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import com.example.server.dto.ExposedUserDTO.UserDTO;
 import com.example.server.models.UserModels.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -64,13 +66,18 @@ public class Prescription {
 
     private String dosage;
 
-    private String frequency; // дни на прием, като CSV
+    @Column(name = "start_date")
+    @JsonProperty("startDate")
+    private LocalDate startDate;
+    @Column(name = "end_date")
+    @JsonProperty("endDate")
+    private LocalDate endDate;
 
     private String prescribingDoctor;
 
     private String takingHour; // променено от LocalDate на String (CSV на часовете)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
