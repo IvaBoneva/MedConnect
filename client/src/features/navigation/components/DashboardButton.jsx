@@ -7,7 +7,7 @@ export const DashboardButton = ({ onClick }) => {
       variant="light"
       className="ms-3 px-3 rounded-pill"
     >
-      Вашето табло
+      <strong>Вашето табло</strong>
     </Button>
   );
 };

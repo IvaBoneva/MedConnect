@@ -5,13 +5,15 @@ export const SubscriptionPromo = () => {
   return (
     <div
       style={{
-        backgroundColor: "#2E8B57",
-        borderRadius: "10px",
+        backgroundColor: "#1b9951ff",
         minHeight: "300px",
-        width: "100%",
         display: "flex",
-        alignItems: "center", 
-        marginBottom: "30px"
+        alignItems: "center",
+        width: "calc(100% + 3rem)", 
+        marginLeft: "-1.5rem",      
+        marginRight: "-1.5rem",    
+        marginBottom: "-1.5rem",    
+        marginTop: "30px"           
       }}
     >
       <Container className="py-5 text-white text-center">

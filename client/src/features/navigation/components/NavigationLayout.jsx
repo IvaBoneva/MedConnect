@@ -9,7 +9,7 @@ export const NavigationLayout = ({
   onDashboardClick 
 }) => {
   return (
-    <Navbar expand="lg" className="navbar-dark shadow-lg" sticky="top" style={{ backgroundColor: "#2E8B57" }}>
+    <Navbar expand="lg" className="navbar-dark shadow-lg" sticky="top" style={{ backgroundColor: "#9fbdacff" }}>
       <Container>
         <NavBrand isPremium={isPremium} />
         
