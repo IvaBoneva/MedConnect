@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { Container, Card, Button, Form, Row, Col } from "react-bootstrap";
-import { MicFill, ChatDots, ClockHistory, ArrowUp } from "react-bootstrap-icons";
-import doctorImage from "../../../../images/doctor.png";
+import {
+  Container,
+  Card,
+  Button,
+  Form,
+  Row,
+  Col,
+  Alert,
+} from "react-bootstrap";
+import { ChatDots, ArrowUp } from "react-bootstrap-icons";
+import doctorImage from "../../../../images/girl.png";
 import { callDoctorAdvice } from "../../../../api/geminiApi";
 import { useAuth } from "../../../../context/AuthContext";
 
@@ -10,7 +18,7 @@ const formatBulletText = (text) => {
   return text.replace(/\*\*/g, " ").replace(/\*/g, " ");
 };
 
-const SymptomCheck = () => {
+const SymptomCheck = ({ isPremium }) => {
   const { user, token } = useAuth();
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([
@@ -24,20 +32,14 @@ const SymptomCheck = () => {
     if (!userInput.trim()) return;
 
     const question = userInput;
-
     setMessages((prev) => [...prev, { role: "user", text: userInput }]);
-
     setUserInput("");
 
     try {
       const aiReply = await callDoctorAdvice(token, question);
       setMessages((prev) => [
         ...prev,
-        {
-          role: "ai",
-          text: aiReply.answer,
-          date: aiReply.date,
-        },
+        { role: "ai", text: aiReply.answer, date: aiReply.date },
       ]);
     } catch (error) {
       setMessages((prev) => [
@@ -50,13 +52,30 @@ const SymptomCheck = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && e.shiftKey) {
       e.preventDefault();
-      setUserInput(userInput + "\n"); 
-    }
-    else if (e.key === "Enter") {
+      setUserInput(userInput + "\n");
+    } else if (e.key === "Enter") {
       e.preventDefault();
       handleSend();
     }
   };
+
+  // Ако не е премиум – показваме съобщение
+  if (!isPremium) {
+    return (
+      <Container className="py-5">
+        <Alert variant="warning" className="text-center p-4">
+          <h4>🔒 Платена функция</h4>
+          <p>
+            AI медицинският асистент е достъпен само за потребители с активен
+            премиум абонамент.
+          </p>
+          <Button variant="success" href="/subscriptions">
+            Отиди към абонаментите
+          </Button>
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid className="p-0 vh-100">
@@ -78,7 +97,7 @@ const SymptomCheck = () => {
                 Dr. Medconnect{" "}
                 <span className="badge bg-light text-dark">Chatbot</span>
               </div>
-              <small>Your AI Medical Assistent</small>
+              <small>Your AI Medical Assistant</small>
             </Col>
           </Row>
         </Card.Header>
@@ -88,7 +107,9 @@ const SymptomCheck = () => {
             <div
               key={index}
               className={`d-flex mb-3 ${
-                msg.role === "user" ? "justify-content-end" : "justify-content-start"
+                msg.role === "user"
+                  ? "justify-content-end"
+                  : "justify-content-start"
               }`}
             >
               <div
@@ -98,7 +119,7 @@ const SymptomCheck = () => {
                 style={{
                   background: msg.role === "user" ? "#2e8b57" : "white",
                   maxWidth: "70%",
-                  whiteSpace: "pre-line", 
+                  whiteSpace: "pre-line",
                   borderRadius:
                     msg.role === "user"
                       ? "12px 12px 0 12px"
@@ -121,13 +142,13 @@ const SymptomCheck = () => {
             <Row className="align-items-center g-2">
               <Col>
                 <Form.Control
-                  as="textarea" // Allow multiline input
+                  as="textarea"
                   rows={3}
                   placeholder="Type your medical question..."
                   className="rounded-pill"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
-                  onKeyDown={handleKeyDown} // Attach the keydown handler here
+                  onKeyDown={handleKeyDown}
                 />
               </Col>
               <Col xs="auto">
@@ -138,17 +159,11 @@ const SymptomCheck = () => {
             </Row>
           </Form>
 
-          {/* Bottom Nav */}
           <Row className="text-center mt-3 small text-muted">
             <Col>
               <ChatDots />
               <div>Chat</div>
             </Col>
-            {/* may be added  */}
-            {/* <Col>
-              <ClockHistory />
-              <div>History</div>
-            </Col> */}
           </Row>
 
           <div className="text-center mt-2 small">
