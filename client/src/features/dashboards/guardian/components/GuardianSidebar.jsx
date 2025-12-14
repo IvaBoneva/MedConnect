@@ -16,47 +16,47 @@ export const GuardianSidebar = ({ basePath }) => {
       <Nav className="flex-column">
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/home`} end>
-            🏠 Начало
+            <i class="bi bi-house me-1"></i>Начало
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/personal_information`}>
-            Лични данни
+            <i class="bi bi-person me-1"></i>Лични данни
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/subscriptions`}>
-            Абонамент
+            <i class="bi bi-star me-1"></i>Абонамент
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/prescriptions`}>
-            Предписания
+            <i class="bi bi-prescription2 me-1"></i>Предписания
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/appointments`}>
-            Записване на часове
+            <i class="bi bi-calendar me-1"></i>Записване на часове
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/storage`}>
-            Хранилище
+            <i class="bi bi-file-medical me-1"></i>Хранилище
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/symptom_check`}>
-            Проверка на симптоми
+            <i class="bi bi-search me-1"></i>Проверка на симптоми
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/vaccines_profilactics`}>
-            Имунизации и профилактика
+            <i class="bi bi-shield-plus me-1"></i>Имунизации и профилактика
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/pharmacies_hospitals`}>
-            Болници и аптеки наоколо
+            <i class="bi bi-geo-alt me-1"></i>Болници и аптеки наоколо
           </Nav.Link>
         </Nav.Item>
       </Nav>

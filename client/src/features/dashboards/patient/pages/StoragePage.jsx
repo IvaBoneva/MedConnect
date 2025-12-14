@@ -157,18 +157,18 @@ const StoragePage = ({ userId }) => {
       });
   };
 
-const handlePrint = (file) => {
-  const fileURL = file.fileCloudinaryUrl;
+  const handlePrint = (file) => {
+    const fileURL = file.fileCloudinaryUrl;
 
-  // If it's an image, open it in a new window and print it
-  const isImage = file.type?.startsWith("image/");
+    // If it's an image, open it in a new window and print it
+    const isImage = file.type?.startsWith("image/");
 
-  if (isImage) {
-    // Open the image in a new window
-    const printWindow = window.open("", "_blank");
+    if (isImage) {
+      // Open the image in a new window
+      const printWindow = window.open("", "_blank");
 
-    // Create a temporary HTML content with the image and a print button
-    printWindow.document.write(`
+      // Create a temporary HTML content with the image and a print button
+      printWindow.document.write(`
       <html>
         <head>
           <title>Print Image</title>
@@ -200,34 +200,34 @@ const handlePrint = (file) => {
       </html>
     `);
 
-    // Wait for the image to load before printing
-    const image = printWindow.document.getElementById("imageToPrint");
+      // Wait for the image to load before printing
+      const image = printWindow.document.getElementById("imageToPrint");
 
-    image.onload = () => {
-      // After the image is loaded, trigger the print dialog
-      printWindow.focus();
-      printWindow.print();
+      image.onload = () => {
+        // After the image is loaded, trigger the print dialog
+        printWindow.focus();
+        printWindow.print();
 
-      // Close the print window after printing
-      printWindow.onafterprint = function () {
+        // Close the print window after printing
+        printWindow.onafterprint = function () {
+          printWindow.close();
+        };
+      };
+
+      // In case the image fails to load (error handling)
+      image.onerror = () => {
+        console.error("Failed to load the image for printing.");
         printWindow.close();
       };
-    };
-
-    // In case the image fails to load (error handling)
-    image.onerror = () => {
-      console.error("Failed to load the image for printing.");
-      printWindow.close();
-    };
-  } else if (file.type === "application/pdf") {
-    // For PDF files, open in the browser viewer
-    const printWindow = window.open(fileURL, "_blank");
-    printWindow.focus();
-    printWindow.print();
-  } else {
-    console.error("Unsupported file type for printing:", file.type);
-  }
-};
+    } else if (file.type === "application/pdf") {
+      // For PDF files, open in the browser viewer
+      const printWindow = window.open(fileURL, "_blank");
+      printWindow.focus();
+      printWindow.print();
+    } else {
+      console.error("Unsupported file type for printing:", file.type);
+    }
+  };
 
   const handleRemove = async (fileId) => {
     try {

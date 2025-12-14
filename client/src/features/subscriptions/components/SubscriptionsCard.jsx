@@ -20,6 +20,8 @@ export const SubscriptionCard = ({
         borderRadius: "15px",
         color: textColor,
         width: "100%",
+        textAlign: "center",
+        transform: isActive ? "scale(1.05)" : "scale(1)",
         opacity: isActive ? 0.9 : 1, 
         transition: "transform 0.2s"
       }}

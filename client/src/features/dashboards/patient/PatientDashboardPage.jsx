@@ -12,7 +12,7 @@ import PaymentPage from "../patient/pages/PaymentPage";
 import SymptomCheck from "../patient/pages/SymptomsCheckPage";
 import VaccinesAndProfilactics from "../patient/pages/VaccinesPage";
 
-import SubscriptionsPage from "../../subscriptions/SubscriptionsPage"
+import SubscriptionsPage from "../../subscriptions/SubscriptionsPage";
 import PharmacyMapPage from "../../map/PharmacyMapPage";
 import { DoctorPersonalDetails } from "../../doctors/DoctorPersonalDetails";
 
@@ -30,25 +30,31 @@ const PatientDashboardPage = () => {
         <Route index element={<Navigate to="home" />} />
         <Route path="home" element={<Home />} />
         <Route path="personal_information" element={<PersonalInformation />} />
-        <Route path="personal_information/edit" element={<EditPersonalInformation />} />
-        
+        <Route
+          path="personal_information/edit"
+          element={<EditPersonalInformation />}
+        />
+
         <Route path="subscriptions" element={<SubscriptionsPage />} />
         <Route path="pharmacies_hospitals" element={<PharmacyMapPage />} />
-        
+
         <Route path="subscriptions/payment" element={<PaymentPage />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="appointments" element={<Appointments />} />
-        <Route path="appointments/doctor/:slug" element={<DoctorPersonalDetails />} />
+        <Route
+          path="appointments/doctor/:slug"
+          element={<DoctorPersonalDetails />}
+        />
         <Route path="storage" element={<Storage userId={user?.id} />} />
         <Route path="symptom_check" element={<SymptomCheck />} />
-        
+
         <Route
           path="vaccines_profilactics"
           element={
             <VaccinesAndProfilactics
               isPremium={true}
               patientAge={user?.age}
-              userId={user?.id}
+              userEmail={user?.email}
             />
           }
         />

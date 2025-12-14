@@ -9,7 +9,6 @@ export const PatientDashboardLayout = ({ basePath, children }) => {
         <Col xs={12} md={3} lg={2}>
           <PatientSidebar basePath={basePath} />
         </Col>
-
         <Col xs={12} md={9} lg={10}>
           {children}
         </Col>
