@@ -12,7 +12,7 @@ import java.util.List;
 public class AIDoctorService {
 
     private final String aiDoctorURL = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
-    private final String googleCloudToken = "ya29.a0Aa7pCA8bQv6EhqI7brEscHhX2O8Fi6gonaNgrYRXhMKfV5XGUcRjpeSkhghgAcuswVN0Oj2gTgj0ONYF1GiAE6lNzSgSoS2WyFe1tTFyvgpnImx5oLId2iMubyDIrRS4Mezu-ZC4F2M7vSNNem64bqq-Tlvpx1izfvq5-iacR1CgBTnFDeIe_Y0TOWq_tv7jbctZLA4RPO6mhAaCgYKAbkSARASFQHGX2MiN1HRuj8e9PdRElWM0y2OTw0213";
+    private final String googleCloudToken = "ya29.a0Aa7pCA9CeNKbdpnCuXw-TfR_F-MrpzT1y9uplWoZaah9-4xctqNsbDmLzWpEaIrTbu8uBNVo5PJgh_B-HGthmUxZblnRUFLlhRBADGyu34T942YKxbTQmHtL3NpoMK5jQ7DY6vIox9LAdptvMcV1h2GeY4t3YQk-b3ZXRpoMCMrHNmhzSVf05i_zDP8zmnaAoO6WxxvxWHcbwQaCgYKASsSARASFQHGX2MiRz0Ne179VWPkmGYqkegvjA0213";
     private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
 

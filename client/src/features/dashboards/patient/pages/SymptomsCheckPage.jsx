@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Container, Card, Button, Form, Row, Col } from "react-bootstrap";
-import { MicFill, ChatDots, ClockHistory } from "react-bootstrap-icons";
+import { MicFill, ChatDots, ClockHistory, ArrowUp } from "react-bootstrap-icons";
 import doctorImage from "../../../../images/doctor.png";
 import { callDoctorAdvice } from "../../../../api/geminiApi";
 import { useAuth } from "../../../../context/AuthContext";
 
 const formatBulletText = (text) => {
   if (!text) return "";
-  return text.replace(/\*\*/g, " ").replace(/\*/g," ");
+  return text.replace(/\*\*/g, " ").replace(/\*/g, " ");
 };
 
 const SymptomCheck = () => {
@@ -47,6 +47,17 @@ const SymptomCheck = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && e.shiftKey) {
+      e.preventDefault();
+      setUserInput(userInput + "\n"); 
+    }
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
   return (
     <Container fluid className="p-0 vh-100">
       <Card className="h-100 rounded-0 border-0">
@@ -72,15 +83,12 @@ const SymptomCheck = () => {
           </Row>
         </Card.Header>
 
-        {/* Chat Body (takes remaining height) */}
         <Card.Body className="flex-grow-1 overflow-auto bg-light">
           {messages.map((msg, index) => (
             <div
               key={index}
               className={`d-flex mb-3 ${
-                msg.role === "user"
-                  ? "justify-content-end"
-                  : "justify-content-start"
+                msg.role === "user" ? "justify-content-end" : "justify-content-start"
               }`}
             >
               <div
@@ -90,7 +98,7 @@ const SymptomCheck = () => {
                 style={{
                   background: msg.role === "user" ? "#2e8b57" : "white",
                   maxWidth: "70%",
-                  whiteSpace: "pre-line", // 🔥 THIS IS THE KEY
+                  whiteSpace: "pre-line", 
                   borderRadius:
                     msg.role === "user"
                       ? "12px 12px 0 12px"
@@ -103,9 +111,7 @@ const SymptomCheck = () => {
           ))}
         </Card.Body>
 
-        {/* Input + Footer */}
         <Card.Footer className="bg-white">
-          {/* Input */}
           <Form
             onSubmit={(e) => {
               e.preventDefault();
@@ -115,16 +121,18 @@ const SymptomCheck = () => {
             <Row className="align-items-center g-2">
               <Col>
                 <Form.Control
-                  type="text"
+                  as="textarea" // Allow multiline input
+                  rows={3}
                   placeholder="Type your medical question..."
                   className="rounded-pill"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown} // Attach the keydown handler here
                 />
               </Col>
               <Col xs="auto">
                 <Button variant="primary" className="rounded-circle">
-                  <MicFill />
+                  <ArrowUp />
                 </Button>
               </Col>
             </Row>
@@ -136,18 +144,15 @@ const SymptomCheck = () => {
               <ChatDots />
               <div>Chat</div>
             </Col>
-            <Col>
-              <MicFill />
-              <div>Voice</div>
-            </Col>
-            <Col>
+            {/* may be added  */}
+            {/* <Col>
               <ClockHistory />
               <div>History</div>
-            </Col>
+            </Col> */}
           </Row>
 
           <div className="text-center mt-2 small">
-            Powered by <b>AI Doctor</b>
+            Powered by <b>MedConnect+ Premium</b>
           </div>
         </Card.Footer>
       </Card>
