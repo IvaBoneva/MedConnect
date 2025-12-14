@@ -7,21 +7,21 @@ const LogoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
-  const { setToken, setUser } = useAuth(); 
+  const { setToken, setUser } = useAuth();
 
   const basePath = location.pathname.startsWith("/test")
     ? "/test/patient"
     : "/dashboard/patient";
 
   const handleConfirmLogout = () => {
-    setLoading(true); 
-    localStorage.removeItem("token"); 
+    setLoading(true);
+    localStorage.removeItem("token");
     setToken(null);
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userFirstName");
     localStorage.removeItem("userLastName");
     localStorage.removeItem("userRole");
-    navigate("/"); 
+    navigate("/");
     localStorage.removeItem("user");
     setUser(null);
   };

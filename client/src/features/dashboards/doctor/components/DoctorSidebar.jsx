@@ -16,22 +16,22 @@ export const DoctorSidebar = ({ basePath }) => {
       <Nav className="flex-column">
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/home`} end>
-            🏠 Начало
+            <i class="bi bi-house me-1"></i>Начало
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/personal_information`}>
-            Лични данни
+            <i class="bi bi-person me-1"></i>Лични данни
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/patients`}>
-            Пациенти
+            <i class="bi bi-people me-1"></i>Пациенти
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link as={NavLink} to={`${basePath}/doctor_reviews`}>
-            Отзиви
+            <i class="bi bi-chat me-1"></i>Отзиви
           </Nav.Link>
         </Nav.Item>
       </Nav>

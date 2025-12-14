@@ -1,7 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-export const AppointmentModal = ({ selected, comment, setComment, onConfirm, onCancel }) => {
+export const AppointmentModal = ({
+  selected,
+  comment,
+  setComment,
+  onConfirm,
+  onCancel,
+}) => {
   if (!selected) return null;
 
   return (
@@ -31,24 +37,24 @@ export const AppointmentModal = ({ selected, comment, setComment, onConfirm, onC
           boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
         }}
       >
-        <h5 className="mb-3 fw-bold">Confirm appointment?</h5>
+        <h5 className="mb-3 fw-bold">Потвърждавате ли записания час?</h5>
         <p className="text-muted">
-          {selected.date} at <strong>{selected.hour}</strong>
+          {selected.date} в <strong>{selected.hour}</strong>
         </p>
         <textarea
           className="form-control mt-3"
           rows={3}
-          placeholder="Add a comment (optional)..."
+          placeholder="Добавете коментар (по желание)..."
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           style={{ resize: "none" }}
         />
         <div className="d-flex gap-3 mt-4 justify-content-center">
           <Button variant="secondary" onClick={onCancel}>
-            Cancel
+            Отмени
           </Button>
           <Button variant="success" onClick={onConfirm}>
-            Confirm
+            Потвърди
           </Button>
         </div>
       </div>

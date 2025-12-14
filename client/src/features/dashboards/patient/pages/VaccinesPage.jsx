@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Button, Alert, Card, Form } from "react-bootstrap";
 
-const VaccinesAndProfilactics = ({ isPremium, patientAge, userId }) => {
+const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
   const [vaccines, setVaccines] = useState([]);
   const [profilactics, setProfilactics] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
 
-  const storageKey = `checkedItems-${userId}`; // уникален ключ за потребителя
+  const storageKey = `checkedItems-${userEmail}`; // уникален ключ за текущия потребител
 
   // Зареждане на отметките при зареждане на компонента
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
-      setCheckedItems(JSON.parse(saved));
+      setCheckedItems(JSON.parse(saved)); // само за текущия потребител
+    } else {
+      setCheckedItems({}); // започваме празно
     }
   }, [storageKey]);
 
@@ -56,9 +58,9 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userId }) => {
     }
   }, [isPremium, patientAge]);
 
-  // Обработка на checkbox
-  const handleCheck = (type, age, index) => {
-    const key = `${type}-${age}-${index}`;
+  // Обработка на checkbox за отделен елемент
+  const handleCheck = (type, age, name) => {
+    const key = `${type}-${age}-${name}`; // уникално за тип + възраст + име
     setCheckedItems((prev) => ({
       ...prev,
       [key]: !prev[key],
@@ -140,15 +142,17 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userId }) => {
                   <td>{v.age} години</td>
                   <td>
                     <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-                      {v.vaccines.map((vac, j) => {
-                        const key = `vaccine-${v.age}-${j}`;
+                      {v.vaccines.map((vac) => {
+                        const key = `vaccine-${v.age}-${vac}`;
                         return (
-                          <li key={j}>
+                          <li key={vac}>
                             <Form.Check
                               type="checkbox"
                               label={vac}
                               checked={!!checkedItems[key]}
-                              onChange={() => handleCheck("vaccine", v.age, j)}
+                              onChange={() =>
+                                handleCheck("vaccine", v.age, vac)
+                              }
                             />
                           </li>
                         );
@@ -181,15 +185,17 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userId }) => {
                   <td>{p.age}+</td>
                   <td>
                     <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-                      {p.checks.map((check, j) => {
-                        const key = `check-${p.age}-${j}`;
+                      {p.checks.map((check) => {
+                        const key = `check-${p.age}-${check}`;
                         return (
-                          <li key={j}>
+                          <li key={check}>
                             <Form.Check
                               type="checkbox"
                               label={check}
                               checked={!!checkedItems[key]}
-                              onChange={() => handleCheck("check", p.age, j)}
+                              onChange={() =>
+                                handleCheck("check", p.age, check)
+                              }
                             />
                           </li>
                         );

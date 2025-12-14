@@ -13,9 +13,9 @@ export const SubscriptionPageLayout = ({
   return (
     <>
       <Container className="py-5">
-        <h3 className="text-success text-left mb-5">Избор на абонаментен план</h3>
+        <h1 className="text-success text-center mb-5">Избор на абонаментен план</h1>
         
-        <Row className="justify-content-left g-4">
+        <Row className="justify-content-center g-4">
           {plans.map((plan) => (
             <Col key={plan.key} xs={12} md={6} lg={3} className="d-flex">
               <SubscriptionCard {...plan} />
@@ -27,7 +27,7 @@ export const SubscriptionPageLayout = ({
               xs={12} 
               lg={3} 
               className="text-left d-none d-lg-block" 
-              style={{ marginLeft: "-80px", marginBottom: "-62px" }}
+              style={{ marginLeft: "-60px", marginBottom: "-62px" }}
             >
               <Image 
                 src={paymentImage} 
