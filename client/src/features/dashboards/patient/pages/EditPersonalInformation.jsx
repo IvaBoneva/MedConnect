@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../../context/AuthContext";
+import { uploadToCloudinary } from "../../../../api/cloudinaryApi";
 
 const EditPersonalInformation = () => {
   const { user } = useAuth();
@@ -40,6 +41,7 @@ const EditPersonalInformation = () => {
   const [fnameError, setFNameError] = useState("");
   const [lnameError, setLNameError] = useState("");
   const [message, setMessage] = useState("");
+  const [photoFile, setPhotoFile] = useState(null);
 
   useEffect(() => {
     const fetchLatestData = async () => {
@@ -84,7 +86,8 @@ const EditPersonalInformation = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, photo: URL.createObjectURL(file) });
+      setPhotoFile(file); 
+      setFormData({ ...formData, photo: URL.createObjectURL(file) }); 
     }
   };
 
@@ -151,17 +154,29 @@ const EditPersonalInformation = () => {
       return;
     }
 
-    const payload = {
-      firstName: formData.fname,
-      lastName: formData.lname,
-      age: formData.age,
-      email: formData.email,
-      phoneNumber: formData.phone,
-      allergies: formData.allergies,
-      diseases: formData.diseases,
-    };
-
     try {
+      let finalPhotoURL = formData.photo; 
+
+      if (photoFile) {
+        const uploadedUrl = await uploadToCloudinary(photoFile);
+        if (uploadedUrl) {
+          finalPhotoURL = uploadedUrl;
+        } else {
+          throw new Error("Неуспешно качване на снимка.");
+        }
+      }
+
+      const payload = {
+        firstName: formData.fname,
+        lastName: formData.lname,
+        age: formData.age,
+        email: formData.email,
+        phoneNumber: formData.phone,
+        allergies: formData.allergies,
+        diseases: formData.diseases,
+        photoURL: finalPhotoURL 
+      };
+
       const response = await fetch(
         `http://localhost:8080/api/user/patient/update/${user.id}`,
         {
@@ -184,9 +199,8 @@ const EditPersonalInformation = () => {
       const newUserData = { ...user, ...updatedUser };
       localStorage.setItem("user", JSON.stringify(newUserData));
 
-      setMessage("✅ Информацията е успешно запазена!");
+      setTimeout(() => navigate(`${basePath}/personal_information`, { replace: true }), 1000);
 
-      setTimeout(() => navigate(`${basePath}/personal_information`), 1000);
     } catch (error) {
       console.error(error);
       setMessage("❌ Грешка: " + error.message);
