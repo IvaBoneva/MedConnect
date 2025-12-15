@@ -1,6 +1,7 @@
 package com.example.server.models.CalendarModels;
 
 import com.example.server.models.UserModels.Doctor;
+import com.example.server.models.UserModels.Guardian;
 import com.example.server.models.UserModels.Patient;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,6 +18,16 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", startingTime=" + startingTime +
+                ", durationInMinutes=" + durationInMinutes +
+                ", endTime=" + endTime +
+                '}';
+    }
 
     // The exact start date + time
     private LocalDateTime startingTime;
@@ -42,6 +53,9 @@ public class Appointment {
 
     @ManyToOne
     private Patient patient;
+
+    @ManyToOne
+    private Guardian guardian;
 
     public enum Status {
         Free,

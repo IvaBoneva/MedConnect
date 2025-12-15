@@ -1,6 +1,8 @@
 package com.example.server.service.UserServices;
 
+import com.example.server.models.StorageModels.Storage;
 import com.example.server.models.UserModels.User;
+import com.example.server.repository.StorageRepositories.StorageRepository;
 import com.example.server.repository.UserRepositories.BaseUserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,15 +15,15 @@ import java.util.Optional;
 @Service
 public abstract class BaseUserServiceImpl<T extends User> implements BaseUserService<T> {
 
-    // private final UserRepository userRepository;
     private final BaseUserRepository<T> repository;
     private final PasswordEncoder passwordEncoder;
+    private final StorageRepository storageRepository;
 
-    public BaseUserServiceImpl(BaseUserRepository<T> repository, PasswordEncoder passwordEncoder) {
+    public BaseUserServiceImpl(BaseUserRepository<T> repository, PasswordEncoder passwordEncoder, StorageRepository storageRepository) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.storageRepository = storageRepository;
     }
-
 
     @Override
     public T saveUser(T user) throws Exception {
@@ -37,6 +39,10 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         user.setSubscription("free");
         user.setSubscriptionExpiry(LocalDate.now().plusYears(100));
 
+        Storage storage = new Storage();
+        storageRepository.save(storage);
+
+        user.setStorage(storage);
         repository.save(user);
 
         return user;
@@ -62,7 +68,7 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
 
     @Override
     public void upgradeSubscription(String email, String planId) {
-        // Find the user
+        
         Optional<T> optionalUser = Optional.ofNullable(repository.findByEmail(email));
         if (optionalUser.isEmpty()) {
             System.out.println("No user found with email: " + email);

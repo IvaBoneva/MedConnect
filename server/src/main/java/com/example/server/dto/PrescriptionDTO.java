@@ -47,7 +47,7 @@ public class PrescriptionDTO {
 
     private String prescribingDoctor;
 
-    private String takingHour; // променено на String
+    private String takingHour; 
 
     private Long userId;
 

@@ -1,0 +1,245 @@
+<<<<<<< HEAD:client/src/context/Routes.js
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+} from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { ProtectedRoleRoute } from "./ProtectedRoleRoute";
+import { ProtectedRoute } from "./ProtectedRoutes";
+import DashboardPatient from "../dashboards/DashboardPatient";
+import DashboardDoctor from "../dashboards/DashboardDoctor";
+import DashboardGuardian from "../dashboards/DashboardGuardian";
+import HomePage from "../pages/HomePage";
+import LogoutPage from "../pages/LogoutPage";
+import MainLayout from "../pages/MainLayout";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
+import { useEffect, useState } from "react";
+import PaymentSuccess from "../pages/PaymentSuccess";
+import { DoctorNewPersonalDetails } from "../components/DoctorComponents/DoctorPersonalDetailsComponents/DoctorNewPersonalDetails";
+
+
+const Routes = () => {
+  const { user } = useAuth();
+  const { token } = useAuth();
+
+  // Add a small hydration delay so the router waits for AuthContext to initialize
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    setIsReady(true);
+  }, [token]);
+
+  if (!isReady) return null;
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <MainLayout />, // Wrap Navbar above the page
+      children: [
+        // Public routes
+        { index: true, element: <HomePage /> },
+
+        {
+          //   redirect already loged in users
+          path: "login",
+          element: token ? <Navigate to="/" replace /> : <LoginPage />,
+        },
+        {
+          path: "admin-login",
+          element: <AdminPanel/>,
+        },
+        {
+          // same here
+          path: "register",
+          element: token ? <Navigate to="/" replace /> : <RegisterPage />,
+        },
+        {
+          path: "logout",
+          element: token ? <LogoutPage /> : <Navigate to="/" replace />,
+        },
+
+        {
+          path: "dashboard/*",
+          element: (
+            <ProtectedRoute>
+              {/* Redirect to role-specific dashboard */}
+              <Navigate
+                to={
+                  user?.role === "patient"
+                    ? "/dashboard/patient"
+                    : user?.role === "doctor"
+                    ? "/dashboard/doctor"
+                    : user?.role === "guardian"
+                    ? "/dashboard/guardian"
+                    : "/login"
+                }
+                replace
+              />
+            </ProtectedRoute>
+          ),
+        },
+
+        // routes for only authenticated users
+        {
+          path: "dashboard/patient/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["patient"]}>
+              <DashboardPatient />
+            </ProtectedRoleRoute>
+          ),
+        },
+        {
+          path: "dashboard/doctor/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["doctor"]}>
+              <DashboardDoctor />
+            </ProtectedRoleRoute>
+          ),
+        },
+        {
+          path: "dashboard/guardian/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["guardian"]}>
+              <DashboardGuardian />
+            </ProtectedRoleRoute>
+          ),
+        },
+
+        {
+          path: "payment-success",
+          element: <PaymentSuccess />,
+        },
+
+// NEWLY ADDED
+        {
+          path: "doctor/:slug",  // Dynamic route with slug
+          element: <DoctorNewPersonalDetails />,  // New component to show doctor details
+        },
+      ],
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+};
+
+export default Routes;
+=======
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+} from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { ProtectedRoleRoute } from "./ProtectedRoleRoute";
+import { ProtectedRoute } from "./ProtectedRoutes";
+import DashboardPatient from "../features/dashboards/patient/PatientDashboardPage"
+import DashboardDoctor from "../features/dashboards/doctor/DoctorDashboardPage"
+import DashboardGuardian from "../features/dashboards/guardian/GuardianDashboardPage"
+import HomePage from "../features/home/HomePage";
+import LogoutPage from "../features/auth/components/LogoutPage";
+import MainLayout from "../layouts/MainLayout";
+import LoginPage from "../features/auth/LoginForm";
+import RegisterPage from "../features/auth/RegisterForm";
+import { useEffect, useState } from "react";
+import PaymentSuccess from "../features/subscriptions/PaymentSuccess";
+import { DoctorPersonalDetails } from "../features/doctors/DoctorPersonalDetails";
+
+
+const Routes = () => {
+  const { user } = useAuth();
+  const { token } = useAuth();
+
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    setIsReady(true);
+  }, [token]);
+
+  if (!isReady) return null;
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <MainLayout />, 
+      children: [
+        { index: true, element: <HomePage /> },
+
+        {
+          path: "login",
+          element: token ? <Navigate to="/" replace /> : <LoginPage />,
+        },
+        {
+          path: "register",
+          element: token ? <Navigate to="/" replace /> : <RegisterPage />,
+        },
+        {
+          path: "logout",
+          element: token ? <LogoutPage /> : <Navigate to="/" replace />,
+        },
+
+        {
+          path: "dashboard/*",
+          element: (
+            <ProtectedRoute>
+              {/* Redirect to role-specific dashboard */}
+              <Navigate
+                to={
+                  user?.role === "patient"
+                    ? "/dashboard/patient"
+                    : user?.role === "doctor"
+                    ? "/dashboard/doctor"
+                    : user?.role === "guardian"
+                    ? "/dashboard/guardian"
+                    : "/login"
+                }
+                replace
+              />
+            </ProtectedRoute>
+          ),
+        },
+
+        // routes for only authenticated users
+        {
+          path: "dashboard/patient/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["patient"]}>
+              <DashboardPatient />
+            </ProtectedRoleRoute>
+          ),
+        },
+        {
+          path: "dashboard/doctor/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["doctor"]}>
+              <DashboardDoctor />
+            </ProtectedRoleRoute>
+          ),
+        },
+        {
+          path: "dashboard/guardian/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["guardian"]}>
+              <DashboardGuardian />
+            </ProtectedRoleRoute>
+          ),
+        },
+
+        {
+          path: "payment-success",
+          element: <PaymentSuccess />,
+        },
+
+// NEWLY ADDED
+        {
+          path: "doctor/:slug",  // Dynamic route with slug
+          element: <DoctorPersonalDetails />,  // New component to show doctor details
+        },
+      ],
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+};
+
+export default Routes;
+>>>>>>> a06fa42d2ff344174f6c08fe759304017fc216a4:client/src/context/Routes.jsx

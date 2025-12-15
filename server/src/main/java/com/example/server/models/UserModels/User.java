@@ -1,5 +1,9 @@
 package com.example.server.models.UserModels;
 
+import com.example.server.models.MedicalActionsModels.MedicalProcedure;
+import com.example.server.models.StorageModels.Storage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +12,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,7 +36,11 @@ public class User {
     private String email;
     private String password;
 
-    private int age;
+    private Integer age;
+
+    @Column
+    private LocalDate birthDate;
+
     private String phoneNumber;
     private String role;
 
@@ -50,5 +60,12 @@ public class User {
     private String googleAccessToken;
 
     private String googleRefreshToken;
+
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private Storage storage;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<MedicalProcedure> medicalProcedureSet;
 
 }

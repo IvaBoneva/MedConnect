@@ -1,6 +1,10 @@
 package com.example.server.controller.UserControllers;
 
+import com.example.server.dto.ExposedUserDTO.GuardianDTO;
+import com.example.server.dto.ExposedUserDTO.PatientDTO;
+import com.example.server.mappers.UserMappers.GuardianMapper;
 import com.example.server.models.UserModels.Guardian;
+import com.example.server.models.UserModels.Patient;
 import com.example.server.models.UserModels.User;
 import com.example.server.service.UserServices.GuardianService;
 import org.springframework.http.HttpStatus;
@@ -15,10 +19,12 @@ import java.util.Map;
 @RestController
 public class GuardianController {
 
-    public final GuardianService guardianService;
+    private final GuardianService guardianService;
+    private final GuardianMapper guardianMapper;
 
-    public GuardianController(GuardianService guardianService) {
+    public GuardianController(GuardianService guardianService, GuardianMapper guardianMapper) {
         this.guardianService = guardianService;
+        this.guardianMapper = guardianMapper;
     }
 
     @PostMapping("/register")
@@ -54,6 +60,24 @@ public class GuardianController {
 
         return ResponseEntity.ok(response);
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GuardianDTO> getGuardianWithAppointments(@PathVariable Long id) {
+
+        Guardian guardian = guardianService.findById(id);
+
+        GuardianDTO guardianDTO = guardianMapper.convertToDTO(guardian);
+
+        return ResponseEntity.ok(guardianDTO);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<GuardianDTO> updateGuardian(@PathVariable Long id, @RequestBody GuardianDTO guardianDTO) {
+
+        GuardianDTO updatedGuardianDTO = guardianService.updateGuardian(id, guardianDTO);
+
+        return ResponseEntity.ok(updatedGuardianDTO);
     }
 
 }

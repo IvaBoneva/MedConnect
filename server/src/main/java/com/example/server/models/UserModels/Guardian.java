@@ -1,10 +1,14 @@
 package com.example.server.models.UserModels;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @Getter
 @Setter
@@ -20,7 +24,9 @@ public class Guardian extends User {
 
     private String wardLastName;
 
-    private int wardAge;
+    private Integer wardAge;
+
+    private LocalDate wardBirthday;
 
     private Boolean isWardDisabled;
 

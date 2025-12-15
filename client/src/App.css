@@ -1,5 +1,5 @@
 :root {
-  --primary-green: #2e8b57; /* основно медицинско зелено */
+  --primary-green: #2e8b57; 
   --light-green: #e8f5e9;
   --text-dark: #1b1b1b;
   --white: #ffffff;
@@ -8,7 +8,7 @@
 body {
   background-color: var(--light-green);
   color: var(--text-dark);
-  font-family: "Segoe UI", Roboto, sans-serif;
+  font-family: Inter Tight, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -17,15 +17,38 @@ body {
   background-color: var(--primary-green) !important;
 }
 
-.navbar-brand,
-.nav-link {
-  color: var(--white) !important;
-  font-weight: 500;
+.navbar-brand{
+  background: linear-gradient(45deg, rgba(245, 247, 245, 0.993) ,rgb(196, 199, 197));
+  font-weight: 600;
+  text-align: left;
+  -webkit-background-clip: text;  
+  -webkit-text-fill-color:transparent;
 }
 
-.nav-link:hover {
-  color: #c8e6c9 !important;
+.nav-link {
+  display: inline-block; 
+  position: relative;
+  font-weight: 500;
+  color: #ffffff; 
+  text-decoration: none;
+  transition: color 0.3s;
 }
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px; 
+  left: 0;
+  bottom: 5px; 
+  background-color: #ffffff; 
+  transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+  width: 100%; 
+}
+
 
 .card {
   border: none;
@@ -48,7 +71,7 @@ body {
 }
 
 .card-hover:hover {
-  background-color: #2e8b57; /* същото зелено като заглавията */
+  background-color: var(--primary-green); 
   color: #ffffff;
   transform: translateY(-5px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
@@ -67,16 +90,9 @@ body {
   padding: 10px 15px;
 }
 
-/* Hover ефект */
-.sidebar .nav-link:hover {
-  background-color: white !important;
-  color: #2e8b57 !important;
-}
-
-/* Активен линк (NavLink автоматично добавя .active) */
 .sidebar .nav-link.active {
   background-color: white !important;
-  color: #2e8b57 !important;
+  color: var(--primary-green) !important;
   font-weight: 600;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
@@ -89,15 +105,14 @@ body {
 }
 
 .custom-time-slot-btn {
-  background-color: #ffffff; /* Default background color */
-  color: #004c42; /* Default text color */
-  border: 2px solid #01bfa5; /* Border color */
-  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  color: #ffffff; 
+  border: 2px solid #c3cfce; 
+  transition: all 0.3s ease; 
 }
 
 .custom-time-slot-btn:hover {
-  background-color: #01bfa5; /* Hover background color */
-  color: #ffffff; /* Hover text color */
-  border: 2px solid #01bfa5; /* Keep the border the same */
+  background-color: #b5c5c3; 
+  color: #ffffff; 
+  border: 2px solid #bfd4d2; 
 }
 
