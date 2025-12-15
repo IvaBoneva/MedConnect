@@ -8,6 +8,7 @@ import {
   getAllWorkDays,
   updateWorkingHours,
   setDayOff,
+  completeAppointment,
 } from "../../../api/doctorApi";
 import { PatientAccourdion } from "../calendar/components/PatientAccourdion"
 import { transformWorkDayToEvents } from "../../utils/calendarUtils";
@@ -28,6 +29,19 @@ const GoogleCalendarComponent = () => {
   const [calendarKey, setCalendarKey] = useState(0);
 
   const { user } = useAuth();
+  
+  const handleComplete = async (appointmentId) => {
+    try {
+      await completeAppointment(appointmentId);
+      
+      alert("Appointment completed successfully!");
+      await loadData(); 
+
+    } catch (error) {
+      console.error("Error completing appointment:", error);
+      alert("Failed to complete appointment. Please try again.");
+    }
+  };
 
   const loadData = async () => {
     const data = await getAllWorkDays(
@@ -79,7 +93,14 @@ const GoogleCalendarComponent = () => {
 
     setCalendarKey((prev) => prev + 1);
   };
-
+  useEffect(() => {
+    if (selectedDate && events2.length > 0) {
+      const updatedEvents = events2.filter(
+        (ev) => ev.start.slice(0, 10) === selectedDate
+      );
+      setDayEvents(updatedEvents);
+    }
+  }, [events2, selectedDate]);
   useEffect(() => {
     loadData();
   }, []);
@@ -214,7 +235,9 @@ const GoogleCalendarComponent = () => {
 
         {getSelectedDayInfo()}
 
-        <PatientAccourdion dayEvents={dayEvents} />
+        <PatientAccourdion 
+        dayEvents={dayEvents}
+        onComplete={handleComplete} />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ const DoctorCard = ({ doctor }) => {
   const navigate = useNavigate();
 
   const handleSelect = () => {
-    navigate(`/dashboard/patient/appointments/doctor/${doctor.slug}`);
+    navigate(`doctor/${doctor.slug}`);
   };
 
   return (

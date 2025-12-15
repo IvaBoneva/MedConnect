@@ -5,15 +5,16 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 
-
 @Getter
 @Setter
 public class AppointmentDTO {
+    private Long id;
     public LocalTime start;
     public LocalTime end;
     public String status;
 
-    public AppointmentDTO(LocalTime start, LocalTime end, String status, PatientCalendarDTO patient, String comment) {
+    public AppointmentDTO(Long id, LocalTime start, LocalTime end, String status, PatientCalendarDTO patient, String comment) {
+        this.id = id;
         this.start = start;
         this.end = end;
         this.status = status;
@@ -24,6 +25,5 @@ public class AppointmentDTO {
     private PatientCalendarDTO patient;
 
     private String comment;
-
 
 }

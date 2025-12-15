@@ -3,14 +3,21 @@ package com.example.server.service.CalendarServices;
 import com.example.server.dto.CalendarDTO.AppointmentCreateDTO;
 import com.example.server.models.CalendarModels.Appointment;
 import com.example.server.models.UserModels.Doctor;
+import com.example.server.models.UserModels.Guardian;
 import com.example.server.models.UserModels.Patient;
 import com.example.server.repository.CalendarRepositories.AppointmentRepository;
 import com.example.server.repository.UserRepositories.DoctorRepository;
+import com.example.server.repository.UserRepositories.GuardianRepository;
 import com.example.server.repository.UserRepositories.PatientRepository;
+import com.twilio.type.App;
+
 import org.springframework.stereotype.Service;
 
+import java.security.Guard;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
@@ -18,62 +25,80 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final GuardianRepository guardianRepository;
 
     public AppointmentService(
             AppointmentRepository appointmentRepository,
             DoctorRepository doctorRepository,
-            PatientRepository patientRepository) {
+            PatientRepository patientRepository, GuardianRepository guardianRepository) {
 
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.guardianRepository = guardianRepository;
     }
 
     public Appointment createAppointment(AppointmentCreateDTO dto) {
 
-
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        Appointment appt = new Appointment();
+
+        Optional<Patient> patientOpt = patientRepository.findById(dto.getPatientId());
+
+        if (patientOpt.isPresent()) {
+
+            appt.setPatient(patientOpt.get());
+
+            appt.setComment(dto.getComment());
+        } else {
+
+            Guardian guardian = guardianRepository.findById(dto.getPatientId())
+                    .orElseThrow(() -> new RuntimeException("User not found (ID is neither Patient nor Guardian)"));
+
+            appt.setGuardian(guardian);
+
+            String note = dto.getComment() != null ? dto.getComment() : "";
+            appt.setComment(note + " (Дете: " + guardian.getWardFirstName() + ")");
+        }
 
         LocalDateTime startingTime = LocalDateTime.of(dto.getDate(), dto.getStart());
 
-
-        boolean appointmentExists = appointmentRepository.existsByDoctorIdAndStartingTime(dto.getDoctorId(),startingTime);
-
+        boolean appointmentExists = appointmentRepository.existsByDoctorIdAndStartingTime(dto.getDoctorId(),
+                startingTime);
         if (appointmentExists) {
             throw new RuntimeException("Appointment already exists at this time.");
         }
 
-        Appointment appt = new Appointment();
-
-        // Build LocalDateTime from date + start
-        LocalDateTime starting = LocalDateTime.of(dto.getDate(), dto.getStart());
-        appt.setStartingTime(starting);
-
-        // Duration is always 30 minutes, endTime computed automatically
+        appt.setStartingTime(startingTime);
         appt.setDurationInMinutes(30L);
-
         appt.setStatus(Appointment.Status.Requested);
-
-        // Default status for new appointment
-        appt.setStatus(Appointment.Status.Booked); // OR Requested if you add it
-
         appt.setDoctor(doctor);
-        appt.setPatient(patient);
-        appt.setComment(dto.getComment());
 
         return appointmentRepository.save(appt);
     }
 
-    public List<Appointment> getDoctorAppointments(Long doctorId, Appointment.Status status){
-        return appointmentRepository.findByDoctorIdAndStatusAndFeedbackIsNotNull(doctorId, status);
+    public List<Appointment> getDoctorAppointments(Long doctorId, Appointment.Status status) {
+        List<Appointment> appointments = appointmentRepository.findByDoctorIdAndStatusAndFeedbackIsNotNull(doctorId,
+                status);
+
+        return appointments.stream()
+                .filter(a -> a.getStatus() != Appointment.Status.Completed)
+                .toList();
     }
 
-    public List<Appointment> getDoctorAppointmentToUser(Long doctorId, Appointment.Status status, Long patientId){
-        return appointmentRepository.findByDoctorIdAndPatientIdAndStatusNullCustomQuery(doctorId, status, patientId);
+    public List<Appointment> getDoctorAppointmentToUser(Long doctorId, Appointment.Status status, Long userId) {
+        List<Appointment> patientAppointments = appointmentRepository
+                .findByDoctorIdAndPatientIdAndStatusNullCustomQuery(doctorId, status, userId);
+
+        List<Appointment> guardianAppointments = appointmentRepository
+                .findByDoctorIdAndGuardianIdAndStatusNullCustomQuery(doctorId, status, userId);
+
+        List<Appointment> allAppointments = new ArrayList<>(patientAppointments);
+        allAppointments.addAll(guardianAppointments);
+
+        return allAppointments.stream().filter(appt -> appt.getStatus() != Appointment.Status.Completed).toList();
     }
 
     public void updateFeedback(Long id, String feedback) {
@@ -83,4 +108,18 @@ public class AppointmentService {
         a.setFeedback(feedback);
         appointmentRepository.save(a);
     }
+
+    public void completeAppointment(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        if (appointment.getStatus() != Appointment.Status.Booked
+                && appointment.getStatus() != Appointment.Status.Requested) {
+            throw new RuntimeException("Only booked or requested appointments can be marked as completed.");
+        }
+
+        appointment.setStatus(Appointment.Status.Completed);
+        appointmentRepository.save(appointment);
+    }
+
 }

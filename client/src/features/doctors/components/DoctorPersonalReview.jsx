@@ -110,11 +110,11 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                 <Card>
                   <Card.Body>
                     <Card.Title>
-                      {appointment.patient.firstName}{" "}
-                      {appointment.patient.lastName}
+                      {appointment.patientName}{" "}
+                      {appointment.patientSurname}
                     </Card.Title>
                     <Card.Text>
-                      Appointment Date: {appointment.startingTime}
+                      Appointment Date: {appointment.startTime}
                     </Card.Text>
                     <Card.Text>
                       {appointment.feedback || "No feedback provided yet."}

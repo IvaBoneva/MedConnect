@@ -86,7 +86,7 @@ export const DoctorPersonalDetails = () => {
     return slots;
   };
 
-  const transformedCalendar = calendar.map((day) => {
+  const transformedCalendar = (calendar || []).map((day) => {
     const dateObj = new Date(day.date);
     const weekdayNames = ["неделя", "понеделник", "вторник", "сряда", "четвъртък", "петък", "събота"];
 
@@ -97,7 +97,7 @@ export const DoctorPersonalDetails = () => {
         ? generateTimeSlots(day.startTime, day.endTime, day.appointments)
         : [],
     };
-  });
+});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -193,7 +193,7 @@ export const DoctorPersonalDetails = () => {
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >
-          {calendar.length > 0 && (
+          {calendar?.length > 0 && (
             <AppointmentsSwiper
               days={transformedCalendar}
               refreshCalendar={refreshCalendar}
