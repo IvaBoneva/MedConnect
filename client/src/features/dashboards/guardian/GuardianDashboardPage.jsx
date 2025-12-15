@@ -11,6 +11,7 @@ import Storage from "../patient/pages/StoragePage";
 import PaymentPage from "../patient/pages/PaymentPage";
 import SymptomCheck from "../patient/pages/SymptomsCheckPage";
 import VaccinesAndProfilactics from "../patient/pages/VaccinesPage";
+import { DoctorPersonalDetails } from "../../doctors/DoctorPersonalDetails";
 
 import SubscriptionsPage from "../../subscriptions/SubscriptionsPage";
 import PharmacyMapPage from "../../map/PharmacyMapPage";
@@ -42,7 +43,7 @@ const GuardianDashboardPage = () => {
 
         <Route path="subscriptions/payment" element={<PaymentPage />} />
         <Route path="prescriptions" element={<Prescriptions />} />
-        <Route path="appointments" element={<Appointments />} />
+        <Route path="appointments/*" element={<Appointments />} />
         <Route path="storage" element={<Storage userId={user?.id} />} />
         <Route
           path="symptom_check"

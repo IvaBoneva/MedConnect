@@ -55,8 +55,8 @@ const DoctorReviews = ({ refreshTrigger, doctorId }) => {
               >
                 <Card.Body>
                   <Card.Title>
-                    {appointment.patient.firstName}{" "}
-                    {appointment.patient.lastName}
+                    {appointment.patientName}{" "}
+                    {appointment.patientSurname}
                   </Card.Title>
                   <Card.Text>
                     {appointment.feedback || "No feedback provided"}

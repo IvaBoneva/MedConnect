@@ -2,6 +2,8 @@ package com.example.server.dto.CalendarDTO;
 
 import com.example.server.models.UserModels.Doctor;
 import com.example.server.models.UserModels.Patient;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +16,11 @@ public class AppointmentCreateDTO {
 
     private Long doctorId;
     private Long patientId;
+    private Long guardianId;
 
-    private LocalDate date;     // yyyy-MM-dd
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+    @JsonFormat(pattern = "HH:mm")     // yyyy-MM-dd
     private LocalTime start;
 
     private String comment;

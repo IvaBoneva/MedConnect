@@ -1,6 +1,7 @@
 package com.example.server.models.CalendarModels;
 
 import com.example.server.models.UserModels.Doctor;
+import com.example.server.models.UserModels.Guardian;
 import com.example.server.models.UserModels.Patient;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -52,6 +53,9 @@ public class Appointment {
 
     @ManyToOne
     private Patient patient;
+
+    @ManyToOne
+    private Guardian guardian;
 
     public enum Status {
         Free,
