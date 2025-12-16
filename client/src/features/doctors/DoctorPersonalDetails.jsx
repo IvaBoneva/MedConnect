@@ -6,16 +6,18 @@ import { DoctorMapLocation } from "./components/DoctorMapLocation";
 import DoctorDetailsCard from "./components/DoctorDetailsCard";
 import DoctorReviews from "./components/DoctorReviews";
 import PersonalReview from "./components/DoctorPersonalReview";
-import { Button } from "react-bootstrap";
-
+import { useAuth } from "../../context/AuthContext";
 
 export const DoctorPersonalDetails = () => { 
+  // 🔴 CRITICAL: Initialize as null so the map knows to wait
   const [coords, setCoords] = useState(null);
+  
   const { slug } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [calendar, setCalendar] = useState([]);
   const [loading, setLoading] = useState(false); 
   const [refreshReviewsTrigger, setRefreshReviewsTrigger] = useState(0);
+  const { token } = useAuth();
 
   const refreshDoctorReviews = () => {
     setRefreshReviewsTrigger((prev) => prev + 1);
@@ -36,30 +38,48 @@ export const DoctorPersonalDetails = () => {
     };
   };
 
-  useEffect(() => {
-    if (!doctor?.hospital || !doctor?.city) return;
+  // --- FETCH COORDINATES EFFECT ---
+  // In DoctorPersonalDetails.jsx
 
-    const fetchCoords = async () => {
-      const query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
+useEffect(() => {
+  if (!doctor) return;
 
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data?.length > 0) {
-          setCoords({
-            lat: parseFloat(data[0].lat),
-            lon: parseFloat(data[0].lon),
-          });
+  const fetchCoords = async () => {
+    // 1. Prepare URL
+    let query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
+    let url = `http://localhost:8080/api/utils/geocode?address=${query}`;
+
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (data && data.length > 0) {
+        // 2. Parse numbers
+        const lat = parseFloat(data[0].lat);
+        const lng = parseFloat(data[0].lon); // Note: Backend sends 'lon', we call it 'lng'
+
+        // 3. Check validity
+        if (!isNaN(lat) && !isNaN(lng)) {
+          // ✅ FIX: Save as an OBJECT explicitly
+          setCoords({ lat: lat, lng: lng });
         }
-      } catch (e) {
-        console.error("Error fetching coords", e);
       }
-    };
+    } catch (e) {
+      console.error("Error fetching coordinates:", e);
+    }
+  };
 
-    fetchCoords();
-  }, [doctor]);
+  fetchCoords();
+}, [doctor, token]);
 
+  // --- FETCH CALENDAR DATA EFFECT ---
   const refreshCalendar = async () => {
     const { from, to } = getDateRange();
     const updatedDays = await getAllWorkDays(doctor.id, from, to);
@@ -99,8 +119,9 @@ export const DoctorPersonalDetails = () => {
         ? generateTimeSlots(day.startTime, day.endTime, day.appointments)
         : [],
     };
-});
+  });
 
+  // --- FETCH DOCTOR DETAILS EFFECT ---
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -125,8 +146,10 @@ export const DoctorPersonalDetails = () => {
     return <div>Loading...</div>;
   }
 
+  // --- RENDER ---
   return (
     <>
+      {/* --- TOP SECTION: Doctor Card + Map --- */}
       <div
         className="doctor-map-container"
         style={{
@@ -140,8 +163,10 @@ export const DoctorPersonalDetails = () => {
           backgroundColor: "#f8f9fa",
         }}
       >
+        {/* Doctor Info Card */}
         <DoctorDetailsCard doctor={doctor} />
 
+        {/* Map Section */}
         <div
           className="map-info"
           style={{
@@ -151,12 +176,26 @@ export const DoctorPersonalDetails = () => {
             overflow: "hidden",
             marginRight: "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            backgroundColor: "#e9ecef", 
+            position: "relative"
           }}
         >
           {coords ? (
             <DoctorMapLocation doctor={doctor} coords={coords} />
           ) : (
-            <p>Зареждане на локацията…</p>
+            <div 
+              style={{ 
+                height: "100%", 
+                width: "100%", 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                color: "#6c757d",
+                fontWeight: "500"
+              }}
+            >
+              <p style={{ margin: 0 }}>📍 Зареждане на локацията...</p>
+            </div>
           )}
         </div>
       </div>
@@ -193,24 +232,27 @@ export const DoctorPersonalDetails = () => {
             backgroundColor: "#ffffff",
             borderRadius: "10px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            padding: "10px"
           }}
         >
-          {calendar?.length > 0 && (
+          {calendar?.length > 0 ? (
             <AppointmentsSwiper
               days={transformedCalendar}
               refreshCalendar={refreshCalendar}
               doctorId={doctor.id}
             />
+          ) : (
+             <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+               Няма свободни часове за този период.
+             </div>
           )}
         </div>
       </div>
+
       <PersonalReview
         onFeedbackSubmitted={refreshDoctorReviews}
         doctorId={doctor.id}
       />
-      <Button onClick = {() => console.log(doctor.id)}>
-        testtt
-      </Button>
     </>
   );
 };

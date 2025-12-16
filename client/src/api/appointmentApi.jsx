@@ -57,14 +57,14 @@ export async function fetchPastAppointmentsForReview(
   return res.json();
 }
 
-export async function submitFeedback(id, feedback, token) {
+export async function submitFeedback(id, feedback, rating, token) {
   const res = await fetch(`http://localhost:8080/api/appointments/${id}/feedback`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: feedback,
+    body: JSON.stringify({feedback: feedback, rating: rating})
   });
 
   if (!res.ok) {
@@ -74,3 +74,19 @@ export async function submitFeedback(id, feedback, token) {
 
   return res.text();
 }
+
+export async function fetchAppointmentStatistics(doctorId, token) {
+
+  const res = await fetch(
+    `http://localhost:8080/api/appointments/statistics/${doctorId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.json();
+}
+

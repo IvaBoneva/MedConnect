@@ -1,5 +1,4 @@
-// transform workdays to events of the calendar
-// (makes workdays from out DB writeable)
+
 export function transformWorkDayToEvents(workDay) {
   if (!workDay || !workDay.appointments) return [];
 

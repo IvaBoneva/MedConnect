@@ -33,6 +33,7 @@ const DoctorCalendarComponent = () => {
   const handleComplete = async (appointmentId) => {
     try {
       await completeAppointment(appointmentId);
+      window.dispatchEvent(new Event('force-stats-update'));
       
       alert("Appointment completed successfully!");
       await loadData(); 
@@ -188,7 +189,7 @@ const DoctorCalendarComponent = () => {
       style={{
         backgroundColor: "white",
         padding: "10px",
-        width: "80%",
+        width: "83%",
         margin: "0 auto",
       }}
     >

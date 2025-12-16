@@ -29,6 +29,8 @@ public class Appointment {
                 '}';
     }
 
+    private Integer rating;
+
     // The exact start date + time
     private LocalDateTime startingTime;
 
