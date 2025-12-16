@@ -4,6 +4,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import ErrorPage from "./ErrorPage";
 import { ProtectedRoleRoute } from "./ProtectedRoleRoute";
 import { ProtectedRoute } from "./ProtectedRoutes";
 import DashboardPatient from "../features/dashboards/patient/PatientDashboardPage";
@@ -33,20 +34,24 @@ const Routes = () => {
     {
       path: "/",
       element: <MainLayout />,
+      errorElement: <ErrorPage />,
       children: [
-        { index: true, element: <HomePage /> },
+        { index: true, element: <HomePage />, errorElement: <ErrorPage /> },
 
         {
           path: "login",
           element: token ? <Navigate to="/" replace /> : <LoginPage />,
+          errorElement: <ErrorPage />,
         },
         {
           path: "register",
           element: token ? <Navigate to="/" replace /> : <RegisterPage />,
+          errorElement: <ErrorPage />,
         },
         {
           path: "logout",
           element: token ? <LogoutPage /> : <Navigate to="/" replace />,
+          errorElement: <ErrorPage />,
         },
 
         {
@@ -68,6 +73,7 @@ const Routes = () => {
               />
             </ProtectedRoute>
           ),
+          errorElement: <ErrorPage />,
         },
 
         // routes for only authenticated users
@@ -78,6 +84,7 @@ const Routes = () => {
               <DashboardPatient />
             </ProtectedRoleRoute>
           ),
+          errorElement: <ErrorPage />,
         },
         {
           path: "dashboard/doctor/*",
@@ -86,6 +93,7 @@ const Routes = () => {
               <DashboardDoctor />
             </ProtectedRoleRoute>
           ),
+          errorElement: <ErrorPage />,
         },
         {
           path: "dashboard/guardian/*",
@@ -94,17 +102,20 @@ const Routes = () => {
               <DashboardGuardian />
             </ProtectedRoleRoute>
           ),
+          errorElement: <ErrorPage />,
         },
 
         {
           path: "payment-success",
           element: <PaymentSuccess />,
+          errorElement: <ErrorPage />,
         },
 
         // NEWLY ADDED
         {
           path: "doctor/:slug", // Dynamic route with slug
           element: <DoctorPersonalDetails />, // New component to show doctor details
+          errorElement: <ErrorPage />,
         },
       ],
     },
