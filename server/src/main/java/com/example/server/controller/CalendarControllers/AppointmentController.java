@@ -137,30 +137,11 @@ public class AppointmentController {
         return ResponseEntity.ok(dtos);
     }
 
-    private PatientAppointmentDTO convertToDTO(Appointment appointment) {
-        PatientCalendarDTO patientDTO = new PatientCalendarDTO(
-                appointment.getPatient().getId(),
-                appointment.getPatient().getFirstName(),
-                appointment.getPatient().getLastName(),
-                appointment.getPatient().getPhoneNumber(),
-                appointment.getPatient().getAllergies(),
-                appointment.getPatient().getDiseases());
-
-        LocalDateTime start = appointment.getStartingTime();
-        LocalDateTime end = appointment.getEndTime();
-
-        return new PatientAppointmentDTO(
-                start,
-                end,
-                appointment.getStatus().name(),
-                patientDTO,
-                appointment.getComment(),
-                appointment.getDoctor());
-    }
-
     @GetMapping("/statistics/{doctorId}")
     public ResponseEntity<?> getAppointmentStatistics(@PathVariable Long doctorId) {
         return ResponseEntity.ok(service.getAppointmentStatistics(doctorId));
+    }
+    
     @GetMapping("/guardian/{guardianId}")
     public ResponseEntity<List<GuardianAppointmentDTO>> getGuardianAppointments(
             @PathVariable Long guardianId
@@ -173,29 +154,5 @@ public class AppointmentController {
 
         return ResponseEntity.ok(dtos);
     }
-
-
-//    private PatientAppointmentDTO convertToDTO(Appointment appointment) {
-//        PatientCalendarDTO patientDTO = new PatientCalendarDTO(
-//                appointment.getPatient().getId(),
-//                appointment.getPatient().getFirstName(),
-//                appointment.getPatient().getLastName(),
-//                appointment.getPatient().getPhoneNumber(),
-//                appointment.getPatient().getAllergies(),
-//                appointment.getPatient().getDiseases()
-//        );
-//
-//        LocalDateTime start = appointment.getStartingTime();
-//        LocalDateTime end = appointment.getEndTime();
-//
-//        return new PatientAppointmentDTO(
-//                start,
-//                end,
-//                appointment.getStatus().name(),
-//                patientDTO,
-//                appointment.getComment(),
-//                appointment.getDoctor()
-//        );
-//    }
 
 }
