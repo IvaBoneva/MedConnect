@@ -9,9 +9,9 @@ import { useAuth } from "../../../context/AuthContext";
 
 export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
+
   // New State for Rating and Hover effect
-  const [rating, setRating] = useState(0); 
+  const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
   const [feedback, setFeedback] = useState("");
@@ -26,8 +26,8 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
 
   const handleAppointmentSelect = (appointment) => {
     setSelectedAppointment(appointment);
-    setFeedback("");
-    setRating(0); // Reset rating when switching appointments
+    setFeedback(appointment.feedback || ""); // Зареждаме вече подадения feedback, ако има
+    setRating(appointment.rating || 0); // Зареждаме вече подадената оценка, ако има
     setHover(0);
   };
 
@@ -37,14 +37,22 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
 
     try {
       setLoading(true);
-      
-      // PASS RATING TO API
-      // Note: You must update your submitFeedback function in appointmentApi.js
-      // to accept this new 'rating' argument.
-      await submitFeedback(selectedAppointment.id, feedback.trim(), rating, token);
 
+      // PASS RATING TO API
+      await submitFeedback(
+        selectedAppointment.id,
+        feedback.trim(),
+        rating,
+        token
+      );
+
+      // Обновяваме локално appointmentsToReview, за да се запази вече подаденото
       setAppointmentsToReview((prev) =>
-        prev.filter((a) => a.id !== selectedAppointment.id)
+        prev.map((a) =>
+          a.id === selectedAppointment.id
+            ? { ...a, feedback: feedback.trim(), rating }
+            : a
+        )
       );
 
       setSelectedAppointment(null);
@@ -56,11 +64,13 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
       }
     } catch (err) {
       console.error("Failed to submit feedback:", err);
+      setFeedbackError("Неуспешно изпращане на обратна връзка.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Always fetch past appointments from API (true source of truth)
   useEffect(() => {
     if (!doctorId || !token || !user) return;
 
@@ -74,7 +84,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
         setAppointmentsToReview(result);
       } catch (err) {
         console.error("Failed to fetch reviewable appointments:", err);
-        setError("Failed to load appointments");
+        setError("Неуспешно зареждане на прегледите");
       }
     }
 
@@ -118,7 +128,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                   marginBottom: "15px",
                   border:
                     selectedAppointment?.id === appointment.id
-                      ? "2px solid #2E8B57" // Highlight selected
+                      ? "2px solid #2E8B57"
                       : "1px solid #ddd",
                   borderRadius: "8px",
                   padding: "10px",
@@ -148,9 +158,11 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
             <div style={{ marginTop: "20px", padding: "0 10%" }}>
               <h5>Напишете обратна връзка за прегледа</h5>
               <Form>
-                
                 {/* --- STAR RATING SECTION --- */}
-                <Form.Group controlId="ratingStars" style={{ marginBottom: "15px" }}>
+                <Form.Group
+                  controlId="ratingStars"
+                  style={{ marginBottom: "15px" }}
+                >
                   <Form.Label style={{ display: "block" }}>Оценка</Form.Label>
                   <div style={{ display: "flex", gap: "5px" }}>
                     {[...Array(5)].map((star, i) => {
@@ -174,13 +186,20 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                             }
                             onMouseEnter={() => setHover(ratingValue)}
                             onMouseLeave={() => setHover(0)}
-                            style={{ cursor: "pointer", transition: "color 200ms" }}
+                            style={{
+                              cursor: "pointer",
+                              transition: "color 200ms",
+                            }}
                           />
                         </label>
                       );
                     })}
                   </div>
-                  {rating > 0 && <Form.Text className="text-muted">Оценка: {rating}/5</Form.Text>}
+                  {rating > 0 && (
+                    <Form.Text className="text-muted">
+                      Оценка: {rating}/5
+                    </Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="feedbackText">
                   <Form.Label>Коментар</Form.Label>
@@ -197,10 +216,15 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                   variant="success"
                   onClick={handleFeedbackSubmit}
                   style={{ marginTop: "10px" }}
-                  disabled={!isFeedbackValid || loading} 
+                  disabled={!isFeedbackValid || loading}
                 >
                   Изпрати
                 </Button>
+                {feedbackError && (
+                  <p style={{ color: "red", marginTop: "10px" }}>
+                    {feedbackError}
+                  </p>
+                )}
               </Form>
             </div>
           )}
