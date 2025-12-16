@@ -61,8 +61,6 @@ public class Appointment {
         Free,
         Booked,
         Completed,
-        Cancelled,
-        Requested
     }
 
     private String comment;

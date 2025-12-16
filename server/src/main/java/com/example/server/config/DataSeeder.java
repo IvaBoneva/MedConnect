@@ -462,9 +462,40 @@ public class DataSeeder {
                 a6.setComment("Follow-up consultation after recent surgery.");
                 appointmentRepo.save(a6);
 
+                Appointment a10 = new Appointment();
+                a10.setDoctor(doctor1);  // Doctor Gregory House, ID = 7
+                a10.setPatient(patient);  // Patient Peter Parker, ID = 1
+                a10.setStartingTime(LocalDateTime.of(2025, 11, 15, 11, 0));  // Set for 15th November, 11:00 AM (new available time)
+                a10.setDurationInMinutes(30L);
+                a10.setStatus(Appointment.Status.Completed);
+                a10.setComment("i am comming");  // No feedback for this appointment
+//                a10.setFeedback("Wooooo");
+                appointmentRepo.save(a10);  // Save the first appointment
+
+// Second new appointment
+                Appointment a22 = new Appointment();
+                a22.setDoctor(doctor1);  // Doctor Gregory House, ID = 7
+                a22.setPatient(patient);  // Patient Peter Parker, ID = 1
+                a22.setStartingTime(LocalDateTime.of(2025, 11, 15, 14, 0));  // Set for 15th November, 2:00 PM (new available time)
+                a22.setDurationInMinutes(30L);
+                a22.setStatus(Appointment.Status.Completed);
+                a22.setComment("Peter had a full check-up. Everything is normal.");  // Feedback for this appointment
+                a22.setFeedback("Wooooo");
+                appointmentRepo.save(a22);  // Save the second appointmen
+
                 appointmentRepo.save(a1);
                 appointmentRepo.save(a2);
 
+
+                Appointment guardianAppointment = new Appointment();
+                guardianAppointment.setDoctor(doctor1); // Gregory House
+                guardianAppointment.setGuardian(guardian); // Martha Kent
+                guardianAppointment.setStartingTime(LocalDateTime.of(2025, 12, 29, 10, 0));
+                guardianAppointment.setDurationInMinutes(30L);
+                guardianAppointment.setStatus(Appointment.Status.Booked);
+                guardianAppointment.setComment("Guardian appointment for ward Clark Kent.");
+
+                appointmentRepo.save(guardianAppointment);
 
                 System.out.println("✅ Users, doctors, schedules, and appointments seeded successfully!");
             }

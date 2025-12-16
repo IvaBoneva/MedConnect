@@ -72,6 +72,7 @@ public class SecurityConfig {
                         "/api/storage/files/{fileId}", // Protected file deletion endpoint (JWT required)
 
                         "/api/appointments/patient/**",
+                        "/api/appointment/guardian/**",
 
                         "/api/prescription-events/user/\\d+",
 

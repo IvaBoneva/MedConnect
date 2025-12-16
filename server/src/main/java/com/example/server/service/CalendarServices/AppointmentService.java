@@ -55,14 +55,11 @@ public class AppointmentService {
 
             appt.setComment(dto.getComment());
         } else {
-
             Guardian guardian = guardianRepository.findById(dto.getPatientId())
                     .orElseThrow(() -> new RuntimeException("User not found (ID is neither Patient nor Guardian)"));
 
             appt.setGuardian(guardian);
-
-            String note = dto.getComment() != null ? dto.getComment() : "";
-            appt.setComment(note + " (Дете: " + guardian.getWardFirstName() + ")");
+            appt.setComment(dto.getComment() != null ? dto.getComment() : "");
         }
 
         LocalDateTime startingTime = LocalDateTime.of(dto.getDate(), dto.getStart());
@@ -76,13 +73,9 @@ public class AppointmentService {
         appt.setStartingTime(startingTime);
         appt.setDurationInMinutes(30L);
 
-//        appt.setStatus(Appointment.Status.Requested);
 
         // Default status for new appointment
-//        appt.setStatus(Appointment.Status.Booked); // OR Requested if you add it
-        appt.setStatus(Appointment.Status.Completed);
-// TODO: CHECK HERE LATER WHAT'S GOING ON
-        appt.setStatus(Appointment.Status.Requested);
+        appt.setStatus(Appointment.Status.Booked);
         appt.setDoctor(doctor);
 
         return appointmentRepository.save(appt);
@@ -93,7 +86,7 @@ public class AppointmentService {
                 status);
 
         return appointments.stream()
-                .filter(a -> a.getStatus() != Appointment.Status.Completed)
+                .filter(a -> a.getStatus() == Appointment.Status.Completed)
                 .toList();
     }
 
@@ -107,7 +100,7 @@ public class AppointmentService {
         List<Appointment> allAppointments = new ArrayList<>(patientAppointments);
         allAppointments.addAll(guardianAppointments);
 
-        return allAppointments.stream().filter(appt -> appt.getStatus() != Appointment.Status.Completed).toList();
+        return allAppointments.stream().filter(appt -> appt.getStatus() == Appointment.Status.Completed).toList();
     }
 
     public void updateFeedback(Long id, String feedback) {
@@ -122,9 +115,8 @@ public class AppointmentService {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
 
-        if (appointment.getStatus() != Appointment.Status.Booked
-                && appointment.getStatus() != Appointment.Status.Requested) {
-            throw new RuntimeException("Only booked or requested appointments can be marked as completed.");
+        if (appointment.getStatus() != Appointment.Status.Booked) {
+            throw new RuntimeException("Only booked appointments can be marked as completed.");
         }
 
         appointment.setStatus(Appointment.Status.Completed);
@@ -134,5 +126,10 @@ public class AppointmentService {
 
     public List<Appointment> getPatientAppointments(Long patientId){
         return appointmentRepository.findByPatientIdAndStatus(patientId, Appointment.Status.Booked);
+    }
+
+
+    public List<Appointment> getGuardianAppointments(Long guardianId){
+        return appointmentRepository.findByGuardianIdAndStatus(guardianId, Appointment.Status.Booked);
     }
 }
