@@ -6,6 +6,8 @@ import { DoctorMapLocation } from "./components/DoctorMapLocation";
 import DoctorDetailsCard from "./components/DoctorDetailsCard";
 import DoctorReviews from "./components/DoctorReviews";
 import PersonalReview from "./components/DoctorPersonalReview";
+import { Button } from "react-bootstrap";
+
 
 export const DoctorPersonalDetails = () => { 
   const [coords, setCoords] = useState(null);
@@ -206,6 +208,9 @@ export const DoctorPersonalDetails = () => {
         onFeedbackSubmitted={refreshDoctorReviews}
         doctorId={doctor.id}
       />
+      <Button onClick = {() => console.log(doctor.id)}>
+        testtt
+      </Button>
     </>
   );
 };

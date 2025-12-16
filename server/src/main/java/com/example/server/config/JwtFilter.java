@@ -71,15 +71,21 @@ public class JwtFilter extends GenericFilterBean {
                 servletPath.startsWith("/api/storage/**") ||  //
 
 
-            servletPath.startsWith("/api/calendar/doctor/off") ||
+                servletPath.startsWith("/api/calendar/doctor/off") ||
 
                 servletPath.matches("/api/calendar/doctor/\\d+/exception") ||
+
+                servletPath.startsWith("/api/prescription-events/user/\\d+") ||
+
+                servletPath.matches("/api/appointments/patient/\\d+") ||
+
+
 
                 servletPath.matches("/api/appointments") ||
 
                 servletPath.contains("/google") ||
 //                servletPath.equals("/google/callback") ||
-                                servletPath.startsWith("/events") ||
+                servletPath.startsWith("/events") ||
 
                 servletPath.equals("/auth/me") ||
 
@@ -120,7 +126,6 @@ public class JwtFilter extends GenericFilterBean {
 
 
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
-
 
 
             // Create authentication token with the authenticated user and set it in security context

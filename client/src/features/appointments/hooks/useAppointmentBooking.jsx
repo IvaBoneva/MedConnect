@@ -3,6 +3,7 @@ import { createAppointmentRequest } from "../../../api/appointmentApi";
 import { normalizeDate } from "../../utils/calendarUtils";
 import { useAuth } from "../../../context/AuthContext";
 
+
 export const useAppointment = ({ days, refreshCalendar, doctorId }) => {
   const [selected, setSelected] = useState(null);
   const [comment, setComment] = useState("");
@@ -15,7 +16,7 @@ export const useAppointment = ({ days, refreshCalendar, doctorId }) => {
   const createAppointment = async () => {
     try {
       const payload = {
-        doctorId,
+        doctorId: doctorId,
         patientId: user.id,
         date: normalizeDate(selected.date),
         start: selected.hour,

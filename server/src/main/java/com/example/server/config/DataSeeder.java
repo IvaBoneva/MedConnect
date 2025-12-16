@@ -179,7 +179,7 @@ public class DataSeeder {
                 doctor1.setFirstName("Gregory");
                 doctor1.setLastName("House");
                 doctor1.setEmail("doctorhouse@example.com");
-                doctor1.setPassword(passwordEncoder.encode("doc123456"));
+                    doctor1.setPassword(passwordEncoder.encode("doc123456"));
                 doctor1.setBirthDate(LocalDate.of(1980, 1, 1));
                 doctor1.setAge(45);
                 doctor1.setPhoneNumber("125478963");
@@ -426,8 +426,45 @@ public class DataSeeder {
                 a2.setStatus(Appointment.Status.Booked);
                 a2.setComment("I am really Ill brother");
 
+                Appointment a3 = new Appointment();
+                a3.setDoctor(doctor1);  // Using doctor1, but you can change to any doctor
+                a3.setPatient(patient);
+                a3.setStartingTime(LocalDateTime.of(2025, 12, 19, 10, 0));  // Set for 12th November, 10:00 AM
+                a3.setDurationInMinutes(30L);
+                a3.setStatus(Appointment.Status.Booked);
+                a3.setComment("Peter needs a checkup for a persistent cough.");
+                appointmentRepo.save(a3);
+
+                Appointment a4 = new Appointment();
+                a4.setDoctor(doctor2);
+                a4.setPatient(patient);
+                a4.setStartingTime(LocalDateTime.of(2025, 12, 29, 15, 0));  // Set for 13th November, 3:00 PM
+                a4.setDurationInMinutes(30L);
+                a4.setStatus(Appointment.Status.Booked);
+                a4.setComment("Scheduled consultation with a cardiologist.");
+                appointmentRepo.save(a4);
+
+                Appointment a5 = new Appointment();
+                a5.setDoctor(doctor3);
+                a5.setPatient(patient);
+                a5.setStartingTime(LocalDateTime.of(2025, 12, 22, 9, 0));  // Set for 14th November, 9:00 AM
+                a5.setDurationInMinutes(30L);
+                a5.setStatus(Appointment.Status.Completed);
+                a5.setComment("Routine checkup and blood test completed.");
+                appointmentRepo.save(a5);
+
+                Appointment a6 = new Appointment();
+                a6.setDoctor(doctor4);
+                a6.setPatient(patient);
+                a6.setStartingTime(LocalDateTime.of(2025, 12, 15, 11, 0));  // Set for 15th November, 11:00 AM
+                a6.setDurationInMinutes(30L);
+                a6.setStatus(Appointment.Status.Booked);
+                a6.setComment("Follow-up consultation after recent surgery.");
+                appointmentRepo.save(a6);
+
                 appointmentRepo.save(a1);
                 appointmentRepo.save(a2);
+
 
                 System.out.println("✅ Users, doctors, schedules, and appointments seeded successfully!");
             }

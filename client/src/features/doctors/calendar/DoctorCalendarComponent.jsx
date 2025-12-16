@@ -3,13 +3,13 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import "./components/GoogleCalendarComponent.css";
+import "./components/DoctorCalendarComponent.css";
 import {
   getAllWorkDays,
   updateWorkingHours,
   setDayOff,
 } from "../../../api/doctorApi";
-import { PatientAccourdion } from "../calendar/components/PatientAccourdion"
+import { PatientAccourdion } from "./components/PatientAccourdion";
 import { transformWorkDayToEvents } from "../../utils/calendarUtils";
 import { useAuth } from "../../../context/AuthContext";
 
@@ -18,7 +18,7 @@ const DEFAULT_END = "17:00:00";
 const CALENDAR_START_RENDER_DATE = "2025-09-01";
 const CALENDAR_END_RENDER_DATE = "2026-01-31";
 
-const GoogleCalendarComponent = () => {
+const DoctorCalendarComponent = () => {
   const [dayEvents, setDayEvents] = useState([]);
   const [nonWorkingDaysEvents, setNonWorkingDaysEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -85,8 +85,8 @@ const GoogleCalendarComponent = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Fetched/Updated Events:", events2); 
-    console.log("All Work Days Updated:", allWorkDays); 
+    console.log("Fetched/Updated Events:", events2);
+    console.log("All Work Days Updated:", allWorkDays);
   }, [events2, allWorkDays]);
 
   const handleDateClick = (info) => {
@@ -96,6 +96,7 @@ const GoogleCalendarComponent = () => {
     const eventsForDay = events2.filter(
       (ev) => ev.start.slice(0, 10) === clickedDate
     );
+    console.log(eventsForDay);
     setDayEvents(eventsForDay);
   };
 
@@ -183,6 +184,7 @@ const GoogleCalendarComponent = () => {
           center: "",
           end: "prev,next",
         }}
+        // timeZone="Europe/Sofia" // Set the time zone explicitly here
         events={[...events2, ...nonWorkingDaysEvents, ...changedScheduleEvents]}
         dateClick={handleDateClick}
         customButtons={{
@@ -220,4 +222,4 @@ const GoogleCalendarComponent = () => {
   );
 };
 
-export default GoogleCalendarComponent;
+export default DoctorCalendarComponent;

@@ -14,7 +14,8 @@ import welcomeImage from "../../images/hello_img.png";
 import { useAuth } from "../../context/AuthContext";
 
 // Импорт на календара от новата му локация
-import GoogleCalendarComponent from "./calendar/GoogleCalendarComponent";
+import GoogleCalendarComponent from "./calendar/DoctorCalendarComponent";
+import DoctorCalendarComponent from "./calendar/DoctorCalendarComponent";
 
 const DoctorHome = () => {
   const { user, isReady } = useAuth();
@@ -64,7 +65,7 @@ const DoctorHome = () => {
       </Card>
 
       {/* Календарът */}
-      <GoogleCalendarComponent />
+      <DoctorCalendarComponent />
 
       {/* Summary Cards */}
       <Row className="g-4 mt-2 mb-4">

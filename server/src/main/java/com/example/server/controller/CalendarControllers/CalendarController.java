@@ -53,7 +53,6 @@ public class CalendarController {
             @PathVariable Long doctorId,
             @RequestBody WorkDayExceptionDTO workDayExceptionDTO
     ) {
-        // Call the service method to handle the update
         try {
             calendarService.updateWorkDayException(doctorId, workDayExceptionDTO);
             return ResponseEntity.ok().build();

@@ -1,8 +1,11 @@
 package com.example.server.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.server.models.PrescriptionEvents;
 import org.springframework.stereotype.Service;
 
 import com.example.server.dto.PrescriptionDTO;
@@ -73,5 +76,21 @@ public class PrescriptionService {
     public void deletePrescription(Long id) {
 
         prescriptionRepository.deleteById(id);
+    }
+
+    public PrescriptionEvents mapToPrescriptionEvent(Prescription prescription) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+        LocalDateTime startDateTime = LocalDateTime.of(prescription.getStartDate(), LocalDateTime.parse(prescription.getTakingHour(), formatter).toLocalTime());
+        LocalDateTime endDateTime = LocalDateTime.of(prescription.getEndDate(), LocalDateTime.parse(prescription.getTakingHour(), formatter).toLocalTime());
+
+        return new PrescriptionEvents(
+                prescription.getId(),
+                prescription.getMedicationName(),
+                startDateTime,
+                endDateTime,
+                prescription.getTakingHour(),
+                prescription.getUser()
+        );
     }
 }

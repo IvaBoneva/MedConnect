@@ -7,17 +7,20 @@ import com.example.server.models.UserModels.Patient;
 import com.example.server.repository.CalendarRepositories.AppointmentRepository;
 import com.example.server.repository.UserRepositories.DoctorRepository;
 import com.example.server.repository.UserRepositories.PatientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+
 
     public AppointmentService(
             AppointmentRepository appointmentRepository,
@@ -56,10 +59,11 @@ public class AppointmentService {
         // Duration is always 30 minutes, endTime computed automatically
         appt.setDurationInMinutes(30L);
 
-        appt.setStatus(Appointment.Status.Requested);
+//        appt.setStatus(Appointment.Status.Requested);
 
         // Default status for new appointment
-        appt.setStatus(Appointment.Status.Booked); // OR Requested if you add it
+//        appt.setStatus(Appointment.Status.Booked); // OR Requested if you add it
+        appt.setStatus(Appointment.Status.Completed);
 
         appt.setDoctor(doctor);
         appt.setPatient(patient);
@@ -82,5 +86,9 @@ public class AppointmentService {
 
         a.setFeedback(feedback);
         appointmentRepository.save(a);
+    }
+
+    public List<Appointment> getPatientAppointments(Long patientId){
+        return appointmentRepository.findByPatientIdAndStatus(patientId, Appointment.Status.Booked);
     }
 }

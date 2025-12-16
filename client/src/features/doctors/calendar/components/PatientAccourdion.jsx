@@ -5,19 +5,24 @@ export const PatientAccourdion = ({ dayEvents }) => {
     return <p>No events on this date.</p>;
   }
 
+const addTwoHours = (timeString) => {
+    const date = new Date(timeString);
+    date.setHours(date.getHours() + 2); // Add 2 hours to the current time
+    return date.toISOString().slice(11, 16); // Format as HH:MM
+  };
+
   return (
     <Accordion>
       {dayEvents.map((ev, index) => (
         <Accordion.Item eventKey={index} key={index}>
-          
+            {console.log(ev)}
           <Accordion.Header>
             <div className="d-flex flex-column">
               <span className="fw-semibold">
                 {ev?.patient?.firstName} {ev?.patient?.lastName}
               </span>
-
               <small className="text-muted">
-                {ev?.start.slice(11, 16)} → {ev?.end?.slice(11, 16) || "?"}
+                {ev?.start ? addTwoHours(ev.start) : "?"} → {ev?.end ? addTwoHours(ev.end) : "?"}
               </small>
             </div>
           </Accordion.Header>
