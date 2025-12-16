@@ -23,6 +23,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findByPatientIdAndStatus(Long patientId, Appointment.Status status);
 
+    List<Appointment> findByGuardianIdAndStatus(Long guardian, Appointment.Status status);
+
     List<Appointment> findByDoctorIdAndStatusAndFeedbackIsNotNull(Long doctorId, Appointment.Status status);
 
     @Query("SELECT a FROM Appointment a WHERE a.doctor.id = ?1 AND a.status = ?2 AND a.patient.id = ?3 AND a.feedback IS NULL")

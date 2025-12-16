@@ -201,12 +201,6 @@ const DoctorCalendarComponent = () => {
           center: "title",
           end: "custom2 prevYear,prev,next,nextYear",
         }}
-        footerToolbar={{
-          start: "custom1,custom2",
-          center: "",
-          end: "prev,next",
-        }}
-        // timeZone="Europe/Sofia" // Set the time zone explicitly here
         events={[...events2, ...nonWorkingDaysEvents, ...changedScheduleEvents]}
         dateClick={handleDateClick}
         customButtons={{
@@ -225,6 +219,7 @@ const DoctorCalendarComponent = () => {
         style={{
           flex: 1,
           height: "80vh",
+          marginTop: "40px",
           padding: "15px",
           borderRadius: "8px",
           backgroundColor: "#f5f5f5",

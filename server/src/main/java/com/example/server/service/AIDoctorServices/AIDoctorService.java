@@ -21,7 +21,7 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 public class AIDoctorService {
 
         private final String aiDoctorURL = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
-        private final String googleCloudToken = "ya29.a0Aa7pCA9crjioK_kPInxzNqDGZtm1OV--unP7alCf0G3x84IpeTzH3yEdpRNIDgVA2SXXUdWzuM2yNZBQCFGXFnnqs9dvPWGMe3XFBPbNPmgGtmaev1b9kYHmBEf7UoDE1FHTkRH55zWDXUbZOZn2wp3xjKx0zaWuUySm30o-Ne484fwjS8dEaffQtEyBpgzXcMgDNexQ_3j-aCgYKAaoSARUSFQHGX2MioLsaKnxKvSkvvrEzqr0tkg0211";
+        private final String googleCloudToken = "ya29.a0Aa7pCA_leBStkMhKz7pX07wTgAWxu1vQ14cEzCHyhKXiV2YX6iIQtVGFCotJXtq-CbPQ8QdNASD5HEUVS4ialc9TCcOrJCiUbgJFKSBv2nH9UQjMmwNYJMPUMRtpmti7Dtblwm3FEfYk8Amdqz9Z2c6BBwROMYo2V0EuwDetekpXT374csN6hCO4geTH8cdjbSJczTFCQpeaDgaCgYKAXgSARASFQHGX2Mi_SxgHA2hLOu5cnq3XZ_Bzw0213";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
