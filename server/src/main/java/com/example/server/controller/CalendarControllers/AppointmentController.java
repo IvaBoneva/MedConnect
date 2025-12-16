@@ -3,7 +3,9 @@ package com.example.server.controller.CalendarControllers;
 import com.example.server.dto.CalendarDTO.AppointmentCreateDTO;
 import com.example.server.dto.CalendarDTO.AppointmentFilterDTO;
 import com.example.server.dto.CalendarDTO.AppointmentReviewableDTO;
+import com.example.server.dto.ReviewRequestDTO;
 import com.example.server.dto.CalendarDTO.*;
+import com.example.server.mappers.AppointmentMapper;
 import com.example.server.models.CalendarModels.Appointment;
 import com.example.server.service.CalendarServices.AppointmentService;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -35,8 +36,6 @@ public class AppointmentController {
             return ResponseEntity.ok(appt);
 
         } catch (Exception e) {
-            // Create a response with the error message and status BAD_REQUEST (400)
-            // You can structure the error response as an object with message and details
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST) // HTTP status 400
                     .body(e.getMessage());
@@ -59,6 +58,7 @@ public class AppointmentController {
                     dto.setId(appointment.getId());
                     dto.setStartTime(appointment.getStartingTime());
                     dto.setFeedback(appointment.getFeedback());
+                    dto.setRating(appointment.getRating());
 
                     if (appointment.getPatient() != null) {
                         dto.setPatientName(appointment.getPatient().getFirstName());
@@ -82,7 +82,7 @@ public class AppointmentController {
             @RequestParam Long patientId) {
 
         List<Appointment> appointments = service.getDoctorAppointmentToUser(doctorId, status, patientId);
-
+        System.out.println(appointments);
         List<AppointmentReviewableDTO> dtos = appointments.stream()
                 .map(appointment -> {
                     AppointmentReviewableDTO dto = new AppointmentReviewableDTO();
@@ -90,6 +90,7 @@ public class AppointmentController {
                     dto.setId(appointment.getId());
                     dto.setStartTime(appointment.getStartingTime());
                     dto.setFeedback(appointment.getFeedback());
+                    dto.setRating(appointment.getRating());
 
                     if (appointment.getPatient() != null) {
                         dto.setPatientName(appointment.getPatient().getFirstName());
@@ -108,8 +109,8 @@ public class AppointmentController {
     @PatchMapping("/{id}/feedback")
     public ResponseEntity<?> updateFeedback(
             @PathVariable Long id,
-            @RequestBody String feedback) {
-        service.updateFeedback(id, feedback);
+            @RequestBody ReviewRequestDTO reviewRequestDTO) {
+        service.updateFeedback(id, reviewRequestDTO.getFeedback(), reviewRequestDTO.getRating());
         return ResponseEntity.ok("Feedback updated");
     }
 
@@ -122,38 +123,36 @@ public class AppointmentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<?> getPatientAppointments(
+    public ResponseEntity<List<PatientAppointmentDTO>> getPatientAppointments(
             @PathVariable Long patientId
     ) {
         List<Appointment> appointmentList = service.getPatientAppointments(patientId);
 
-        List<PatientAppointmentDTO> appointmentDTOList = appointmentList.stream().map(this::convertToDTO).collect(Collectors.toList());
+        List<PatientAppointmentDTO> dtos = appointmentList.stream()
+                .map(AppointmentMapper::toPatientDTO)
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(appointmentDTOList);
+        return ResponseEntity.ok(dtos);
     }
 
-    private PatientAppointmentDTO convertToDTO(Appointment appointment) {
-        PatientCalendarDTO patientDTO = new PatientCalendarDTO(
-                appointment.getPatient().getId(),
-                appointment.getPatient().getFirstName(),
-                appointment.getPatient().getLastName(),
-                appointment.getPatient().getPhoneNumber(),
-                appointment.getPatient().getAllergies(),
-                appointment.getPatient().getDiseases()
-        );
+    @GetMapping("/statistics/{doctorId}")
+    public ResponseEntity<?> getAppointmentStatistics(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(service.getAppointmentStatistics(doctorId));
+    }
+    
+    @GetMapping("/guardian/{guardianId}")
+    public ResponseEntity<List<GuardianAppointmentDTO>> getGuardianAppointments(
+            @PathVariable Long guardianId
+    ) {
+        List<Appointment> appointmentList = service.getGuardianAppointments(guardianId);
 
-        LocalDateTime start = appointment.getStartingTime();
-        LocalDateTime end = appointment.getEndTime();
+        List<GuardianAppointmentDTO> dtos = appointmentList.stream()
+                .map(AppointmentMapper::toGuardianDTO)
+                .collect(Collectors.toList());
 
-        return new PatientAppointmentDTO(
-                start,
-                end,
-                appointment.getStatus().name(),
-                patientDTO,
-                appointment.getComment(),
-                appointment.getDoctor()
-        );
+        return ResponseEntity.ok(dtos);
     }
 
 }

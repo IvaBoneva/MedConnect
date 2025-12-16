@@ -29,6 +29,8 @@ public class Appointment {
                 '}';
     }
 
+    private Integer rating;
+
     // The exact start date + time
     private LocalDateTime startingTime;
 
@@ -61,8 +63,6 @@ public class Appointment {
         Free,
         Booked,
         Completed,
-        Cancelled,
-        Requested
     }
 
     private String comment;

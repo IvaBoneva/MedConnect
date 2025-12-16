@@ -1,6 +1,5 @@
 package com.example.server.controller.UserControllers;
 
-
 import java.util.List;
 
 import javax.print.Doc;
@@ -24,7 +23,7 @@ import com.example.server.service.UserServices.DoctorService;
 
 @RequestMapping("/api/user")
 @RestController
-public class DoctorController{
+public class DoctorController {
 
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
@@ -39,6 +38,7 @@ public class DoctorController{
 
         try {
             doctorService.saveUser(doctor);
+            doctorService.createDefaultWeeklyScheduleForDoctor(doctor);
             return new ResponseEntity<>(doctor, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -46,12 +46,12 @@ public class DoctorController{
     }
 
     @GetMapping("/doctors")
-    public List<DoctorDTO> getAllDoctorsDTO(){
+    public List<DoctorDTO> getAllDoctorsDTO() {
         return doctorService.getAllDoctorsDTO();
     }
 
     @GetMapping("/doctors/{doctorSlug}")
-    public DoctorDTO getDoctor(@PathVariable String doctorSlug){
+    public DoctorDTO getDoctor(@PathVariable String doctorSlug) {
         return doctorService.getDoctorBySlug(doctorSlug);
     }
 
@@ -66,11 +66,13 @@ public class DoctorController{
     }
 
     @PutMapping("/doctor/update/{id}")
-    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){ {
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO) {
+        {
 
-        DoctorDTO updatedDoctorDTO = doctorService.updateDoctor(id, doctorDTO);
+            DoctorDTO updatedDoctorDTO = doctorService.updateDoctor(id, doctorDTO);
 
-        return ResponseEntity.ok(updatedDoctorDTO);
+            return ResponseEntity.ok(updatedDoctorDTO);
+        }
+
     }
-
-}}
+}

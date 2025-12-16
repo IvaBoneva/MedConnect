@@ -1,7 +1,4 @@
 
-
-// transform workdays to events of the calendar
-// (makes workdays from out DB writeable)
 export function transformWorkDayToEvents(workDay) {
   if (!workDay || !workDay.appointments) return [];
 
@@ -17,9 +14,13 @@ export function transformWorkDayToEvents(workDay) {
         return null;
       }
 
+        
+
       return {
         id: appt.id,
-        title: appt.status === "Free" ? "Free Slot" : `NAME OF PATIENT`,
+        title: appt.status === "Free"
+          ? "Free Slot"
+          : `${appt.patient.firstName} ${appt.patient.lastName}`,
         start: startDate.toISOString(),
         end: endDate.toISOString(),
         backgroundColor: appt.status === "Free" ? "#4CAF50" : "#2196F3",
@@ -31,8 +32,6 @@ export function transformWorkDayToEvents(workDay) {
     })
     .filter((event) => event !== null);
 }
-
-
 
 export function normalizeDate(d) {
   const [day, month, year] = d.split(".");

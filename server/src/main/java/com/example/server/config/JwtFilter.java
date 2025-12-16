@@ -78,7 +78,7 @@ public class JwtFilter extends GenericFilterBean {
                 servletPath.startsWith("/api/prescription-events/user/\\d+") ||
 
                 servletPath.matches("/api/appointments/patient/\\d+") ||
-
+                servletPath.matches("/api/appointment/guardian/\\d+") ||
 
 
                 servletPath.matches("/api/appointments") ||

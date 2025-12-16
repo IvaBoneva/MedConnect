@@ -3,6 +3,8 @@ import welcomeImage from "../../../../images/hello_img.png";
 import { motion } from "framer-motion";
 import { useAuth } from "../../../../context/AuthContext";
 import PatientCalendarComponent from "../calendar/PatientCalendarComponent";
+import { fetchPatientAppointments } from "../../../../api/patientApi";
+import GuardianAndPatientCalendar from "../../../calendar/GuardianAndPatientCalendar";
 
 
 const PatientHomePage = () => {
@@ -30,9 +32,8 @@ const PatientHomePage = () => {
           <p className="text-muted">Ето какво се случва с вашето здраве.</p>
         </motion.div>
       </Card>
-
-      <PatientCalendarComponent/>
-      
+      {/* <PatientCalendarComponent /> */}
+      <GuardianAndPatientCalendar fetchAppointments = {fetchPatientAppointments}/>
       <br/><br/><br/>
     </div>
   );

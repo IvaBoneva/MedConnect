@@ -41,8 +41,7 @@ public class DataSeeder {
             WorkDayExceptionRepository exceptionRepo,
             AppointmentRepository appointmentRepo,
             StorageRepository storageRepository,
-            UserFileRepository userFileRepository
-    ) {
+            UserFileRepository userFileRepository) {
         return args -> {
 
             if (userRepository.count() == 0) {
@@ -179,7 +178,7 @@ public class DataSeeder {
                 doctor1.setFirstName("Gregory");
                 doctor1.setLastName("House");
                 doctor1.setEmail("doctorhouse@example.com");
-                    doctor1.setPassword(passwordEncoder.encode("doc123456"));
+                doctor1.setPassword(passwordEncoder.encode("doc123456"));
                 doctor1.setBirthDate(LocalDate.of(1980, 1, 1));
                 doctor1.setAge(45);
                 doctor1.setPhoneNumber("125478963");
@@ -427,9 +426,9 @@ public class DataSeeder {
                 a2.setComment("I am really Ill brother");
 
                 Appointment a3 = new Appointment();
-                a3.setDoctor(doctor1);  // Using doctor1, but you can change to any doctor
+                a3.setDoctor(doctor1); // Using doctor1, but you can change to any doctor
                 a3.setPatient(patient);
-                a3.setStartingTime(LocalDateTime.of(2025, 12, 19, 10, 0));  // Set for 12th November, 10:00 AM
+                a3.setStartingTime(LocalDateTime.of(2025, 12, 19, 10, 0)); // Set for 12th November, 10:00 AM
                 a3.setDurationInMinutes(30L);
                 a3.setStatus(Appointment.Status.Booked);
                 a3.setComment("Peter needs a checkup for a persistent cough.");
@@ -438,7 +437,7 @@ public class DataSeeder {
                 Appointment a4 = new Appointment();
                 a4.setDoctor(doctor2);
                 a4.setPatient(patient);
-                a4.setStartingTime(LocalDateTime.of(2025, 12, 29, 15, 0));  // Set for 13th November, 3:00 PM
+                a4.setStartingTime(LocalDateTime.of(2025, 12, 29, 15, 0)); // Set for 13th November, 3:00 PM
                 a4.setDurationInMinutes(30L);
                 a4.setStatus(Appointment.Status.Booked);
                 a4.setComment("Scheduled consultation with a cardiologist.");
@@ -447,7 +446,7 @@ public class DataSeeder {
                 Appointment a5 = new Appointment();
                 a5.setDoctor(doctor3);
                 a5.setPatient(patient);
-                a5.setStartingTime(LocalDateTime.of(2025, 12, 22, 9, 0));  // Set for 14th November, 9:00 AM
+                a5.setStartingTime(LocalDateTime.of(2025, 12, 22, 9, 0)); // Set for 14th November, 9:00 AM
                 a5.setDurationInMinutes(30L);
                 a5.setStatus(Appointment.Status.Completed);
                 a5.setComment("Routine checkup and blood test completed.");
@@ -456,15 +455,46 @@ public class DataSeeder {
                 Appointment a6 = new Appointment();
                 a6.setDoctor(doctor4);
                 a6.setPatient(patient);
-                a6.setStartingTime(LocalDateTime.of(2025, 12, 15, 11, 0));  // Set for 15th November, 11:00 AM
+                a6.setStartingTime(LocalDateTime.of(2025, 12, 15, 11, 0)); // Set for 15th November, 11:00 AM
                 a6.setDurationInMinutes(30L);
                 a6.setStatus(Appointment.Status.Booked);
                 a6.setComment("Follow-up consultation after recent surgery.");
                 appointmentRepo.save(a6);
 
+                Appointment a10 = new Appointment();
+                a10.setDoctor(doctor1);  // Doctor Gregory House, ID = 7
+                a10.setPatient(patient);  // Patient Peter Parker, ID = 1
+                a10.setStartingTime(LocalDateTime.of(2025, 11, 15, 11, 0));  // Set for 15th November, 11:00 AM (new available time)
+                a10.setDurationInMinutes(30L);
+                a10.setStatus(Appointment.Status.Completed);
+                a10.setComment("i am comming");  // No feedback for this appointment
+//                a10.setFeedback("Wooooo");
+                appointmentRepo.save(a10);  // Save the first appointment
+
+// Second new appointment
+                Appointment a22 = new Appointment();
+                a22.setDoctor(doctor1);  // Doctor Gregory House, ID = 7
+                a22.setPatient(patient);  // Patient Peter Parker, ID = 1
+                a22.setStartingTime(LocalDateTime.of(2025, 11, 15, 14, 0));  // Set for 15th November, 2:00 PM (new available time)
+                a22.setDurationInMinutes(30L);
+                a22.setStatus(Appointment.Status.Completed);
+                a22.setComment("Peter had a full check-up. Everything is normal.");  // Feedback for this appointment
+                a22.setFeedback("Wooooo");
+                appointmentRepo.save(a22);  // Save the second appointmen
+
                 appointmentRepo.save(a1);
                 appointmentRepo.save(a2);
 
+
+                Appointment guardianAppointment = new Appointment();
+                guardianAppointment.setDoctor(doctor1); // Gregory House
+                guardianAppointment.setGuardian(guardian); // Martha Kent
+                guardianAppointment.setStartingTime(LocalDateTime.of(2025, 12, 29, 10, 0));
+                guardianAppointment.setDurationInMinutes(30L);
+                guardianAppointment.setStatus(Appointment.Status.Booked);
+                guardianAppointment.setComment("Guardian appointment for ward Clark Kent.");
+
+                appointmentRepo.save(guardianAppointment);
 
                 System.out.println("✅ Users, doctors, schedules, and appointments seeded successfully!");
             }

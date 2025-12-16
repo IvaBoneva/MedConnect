@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Button, Form } from "react-bootstrap";
+import { FaStar } from "react-icons/fa"; // Import Star Icon
 import {
   fetchPastAppointmentsForReview,
   submitFeedback,
@@ -8,6 +9,11 @@ import { useAuth } from "../../../context/AuthContext";
 
 export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  
+  // New State for Rating and Hover effect
+  const [rating, setRating] = useState(0); 
+  const [hover, setHover] = useState(0);
+
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,11 +21,14 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [feedbackError, setFeedbackError] = useState("");
   const { user, token } = useAuth();
 
-  const isFeedbackValid = feedback.trim().length > 0;
+  // Validate that feedback exists AND a rating (> 0) is selected
+  const isFeedbackValid = feedback.trim().length > 0 && rating > 0;
 
   const handleAppointmentSelect = (appointment) => {
     setSelectedAppointment(appointment);
     setFeedback("");
+    setRating(0); // Reset rating when switching appointments
+    setHover(0);
   };
 
   const handleFeedbackSubmit = async () => {
@@ -28,7 +37,11 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
 
     try {
       setLoading(true);
-      await submitFeedback(selectedAppointment.id, feedback.trim(), token);
+      
+      // PASS RATING TO API
+      // Note: You must update your submitFeedback function in appointmentApi.js
+      // to accept this new 'rating' argument.
+      await submitFeedback(selectedAppointment.id, feedback.trim(), rating, token);
 
       setAppointmentsToReview((prev) =>
         prev.filter((a) => a.id !== selectedAppointment.id)
@@ -36,6 +49,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
 
       setSelectedAppointment(null);
       setFeedback("");
+      setRating(0);
 
       if (onFeedbackSubmitted) {
         onFeedbackSubmitted();
@@ -102,7 +116,10 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                 style={{
                   cursor: "pointer",
                   marginBottom: "15px",
-                  border: "2px solid #2E8B57",
+                  border:
+                    selectedAppointment?.id === appointment.id
+                      ? "2px solid #2E8B57" // Highlight selected
+                      : "1px solid #ddd",
                   borderRadius: "8px",
                   padding: "10px",
                   backgroundColor: "#f9f9f9",
@@ -128,11 +145,45 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
           </ListGroup>
 
           {selectedAppointment && (
-            <div style={{ marginTop: "20px" }}>
+            <div style={{ marginTop: "20px", padding: "0 10%" }}>
               <h5>Напишете обратна връзка за прегледа</h5>
               <Form>
+                
+                {/* --- STAR RATING SECTION --- */}
+                <Form.Group controlId="ratingStars" style={{ marginBottom: "15px" }}>
+                  <Form.Label style={{ display: "block" }}>Оценка</Form.Label>
+                  <div style={{ display: "flex", gap: "5px" }}>
+                    {[...Array(5)].map((star, i) => {
+                      const ratingValue = i + 1;
+                      return (
+                        <label key={i}>
+                          <input
+                            type="radio"
+                            name="rating"
+                            value={ratingValue}
+                            onClick={() => setRating(ratingValue)}
+                            style={{ display: "none" }}
+                          />
+                          <FaStar
+                            className="star"
+                            size={30}
+                            color={
+                              ratingValue <= (hover || rating)
+                                ? "#ffc107"
+                                : "#e4e5e9"
+                            }
+                            onMouseEnter={() => setHover(ratingValue)}
+                            onMouseLeave={() => setHover(0)}
+                            style={{ cursor: "pointer", transition: "color 200ms" }}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                  {rating > 0 && <Form.Text className="text-muted">Оценка: {rating}/5</Form.Text>}
+                </Form.Group>
                 <Form.Group controlId="feedbackText">
-                  <Form.Label>Обратна връзка</Form.Label>
+                  <Form.Label>Коментар</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
@@ -141,11 +192,12 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                     placeholder="Напишете вашата обратна връзка тук..."
                   />
                 </Form.Group>
+
                 <Button
                   variant="success"
                   onClick={handleFeedbackSubmit}
                   style={{ marginTop: "10px" }}
-                  disabled={!isFeedbackValid || loading}
+                  disabled={!isFeedbackValid || loading} 
                 >
                   Изпрати
                 </Button>

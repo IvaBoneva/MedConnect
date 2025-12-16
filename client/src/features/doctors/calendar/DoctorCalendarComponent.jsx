@@ -33,6 +33,7 @@ const DoctorCalendarComponent = () => {
   const handleComplete = async (appointmentId) => {
     try {
       await completeAppointment(appointmentId);
+      window.dispatchEvent(new Event('force-stats-update'));
       
       alert("Appointment completed successfully!");
       await loadData(); 
@@ -188,7 +189,7 @@ const DoctorCalendarComponent = () => {
       style={{
         backgroundColor: "white",
         padding: "10px",
-        width: "80%",
+        width: "83%",
         margin: "0 auto",
       }}
     >
@@ -200,12 +201,6 @@ const DoctorCalendarComponent = () => {
           center: "title",
           end: "custom2 prevYear,prev,next,nextYear",
         }}
-        footerToolbar={{
-          start: "custom1,custom2",
-          center: "",
-          end: "prev,next",
-        }}
-        // timeZone="Europe/Sofia" // Set the time zone explicitly here
         events={[...events2, ...nonWorkingDaysEvents, ...changedScheduleEvents]}
         dateClick={handleDateClick}
         customButtons={{
@@ -224,6 +219,7 @@ const DoctorCalendarComponent = () => {
         style={{
           flex: 1,
           height: "80vh",
+          marginTop: "40px",
           padding: "15px",
           borderRadius: "8px",
           backgroundColor: "#f5f5f5",

@@ -1,5 +1,5 @@
 import { Image } from "react-bootstrap";
-
+import {StarDisplay} from "./StarDisplay";
 
 export const DoctorDetailsCard = ({doctor}) => {
   return (
@@ -31,7 +31,9 @@ export const DoctorDetailsCard = ({doctor}) => {
             {"Д-р " + doctor.firstName + " " + doctor.lastName}
           </h4>
           <p>{doctor.specialization}</p>
-          <p>⭐ {doctor.rating}</p>
+          <div className="mb-2">
+             <StarDisplay rating={doctor.rating} />
+          </div>
           <p>📍 {doctor.city}</p>
           <p>🏥 {doctor.hospital}</p>
           <p>🩺 Опит: {doctor.yearsOfExperience} години</p>
