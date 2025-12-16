@@ -105,14 +105,14 @@ body {
 }
 
 .custom-time-slot-btn {
-  color: #004c42; 
-  border: 2px solid #01bfa5; 
+  color: #ffffff; 
+  border: 2px solid #c3cfce; 
   transition: all 0.3s ease; 
 }
 
 .custom-time-slot-btn:hover {
-  background-color: #01bfa5; 
+  background-color: #b5c5c3; 
   color: #ffffff; 
-  border: 2px solid #01bfa5; 
+  border: 2px solid #bfd4d2; 
 }
 

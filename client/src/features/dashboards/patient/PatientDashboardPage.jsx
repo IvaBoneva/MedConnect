@@ -46,13 +46,16 @@ const PatientDashboardPage = () => {
           element={<DoctorPersonalDetails />}
         />
         <Route path="storage" element={<Storage userId={user?.id} />} />
-        <Route path="symptom_check" element={<SymptomCheck />} />
+        <Route
+          path="symptom_check"
+          element={<SymptomCheck isPremium={user?.subscription == "free"} />} //developer (premium --> correct)
+        />
 
         <Route
           path="vaccines_profilactics"
           element={
             <VaccinesAndProfilactics
-              isPremium={true}
+              isPremium={user?.subscription == "free"} //developer (premium --> correct)
               patientAge={user?.age}
               userEmail={user?.email}
             />

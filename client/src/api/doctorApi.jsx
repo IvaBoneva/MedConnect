@@ -91,3 +91,21 @@ export async function updateWorkingHours(doctorId, date, startTime, endTime) {
   if (!res.ok) throw new Error("Failed to update working hours");
   return res.text();
 }
+
+export const completeAppointment = async (appointmentId) => {
+  const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}/complete`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!response.ok) {
+    // Четем текста, който сървърът ни връща (там пише истинската причина!)
+    const errorMessage = await response.text(); 
+    console.error("Server Error:", errorMessage); // Виж това в конзолата на браузъра
+    throw new Error(errorMessage || "Failed to complete appointment");
+  }
+  return await response.text();
+};

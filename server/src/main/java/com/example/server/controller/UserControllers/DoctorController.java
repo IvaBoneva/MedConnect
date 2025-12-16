@@ -3,27 +3,35 @@ package com.example.server.controller.UserControllers;
 
 import java.util.List;
 
+import javax.print.Doc;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.server.dto.ExposedUserDTO.DoctorDTO;
+import com.example.server.dto.ExposedUserDTO.GuardianDTO;
+import com.example.server.mappers.UserMappers.DoctorMapper;
 import com.example.server.models.UserModels.Doctor;
+import com.example.server.models.UserModels.Guardian;
 import com.example.server.service.UserServices.DoctorService;
 
 @RequestMapping("/api/user")
 @RestController
 public class DoctorController{
 
-    public final DoctorService doctorService;
+    private final DoctorService doctorService;
+    private final DoctorMapper doctorMapper;
 
-    public DoctorController(DoctorService doctorService){
+    public DoctorController(DoctorService doctorService, DoctorMapper doctorMapper) {
         this.doctorService = doctorService;
+        this.doctorMapper = doctorMapper;
     }
 
     @PostMapping("/doctor/register")
@@ -47,4 +55,22 @@ public class DoctorController{
         return doctorService.getDoctorBySlug(doctorSlug);
     }
 
-}
+    @GetMapping("/doctor/{id}")
+    public ResponseEntity<DoctorDTO> getDoctorWithAppointments(@PathVariable Long id) {
+
+        Doctor doctor = doctorService.findById(id);
+
+        DoctorDTO doctorDTO = doctorMapper.convertToDTO(doctor);
+
+        return ResponseEntity.ok(doctorDTO);
+    }
+
+    @PutMapping("/doctor/update/{id}")
+    public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorDTO doctorDTO){ {
+
+        DoctorDTO updatedDoctorDTO = doctorService.updateDoctor(id, doctorDTO);
+
+        return ResponseEntity.ok(updatedDoctorDTO);
+    }
+
+}}

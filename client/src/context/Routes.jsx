@@ -6,9 +6,9 @@ import {
 import { useAuth } from "./AuthContext";
 import { ProtectedRoleRoute } from "./ProtectedRoleRoute";
 import { ProtectedRoute } from "./ProtectedRoutes";
-import DashboardPatient from "../features/dashboards/patient/PatientDashboardPage"
-import DashboardDoctor from "../features/dashboards/doctor/DoctorDashboardPage"
-import DashboardGuardian from "../features/dashboards/guardian/GuardianDashboardPage"
+import DashboardPatient from "../features/dashboards/patient/PatientDashboardPage";
+import DashboardDoctor from "../features/dashboards/doctor/DoctorDashboardPage";
+import DashboardGuardian from "../features/dashboards/guardian/GuardianDashboardPage";
 import HomePage from "../features/home/HomePage";
 import LogoutPage from "../features/auth/components/LogoutPage";
 import MainLayout from "../layouts/MainLayout";
@@ -17,7 +17,6 @@ import RegisterPage from "../features/auth/RegisterForm";
 import { useEffect, useState } from "react";
 import PaymentSuccess from "../features/subscriptions/PaymentSuccess";
 import { DoctorPersonalDetails } from "../features/doctors/DoctorPersonalDetails";
-
 
 const Routes = () => {
   const { user } = useAuth();
@@ -33,7 +32,7 @@ const Routes = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <MainLayout />, 
+      element: <MainLayout />,
       children: [
         { index: true, element: <HomePage /> },
 
@@ -102,10 +101,10 @@ const Routes = () => {
           element: <PaymentSuccess />,
         },
 
-// NEWLY ADDED
+        // NEWLY ADDED
         {
-          path: "doctor/:slug",  // Dynamic route with slug
-          element: <DoctorPersonalDetails />,  // New component to show doctor details
+          path: "doctor/:slug", // Dynamic route with slug
+          element: <DoctorPersonalDetails />, // New component to show doctor details
         },
       ],
     },

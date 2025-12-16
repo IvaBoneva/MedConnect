@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Button, Form } from "react-bootstrap";
-import { fetchPastAppointmentsForReview, submitFeedback } from "../../../api/appointmentApi";
+import {
+  fetchPastAppointmentsForReview,
+  submitFeedback,
+} from "../../../api/appointmentApi";
 import { useAuth } from "../../../context/AuthContext";
 
 export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
@@ -9,7 +12,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [appointmentsToReview, setAppointmentsToReview] = useState([]);
-  const [feedbackError, setFeedbackError] = useState(""); 
+  const [feedbackError, setFeedbackError] = useState("");
   const { user, token } = useAuth();
 
   const isFeedbackValid = feedback.trim().length > 0;
@@ -43,7 +46,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (!doctorId || !token || !user) return;
 
@@ -70,20 +73,20 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
       style={{
         padding: "20px",
         width: "80%",
-        margin: "50px auto", 
-        backgroundColor: "#ffffff", 
-        borderRadius: "10px", 
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)", 
+        margin: "50px auto",
+        backgroundColor: "#ffffff",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
       }}
     >
       <h4 style={{ paddingTop: "20px", textAlign: "center" }}>
-        Make a Difference
+        Прегледи при този специалист
       </h4>
 
       {loading ? (
-        <p>Loading appointments...</p>
+        <p>Зареждане на прегледите...</p>
       ) : error ? (
-        <p>Error: {error}</p>
+        <p>Грешка: {error}</p>
       ) : appointmentsToReview.length > 0 ? (
         <div>
           <ListGroup
@@ -99,25 +102,24 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                 style={{
                   cursor: "pointer",
                   marginBottom: "15px",
-                  border: "2px solid #2E8B57", 
+                  border: "2px solid #2E8B57",
                   borderRadius: "8px",
                   padding: "10px",
-                  backgroundColor: "#f9f9f9", 
-                  width: "80%", 
+                  backgroundColor: "#f9f9f9",
+                  width: "80%",
                 }}
-                onClick={() => handleAppointmentSelect(appointment)} 
+                onClick={() => handleAppointmentSelect(appointment)}
               >
                 <Card>
                   <Card.Body>
                     <Card.Title>
-                      {appointment.patient.firstName}{" "}
-                      {appointment.patient.lastName}
+                      {appointment.patientName} {appointment.patientSurname}
                     </Card.Title>
                     <Card.Text>
-                      Appointment Date: {appointment.startingTime}
+                      Дата на прегледа: {appointment.startTime}
                     </Card.Text>
                     <Card.Text>
-                      {appointment.feedback || "No feedback provided yet."}
+                      {appointment.feedback || "Няма обратна връзка все още."}
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -127,16 +129,16 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
 
           {selectedAppointment && (
             <div style={{ marginTop: "20px" }}>
-              <h5>Provide Feedback for Appointment</h5>
+              <h5>Напишете обратна връзка за прегледа</h5>
               <Form>
                 <Form.Group controlId="feedbackText">
-                  <Form.Label>Your Feedback</Form.Label>
+                  <Form.Label>Обратна връзка</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
                     value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)} 
-                    placeholder="Write your feedback here..."
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Напишете вашата обратна връзка тук..."
                   />
                 </Form.Group>
                 <Button
@@ -145,7 +147,7 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
                   style={{ marginTop: "10px" }}
                   disabled={!isFeedbackValid || loading}
                 >
-                  Submit Feedback
+                  Изпрати
                 </Button>
               </Form>
             </div>

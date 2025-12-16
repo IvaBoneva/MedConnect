@@ -65,7 +65,9 @@ const DoctorHome = () => {
       </Card>
 
       {/* Календарът */}
+      {/* I Separated Calendar into google and doctor one */}
       <DoctorCalendarComponent />
+       {/* <GoogleCalendarComponent />  */}
 
       {/* Summary Cards */}
       <Row className="g-4 mt-2 mb-4">
