@@ -3,6 +3,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { PatientDashboardLayout } from "./layouts/PatientDashboardLayout";
 
 import Home from "../patient/pages/PatientHomePage";
+import ErrorPage from "../../../context/ErrorPage";
 import PersonalInformation from "../patient/pages/PersonalInformation";
 import EditPersonalInformation from "../patient/pages/EditPersonalInformation";
 import Prescriptions from "../patient/pages/PrescriptionsPage";
@@ -28,24 +29,33 @@ const PatientDashboardPage = () => {
     <PatientDashboardLayout basePath={basePath}>
       <Routes>
         <Route index element={<Navigate to="home" />} />
+
         <Route path="home" element={<Home />} />
+
         <Route path="personal_information" element={<PersonalInformation />} />
+
         <Route
           path="personal_information/edit"
           element={<EditPersonalInformation />}
         />
 
         <Route path="subscriptions" element={<SubscriptionsPage />} />
+
         <Route path="pharmacies_hospitals" element={<PharmacyMapPage />} />
 
         <Route path="subscriptions/payment" element={<PaymentPage />} />
+
         <Route path="prescriptions" element={<Prescriptions />} />
+
         <Route path="appointments" element={<Appointments />} />
+
         <Route
           path="appointments/doctor/:slug"
           element={<DoctorPersonalDetails />}
         />
+
         <Route path="storage" element={<Storage userId={user?.id} />} />
+
         <Route
           path="symptom_check"
           element={<SymptomCheck isPremium={user?.subscription == "free"} />} //developer (premium --> correct)
@@ -61,7 +71,9 @@ const PatientDashboardPage = () => {
             />
           }
         />
-        <Route path="*" element={<Navigate to="home" />} />
+
+        {/* 404 inside dashboard */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </PatientDashboardLayout>
   );

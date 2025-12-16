@@ -3,6 +3,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { GuardianDashboardLayout } from "./layouts/GuardianDashboardLayout";
 
 import Home from "../../guardians/GuardianHome";
+import ErrorPage from "../../../context/ErrorPage";
 import GuardianPersonalInformation from "../../guardians/GuardianPersonalInformation";
 import GuardianEditInformation from "../../guardians/GuardianEditInformation";
 import Prescriptions from "../patient/pages/PrescriptionsPage";
@@ -28,23 +29,31 @@ const GuardianDashboardPage = () => {
     <GuardianDashboardLayout basePath={basePath}>
       <Routes>
         <Route index element={<Navigate to="home" />} />
+
         <Route path="home" element={<Home />} />
+
         <Route
           path="personal_information"
           element={<GuardianPersonalInformation />}
         />
+
         <Route
           path="personal_information/edit"
           element={<GuardianEditInformation />}
         />
 
         <Route path="subscriptions" element={<SubscriptionsPage />} />
+
         <Route path="pharmacies_hospitals" element={<PharmacyMapPage />} />
 
         <Route path="subscriptions/payment" element={<PaymentPage />} />
+
         <Route path="prescriptions" element={<Prescriptions />} />
+
         <Route path="appointments/*" element={<Appointments />} />
+
         <Route path="storage" element={<Storage userId={user?.id} />} />
+
         <Route
           path="symptom_check"
           element={<SymptomCheck isPremium={user?.subscription == "free"} />} //developer (premium --> correct)
@@ -60,7 +69,9 @@ const GuardianDashboardPage = () => {
             />
           }
         />
-        <Route path="*" element={<Navigate to="home" />} />
+
+        {/* 404 inside dashboard */}
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </GuardianDashboardLayout>
   );
