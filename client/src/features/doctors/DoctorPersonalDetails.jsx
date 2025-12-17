@@ -8,14 +8,14 @@ import DoctorReviews from "./components/DoctorReviews";
 import PersonalReview from "./components/DoctorPersonalReview";
 import { useAuth } from "../../context/AuthContext";
 
-export const DoctorPersonalDetails = () => { 
-  // 🔴 CRITICAL: Initialize as null so the map knows to wait
+export const DoctorPersonalDetails = () => {
+  // CRITICAL: Initialize as null so the map knows to wait
   const [coords, setCoords] = useState(null);
-  
+
   const { slug } = useParams();
   const [doctor, setDoctor] = useState(null);
   const [calendar, setCalendar] = useState([]);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [refreshReviewsTrigger, setRefreshReviewsTrigger] = useState(0);
   const { token } = useAuth();
 
@@ -41,43 +41,43 @@ export const DoctorPersonalDetails = () => {
   // --- FETCH COORDINATES EFFECT ---
   // In DoctorPersonalDetails.jsx
 
-useEffect(() => {
-  if (!doctor) return;
+  useEffect(() => {
+    if (!doctor) return;
 
-  const fetchCoords = async () => {
-    // 1. Prepare URL
-    let query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
-    let url = `http://localhost:8080/api/utils/geocode?address=${query}`;
+    const fetchCoords = async () => {
+      // 1. Prepare URL
+      let query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
+      let url = `http://localhost:8080/api/utils/geocode?address=${query}`;
 
-    try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      try {
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (data && data.length > 0) {
-        // 2. Parse numbers
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon); // Note: Backend sends 'lon', we call it 'lng'
+        if (data && data.length > 0) {
+          // 2. Parse numbers
+          const lat = parseFloat(data[0].lat);
+          const lng = parseFloat(data[0].lon); // Note: Backend sends 'lon', we call it 'lng'
 
-        // 3. Check validity
-        if (!isNaN(lat) && !isNaN(lng)) {
-          // ✅ FIX: Save as an OBJECT explicitly
-          setCoords({ lat: lat, lng: lng });
+          // 3. Check validity
+          if (!isNaN(lat) && !isNaN(lng)) {
+            // FIX: Save as an OBJECT explicitly
+            setCoords({ lat: lat, lng: lng });
+          }
         }
+      } catch (e) {
+        console.error("Error fetching coordinates:", e);
       }
-    } catch (e) {
-      console.error("Error fetching coordinates:", e);
-    }
-  };
+    };
 
-  fetchCoords();
-}, [doctor, token]);
+    fetchCoords();
+  }, [doctor, token]);
 
   // --- FETCH CALENDAR DATA EFFECT ---
   const refreshCalendar = async () => {
@@ -98,9 +98,12 @@ useEffect(() => {
     };
 
     while (toMinutes(current) < toMinutes(endTime)) {
-      const next = new Date(0, 0, 0, ...current.split(":")).getTime() + 30 * 60000;
+      const next =
+        new Date(0, 0, 0, ...current.split(":")).getTime() + 30 * 60000;
       const nextStr = new Date(next).toTimeString().slice(0, 5);
-      const blocked = appointments?.some((a) => a.start.slice(0, 5) === current);
+      const blocked = appointments?.some(
+        (a) => a.start.slice(0, 5) === current
+      );
 
       if (!blocked) slots.push(current);
       current = nextStr;
@@ -110,7 +113,15 @@ useEffect(() => {
 
   const transformedCalendar = (calendar || []).map((day) => {
     const dateObj = new Date(day.date);
-    const weekdayNames = ["неделя", "понеделник", "вторник", "сряда", "четвъртък", "петък", "събота"];
+    const weekdayNames = [
+      "неделя",
+      "понеделник",
+      "вторник",
+      "сряда",
+      "четвъртък",
+      "петък",
+      "събота",
+    ];
 
     return {
       weekday: weekdayNames[dateObj.getDay()],
@@ -143,7 +154,7 @@ useEffect(() => {
   }, [slug]);
 
   if (!doctor) {
-    return <div>Loading...</div>;
+    return <div>Зареждане...</div>;
   }
 
   // --- RENDER ---
@@ -176,22 +187,22 @@ useEffect(() => {
             overflow: "hidden",
             marginRight: "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "#e9ecef", 
-            position: "relative"
+            backgroundColor: "#e9ecef",
+            position: "relative",
           }}
         >
           {coords ? (
             <DoctorMapLocation doctor={doctor} coords={coords} />
           ) : (
-            <div 
-              style={{ 
-                height: "100%", 
-                width: "100%", 
-                display: "flex", 
-                alignItems: "center", 
+            <div
+              style={{
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
                 justifyContent: "center",
                 color: "#6c757d",
-                fontWeight: "500"
+                fontWeight: "500",
               }}
             >
               <p style={{ margin: 0 }}>📍 Зареждане на локацията...</p>
@@ -232,7 +243,7 @@ useEffect(() => {
             backgroundColor: "#ffffff",
             borderRadius: "10px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "10px"
+            padding: "10px",
           }}
         >
           {calendar?.length > 0 ? (
@@ -242,9 +253,11 @@ useEffect(() => {
               doctorId={doctor.id}
             />
           ) : (
-             <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
-               Няма свободни часове за този период.
-             </div>
+            <div
+              style={{ padding: "20px", textAlign: "center", color: "#666" }}
+            >
+              Няма свободни часове за този период.
+            </div>
           )}
         </div>
       </div>

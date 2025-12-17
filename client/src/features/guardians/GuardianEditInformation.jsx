@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 const GuardianEditInformation = () => {
-  const { user} = useAuth();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     photo: user.photoURL,
@@ -37,7 +37,6 @@ const GuardianEditInformation = () => {
     ? "/test/guardian"
     : "/dashboard/guardian";
 
-  
   const [ageError, setAgeError] = useState("");
   const [patientAgeError, setPatientAgeError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -48,67 +47,64 @@ const GuardianEditInformation = () => {
   const [patientLNameError, setPatientLNameError] = useState("");
   const [message, setMessage] = useState("");
 
-  
- useEffect(() => {
-  const fetchLatestData = async () => {
-    const token = localStorage.getItem("token");
-    if (!user?.id || !token) return;
+  useEffect(() => {
+    const fetchLatestData = async () => {
+      const token = localStorage.getItem("token");
+      if (!user?.id || !token) return;
 
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/user/guardian/${user.id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/guardian/${user.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+
+          console.log("Edit Form Fetched:", data);
+
+          setFormData((prev) => ({
+            ...prev,
+            photo: data.photoURL,
+            fname: data.firstName,
+            lname: data.lastName,
+            age: data.age,
+            email: data.email,
+            phone: data.phoneNumber,
+
+            patientFName: data.wardFirstName,
+            patientLName: data.wardLastName,
+            patientAge: data.wardAge,
+            disabilities: data.wardDisabilityDescription,
+            allergies: data.wardAllergies,
+            diseases: data.wardDiseases,
+          }));
         }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        
-        console.log("Edit Form Fetched:", data); 
-
-        setFormData((prev) => ({
-          ...prev,
-          photo: data.photoURL,
-          fname: data.firstName,
-          lname: data.lastName,
-          age: data.age,
-          email: data.email,
-          phone: data.phoneNumber,
-
-          patientFName: data.wardFirstName,        
-          patientLName: data.wardLastName,
-          patientAge: data.wardAge,
-          disabilities: data.wardDisabilityDescription, 
-          allergies: data.wardAllergies,          
-          diseases: data.wardDiseases,            
-        }));
-      }
-    } catch (error) {
-      console.error("Грешка при зареждане на данни:", error);
-    }
-  };
-
-  fetchLatestData();
-}, [user.id]);
-  
-    const handleImageChange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        setFormData({ ...formData, photo: URL.createObjectURL(file) });
+      } catch (error) {
+        console.error("Грешка при зареждане на данни:", error);
       }
     };
 
-  
+    fetchLatestData();
+  }, [user.id]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, photo: URL.createObjectURL(file) });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
 
-    
     if (name === "age" || name === "patientAge") {
       newValue = value.replace(/\D/g, ""); // само цифри
       const num = parseInt(newValue, 10);
@@ -129,7 +125,6 @@ const GuardianEditInformation = () => {
       }
     }
 
-    
     if (name === "email") {
       const latinOnly = /^[A-Za-z0-9@._-]+$/;
       const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -196,67 +191,64 @@ const GuardianEditInformation = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (ageError || emailError || phoneError || fnameError || lnameError) {
-    setMessage("Моля, коригирайте грешките във формата.");
-    return;
-  }
-
-  const payload = {
-    firstName: formData.fname,
-    lastName: formData.lname,
-    age: parseInt(formData.age),
-    email: formData.email,
-    phoneNumber: formData.phone,
-    photoURL: formData.photo,
-    wardFirstName: formData.patientFName,
-    wardLastName: formData.patientLName,
-    wardAge: parseInt(formData.patientAge),
-    wardDisabilityDescription: formData.disabilities,
-    wardAllergies: formData.allergies,
-    wardDiseases: formData.diseases,
-    isWardDisabled: formData.disabilities && formData.disabilities.length > 0
-  };
-
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(
-      `http://localhost:8080/api/user/guardian/update/${user.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || "Update failed");
+    if (ageError || emailError || phoneError || fnameError || lnameError) {
+      setMessage("Моля, коригирайте грешките във формата.");
+      return;
     }
 
-    const updatedUserDTO = await response.json();
-    const newUserData = { ...user, ...updatedUserDTO };
-    
-    localStorage.setItem("user", JSON.stringify(newUserData));
-    
-    setMessage("✅ Информацията е успешно запазена!");
+    const payload = {
+      firstName: formData.fname,
+      lastName: formData.lname,
+      age: parseInt(formData.age),
+      email: formData.email,
+      phoneNumber: formData.phone,
+      photoURL: formData.photo,
+      wardFirstName: formData.patientFName,
+      wardLastName: formData.patientLName,
+      wardAge: parseInt(formData.patientAge),
+      wardDisabilityDescription: formData.disabilities,
+      wardAllergies: formData.allergies,
+      wardDiseases: formData.diseases,
+      isWardDisabled: formData.disabilities && formData.disabilities.length > 0,
+    };
 
-    
-    setTimeout(() => {
-        
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:8080/api/user/guardian/update/${user.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Update failed");
+      }
+
+      const updatedUserDTO = await response.json();
+      const newUserData = { ...user, ...updatedUserDTO };
+
+      localStorage.setItem("user", JSON.stringify(newUserData));
+
+      setMessage("✅ Информацията е успешно запазена!");
+
+      setTimeout(() => {
         navigate(`${basePath}/personal_information`, { replace: true });
-    }, 1000);
-
-  } catch (error) {
-    console.error("Update Error:", error);
-    setMessage("❌ Грешка: " + error.message);
-  }
-};
+      }, 1000);
+    } catch (error) {
+      console.error("Update Error:", error);
+      setMessage("❌ Грешка: " + error.message);
+    }
+  };
 
   // Изчистване
   const handleClear = () => {
@@ -344,7 +336,6 @@ const GuardianEditInformation = () => {
               </div>
             </Col>
 
-            
             <Col md={8}>
               <Form.Group className="mb-3">
                 <Form.Label>Име на пациент</Form.Label>

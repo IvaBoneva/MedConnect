@@ -24,7 +24,7 @@ const SymptomCheck = ({ isPremium }) => {
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "Hello! I’m your AI Doctor. How can I help you today?",
+      text: "Здравейте! Аз съм вашият AI лекар. Как мога да Ви помогна днес?",
     },
   ]);
 
@@ -44,7 +44,10 @@ const SymptomCheck = ({ isPremium }) => {
     } catch (error) {
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "Sorry, something went wrong. Please try again." },
+        {
+          role: "ai",
+          text: "Съжалявам, нещо се обърка. Моля опитайте отново.",
+        },
       ]);
     }
   };
@@ -94,10 +97,10 @@ const SymptomCheck = ({ isPremium }) => {
             </Col>
             <Col>
               <div className="fw-bold">
-                Dr. Medconnect{" "}
+                Д-р Medconnect{" "}
                 <span className="badge bg-light text-dark">Chatbot</span>
               </div>
-              <small>Your AI Medical Assistant</small>
+              <small>Вашият AI медицински помощник</small>
             </Col>
           </Row>
         </Card.Header>
@@ -144,7 +147,7 @@ const SymptomCheck = ({ isPremium }) => {
                 <Form.Control
                   as="textarea"
                   rows={3}
-                  placeholder="Type your medical question..."
+                  placeholder="Задайте медицинския си въпрос (български/английски/македонски)..."
                   className="rounded-pill"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}

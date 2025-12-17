@@ -29,18 +29,19 @@ const DoctorCalendarComponent = () => {
   const [calendarKey, setCalendarKey] = useState(0);
 
   const { user } = useAuth();
-  
+
   const handleComplete = async (appointmentId) => {
     try {
       await completeAppointment(appointmentId);
-      window.dispatchEvent(new Event('force-stats-update'));
-      
-      alert("Appointment completed successfully!");
-      await loadData(); 
+      window.dispatchEvent(new Event("force-stats-update"));
 
+      alert("Успешно приключил преглед!");
+      await loadData();
     } catch (error) {
       console.error("Error completing appointment:", error);
-      alert("Failed to complete appointment. Please try again.");
+      alert(
+        "Не успяхте да маркирате прегледа като приключен. Опитайте отново по-късно."
+      );
     }
   };
 
@@ -126,45 +127,45 @@ const DoctorCalendarComponent = () => {
     const selectedDay = allWorkDays.find((d) => d.date === selectedDate);
 
     if (!selectedDay) {
-      return <p>No data for this day</p>;
+      return <p>Няма данни за този ден</p>;
     }
 
     if (selectedDay.working === false) {
-      return <p>Not working today</p>;
+      return <p>Днес е почивен ден</p>;
     }
 
     const { startTime, endTime } = selectedDay;
     return (
       <p>
-        Working hours: {startTime?.slice(0, 5)} → {endTime?.slice(0, 5)}
+        Работни часове: {startTime?.slice(0, 5)} → {endTime?.slice(0, 5)}
       </p>
     );
   };
 
   const handleSetDayOff = async () => {
     if (!selectedDate) {
-      alert("Select a date first!");
+      alert("Изберете дата първо!");
       return;
     }
 
     try {
       await setDayOff(user.id, selectedDate);
       await loadData();
-      alert(`Marked ${selectedDate} as a day off.`);
+      alert(`Маркирано ${selectedDate} като неработен ден.`);
     } catch (err) {
       console.error(err);
-      alert("Failed to set day off.");
+      alert("Не успяхте да маркирате деня като неработен.");
     }
   };
 
   const handleChangeWorkingHours = async () => {
     if (!selectedDate) {
-      alert("Select a date first!");
+      alert("Изберете дата първо!");
       return;
     }
 
-    const start = prompt("Enter start time (HH:MM):", "10:00");
-    const end = prompt("Enter end time (HH:MM):", "15:00");
+    const start = prompt("Въведете първи час (ЧЧ:ММ):", "10:00");
+    const end = prompt("Въведете последен час (ЧЧ:ММ):", "15:00");
 
     if (!start || !end) return;
 
@@ -177,10 +178,10 @@ const DoctorCalendarComponent = () => {
       );
 
       await loadData();
-      alert(`Updated working hours for ${selectedDate}`);
+      alert(`Обновени работни часове за ${selectedDate}`);
     } catch (err) {
       console.error(err);
-      alert("Failed to update working hours.");
+      alert("Не успяхте да обновите работните часове.");
     }
   };
 
@@ -205,11 +206,11 @@ const DoctorCalendarComponent = () => {
         dateClick={handleDateClick}
         customButtons={{
           custom1: {
-            text: "Set Day Off",
+            text: "Маркирайте като неработен ден",
             click: handleSetDayOff,
           },
           custom2: {
-            text: "Change Hours",
+            text: "Променете часовете",
             click: handleChangeWorkingHours,
           },
         }}
@@ -228,14 +229,12 @@ const DoctorCalendarComponent = () => {
         }}
       >
         <h3 style={{ marginTop: 0 }}>
-          Events on {selectedDate ? selectedDate : "—"}
+          Събития на {selectedDate ? selectedDate : "—"}
         </h3>
 
         {getSelectedDayInfo()}
 
-        <PatientAccourdion 
-        dayEvents={dayEvents}
-        onComplete={handleComplete} />
+        <PatientAccourdion dayEvents={dayEvents} onComplete={handleComplete} />
       </div>
     </div>
   );
