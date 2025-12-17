@@ -20,29 +20,29 @@ const PharmacyMapPage = () => {
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          height: "100%",
-        }}
-      >
-        <MapSidebar
-          isMobile={isMobile}
-          gpsEnabled={gpsEnabled}
-          setGpsEnabled={setGpsEnabled}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          loading={loading}
-          pharmacies={pharmacies}
-          hospitals={hospitals}
-          selectedPharmacy={selectedPharmacy}
-          setSelectedPharmacy={setSelectedPharmacy}
-          selectedHospital={selectedHospital}
-          setSelectedHospital={setSelectedHospital}
-        />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "100%",
+      }}
+    >
+      <MapSidebar
+        isMobile={isMobile}
+        gpsEnabled={gpsEnabled}
+        setGpsEnabled={setGpsEnabled}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        loading={loading}
+        pharmacies={pharmacies}
+        hospitals={hospitals}
+        selectedPharmacy={selectedPharmacy}
+        setSelectedPharmacy={setSelectedPharmacy}
+        selectedHospital={selectedHospital}
+        setSelectedHospital={setSelectedHospital}
+      />
 
+      <div style={{ flex: 1, minHeight: isMobile ? "400px" : "100%" }}>
         <MapView
           coords={coords}
           darkMode={darkMode}
