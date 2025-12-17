@@ -16,8 +16,7 @@ export const MapSidebar = ({
   selectedHospital,
   setSelectedHospital,
 }) => {
-  
-    return (
+  return (
     <div
       style={{
         width: isMobile ? "100%" : "300px",
@@ -32,11 +31,11 @@ export const MapSidebar = ({
     >
       <h4 className="mb-3">Близки места</h4>
 
-      <MapControls 
-        gpsEnabled={gpsEnabled} 
-        setGpsEnabled={setGpsEnabled} 
-        darkMode={darkMode} 
-        setDarkMode={setDarkMode} 
+      <MapControls
+        gpsEnabled={gpsEnabled}
+        setGpsEnabled={setGpsEnabled}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
       />
 
       {!gpsEnabled && (
@@ -66,7 +65,7 @@ export const MapSidebar = ({
 
       {gpsEnabled && hospitals.length > 0 && (
         <>
-          <h5 className="mt-3 text-danger">🏥 Болници</h5>
+          <h5 className="mt-3 text-success">🏥 Болници</h5>
           {hospitals.map((h, i) => (
             <PlaceItem
               key={`h-${i}`}

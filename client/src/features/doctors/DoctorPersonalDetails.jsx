@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getAllWorkDays, getDoctorBySlug } from "../../api/doctorApi";
 import { AppointmentsSwiper } from "../appointments/components/AppointmentSwiper";
 import { DoctorMapLocation } from "./components/DoctorMapLocation";
@@ -18,6 +19,7 @@ export const DoctorPersonalDetails = () => {
   const [loading, setLoading] = useState(false);
   const [refreshReviewsTrigger, setRefreshReviewsTrigger] = useState(0);
   const { token } = useAuth();
+  const navigate = useNavigate();
 
   const refreshDoctorReviews = () => {
     setRefreshReviewsTrigger((prev) => prev + 1);
@@ -165,7 +167,8 @@ export const DoctorPersonalDetails = () => {
         className="doctor-map-container"
         style={{
           display: "flex",
-          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "20px",
           padding: "20px",
           paddingTop: "50px",
           paddingBottom: "50px",
@@ -175,17 +178,19 @@ export const DoctorPersonalDetails = () => {
         }}
       >
         {/* Doctor Info Card */}
-        <DoctorDetailsCard doctor={doctor} />
+        <div style={{ flex: "1 1 350px", minWidth: "300px" }}>
+          <DoctorDetailsCard doctor={doctor} />
+        </div>
 
         {/* Map Section */}
         <div
           className="map-info"
           style={{
-            width: "700px",
+            flex: "1 1 500px",
+            minWidth: "300px",
             height: "350px",
             borderRadius: "10px",
             overflow: "hidden",
-            marginRight: "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
             backgroundColor: "#e9ecef",
             position: "relative",

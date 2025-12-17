@@ -6,18 +6,12 @@ import { MapView } from "./components/MapView";
 const PharmacyMapPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  
+
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
   const [selectedHospital, setSelectedHospital] = useState(null);
 
-  const {
-    coords,
-    pharmacies,
-    hospitals,
-    gpsEnabled,
-    setGpsEnabled,
-    loading,
-  } = useMapLogic();
+  const { coords, pharmacies, hospitals, gpsEnabled, setGpsEnabled, loading } =
+    useMapLogic();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
