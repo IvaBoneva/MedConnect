@@ -6,6 +6,7 @@ import { MapView } from "./components/MapView";
 const PharmacyMapPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
   const [selectedHospital, setSelectedHospital] = useState(null);
@@ -14,35 +15,84 @@ const PharmacyMapPage = () => {
     useMapLogic();
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) setShowSidebar(true); // винаги показан на desktop
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Височината на контейнера задаваме на 800px, може да се променя
+  const containerHeight = 800;
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
-        height: "100%",
+        height: containerHeight,
+        gap: "10px",
+        position: "relative",
       }}
     >
-      <MapSidebar
-        isMobile={isMobile}
-        gpsEnabled={gpsEnabled}
-        setGpsEnabled={setGpsEnabled}
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        loading={loading}
-        pharmacies={pharmacies}
-        hospitals={hospitals}
-        selectedPharmacy={selectedPharmacy}
-        setSelectedPharmacy={setSelectedPharmacy}
-        selectedHospital={selectedHospital}
-        setSelectedHospital={setSelectedHospital}
-      />
+      {/* MOBILE TOGGLE BUTTON */}
+      {isMobile && (
+        <button
+          onClick={() => setShowSidebar(!showSidebar)}
+          style={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            zIndex: 1000,
+            background: "#2e8b57",
+            color: "#fff",
+            border: "none",
+            borderRadius: "20px",
+            padding: "6px 14px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          {showSidebar ? "⬇ Скрий списъка" : "⬆ Покажи списъка"}
+        </button>
+      )}
 
-      <div style={{ flex: 1, minHeight: isMobile ? "400px" : "100%" }}>
+      {/* SIDEBAR */}
+      {(!isMobile || showSidebar) && (
+        <div
+          style={{
+            flex: isMobile ? "0 0 auto" : "0 0 320px",
+            maxHeight: isMobile ? "45vh" : "100%",
+            overflowY: "auto",
+            borderBottom: isMobile ? "1px solid #ddd" : "none",
+          }}
+        >
+          <MapSidebar
+            isMobile={isMobile}
+            gpsEnabled={gpsEnabled}
+            setGpsEnabled={setGpsEnabled}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+            loading={loading}
+            pharmacies={pharmacies}
+            hospitals={hospitals}
+            selectedPharmacy={selectedPharmacy}
+            setSelectedPharmacy={setSelectedPharmacy}
+            selectedHospital={selectedHospital}
+            setSelectedHospital={setSelectedHospital}
+          />
+        </div>
+      )}
+
+      {/* MAP */}
+      <div
+        style={{
+          flex: 1,
+          minHeight: isMobile && !showSidebar ? "100%" : "auto",
+        }}
+      >
         <MapView
           coords={coords}
           darkMode={darkMode}

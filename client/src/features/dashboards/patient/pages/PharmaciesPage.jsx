@@ -8,7 +8,14 @@ const PharmaciesPage = () => {
         <h3 className="text-success text-left mb-5">
           🏥 Търсене на болници и аптеки
         </h3>
-        <div style={{ height: "600px", width: "100%" }}>
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <PharmacyMapPage />
         </div>
       </Card>

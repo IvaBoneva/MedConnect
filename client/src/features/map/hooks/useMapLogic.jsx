@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { getDistance } from "geolib";
 
 export const useMapLogic = () => {
-  const [coords, setCoords] = useState({ lat: 42.6977, lng: 23.3219 }); 
+  const [coords, setCoords] = useState({ lat: 42.6977, lng: 23.3219 });
   const [pharmacies, setPharmacies] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [gpsEnabled, setGpsEnabled] = useState(false);

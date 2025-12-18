@@ -20,13 +20,13 @@ export const MapSidebar = ({
     <div
       style={{
         width: isMobile ? "100%" : "300px",
-        maxHeight: isMobile ? "300px" : "100%",
+        flexShrink: 0,
         overflowY: "auto",
         padding: "20px",
         borderRight: isMobile ? "none" : "1px solid #ccc",
         borderBottom: isMobile ? "1px solid #ccc" : "none",
         background: "#f9f9f9",
-        marginBottom: isMobile ? "30px" : "0px",
+        maxHeight: "100%", // Взима височината на контейнера
       }}
     >
       <h4 className="mb-3">Близки места</h4>
