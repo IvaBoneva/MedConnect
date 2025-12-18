@@ -343,7 +343,12 @@ public class DataSeeder {
                 guardian.setWardAge(10);
                 guardian.setIsWardDisabled(true);
                 guardian.setWardDisabilityDescription("Requires walking assistance.");
+                guardianRepository.save(guardian);
 
+
+                Storage newStorage = new Storage();
+                newStorage.setUser(guardian);
+                storageRepository.save(newStorage);
                 // ========================
                 // SAVE ALL
                 // ========================
@@ -361,7 +366,6 @@ public class DataSeeder {
                 doctorRepository.save(doctor9);
                 doctorRepository.save(doctor10);
 
-                guardianRepository.save(guardian);
 
                 // ========================
                 // SCHEDULES

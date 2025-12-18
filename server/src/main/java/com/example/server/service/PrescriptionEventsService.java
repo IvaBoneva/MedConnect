@@ -15,7 +15,6 @@ public class PrescriptionEventsService {
         this.prescriptionEventsRepository = prescriptionEventsRepository;
     }
 
-    // Method to save all PrescriptionEvents
     public List<PrescriptionEvents> saveAll(List<PrescriptionEvents> events) {
         return prescriptionEventsRepository.saveAll(events); // Save all PrescriptionEvents at once
     }
