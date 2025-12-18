@@ -97,7 +97,7 @@ const SymptomCheck = ({ isPremium }) => {
             </Col>
             <Col>
               <div className="fw-bold">
-                Д-р Medconnect{" "}
+                Д-р MedConnect{" "}
                 <span className="badge bg-light text-dark">Chatbot</span>
               </div>
               <small>Вашият AI медицински помощник</small>

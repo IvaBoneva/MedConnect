@@ -48,7 +48,6 @@ public class StorageController {
 
     @PostMapping("/files")
     public void saveFileForUser(@RequestBody FileUploadRequest fileUploadRequest) {
-        // Assuming storageService is responsible for saving the file metadata to the database
         storageService.saveFile(
                 fileUploadRequest.getUserId(),
                 fileUploadRequest.getFileCloudinaryUrl(),

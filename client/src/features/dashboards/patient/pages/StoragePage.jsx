@@ -118,14 +118,45 @@ const StoragePage = () => {
   /* ================= ACTIONS ================= */
 
   const handleDownload = (file) => {
-    fetch(file.fileCloudinaryUrl)
-      .then((r) => r.blob())
-      .then((blob) => fileDownload(blob, file.name));
+    const url = file.fileCloudinaryUrl.replace(
+      "/upload/",
+      "/upload/fl_attachment/"
+    );
+    window.location.href = url;
   };
 
   const handlePrint = (file) => {
-    window.open(file.fileCloudinaryUrl, "_blank")?.print();
-  };
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) return;
+
+  const isImage = file.type?.startsWith("image/");
+
+  if (isImage) {
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+          <style>
+            body {
+              margin: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${file.fileCloudinaryUrl}" onload="window.print()" />
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+};
 
   const handleRemove = async (fileId) => {
     await deleteFileFromDatabase(fileId, token);
