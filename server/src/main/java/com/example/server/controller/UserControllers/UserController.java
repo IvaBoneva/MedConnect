@@ -23,7 +23,6 @@ import java.util.List;
 @RequestMapping("api/user")
 public class UserController {
 
-    // CHANGED UserService -> BaseUserService
 
     private final BaseUserService<User> baseUserService;
     private final JwtGeneratorInterface jwtGeneratorInterface;

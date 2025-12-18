@@ -16,7 +16,7 @@ public class PrescriptionEventsService {
     }
 
     public List<PrescriptionEvents> saveAll(List<PrescriptionEvents> events) {
-        return prescriptionEventsRepository.saveAll(events); // Save all PrescriptionEvents at once
+        return prescriptionEventsRepository.saveAll(events);
     }
 
     public List<PrescriptionEvents> getPrescriptionEventsByUser(Long userId) {

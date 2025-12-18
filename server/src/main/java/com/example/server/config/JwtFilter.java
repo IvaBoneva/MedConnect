@@ -25,7 +25,7 @@ import java.util.Collections;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-    private final String secret = "supersecretkeysupersecretkey123456"; // same as application.yml
+    private final String secret = "supersecretkeysupersecretkey123456";
 
     private final BaseUserService<User> baseUserService;
 

@@ -147,7 +147,7 @@ const SymptomCheck = ({ isPremium }) => {
                 <Form.Control
                   as="textarea"
                   rows={3}
-                  placeholder="Задайте медицинския си въпрос (български/английски/македонски)..."
+                  placeholder="Задайте медицинския си въпрос (български/английски)..."
                   className="rounded-pill"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}

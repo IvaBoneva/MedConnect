@@ -20,7 +20,6 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 @Service
 public class AIDoctorService {
 
-        private final String aiDoctorURL = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
         private final String googleCloudToken = "ya29.a0Aa7pCA_61YZ8evgmAqETP02PM62L8sl8Ny13LGCNpj3T3Ja4oygsfl5G4FpJyCZLcBs68CTZKjq1kR4MPhan7ChUNL-UmJfUl01nQtSGhh_6IWlR8NVKx0Zb_Kf3wwr2ZGEYVxgococENHCbiO8J7zfsr-yI5vvhUxCOekJ-FxBMg6kJBqBOpjuflNrrvFeS4h0t6b-Bu1daNQaCgYKAUcSARUSFQHGX2MiWxKDsjFaHdvUp6grSWxGEw0213";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 

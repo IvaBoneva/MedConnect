@@ -16,7 +16,6 @@ public class PrescriptionMapper {
     public PrescriptionMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
 
-        // Custom mapping for userId
         modelMapper.typeMap(Prescription.class, PrescriptionDTO.class)
                 .addMapping(src -> src.getUser().getId(), PrescriptionDTO::setUserId);
     }

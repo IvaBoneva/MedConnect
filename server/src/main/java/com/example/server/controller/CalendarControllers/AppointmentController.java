@@ -37,12 +37,11 @@ public class AppointmentController {
 
         } catch (Exception e) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST) // HTTP status 400
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
         }
     }
 
-    // В AppointmentController.java
 
     @GetMapping("/doctor")
     public ResponseEntity<List<AppointmentReviewableDTO>> getDoctorAppointments(

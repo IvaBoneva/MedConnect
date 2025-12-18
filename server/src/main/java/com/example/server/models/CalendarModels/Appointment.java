@@ -31,13 +31,10 @@ public class Appointment {
 
     private Integer rating;
 
-    // The exact start date + time
     private LocalDateTime startingTime;
 
-    // Duration in minutes
     private Long durationInMinutes = 30L;
 
-    // Auto-generated
     private LocalDateTime endTime;
 
     @PrePersist
@@ -46,7 +43,6 @@ public class Appointment {
         this.endTime = startingTime.plus(Duration.ofMinutes(durationInMinutes));
     }
 
-    // Appointment status
     @Enumerated(EnumType.STRING)
     private Status status = Status.Free;
 

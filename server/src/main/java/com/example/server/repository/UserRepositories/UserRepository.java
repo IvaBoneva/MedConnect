@@ -6,8 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends BaseUserRepository<User> {
 
-    // User findByEmail(String email) throws UsernameNotFoundException;
-
-    // List<User> findAll();
 
 }

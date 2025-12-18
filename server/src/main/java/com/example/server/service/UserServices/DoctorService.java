@@ -23,7 +23,7 @@ import com.example.server.repository.UserRepositories.DoctorRepository;
 public class DoctorService extends BaseUserServiceImpl<Doctor> {
 
     private final DoctorMapper doctorMapper;
-    private final DoctorRepository doctorRepository; // Add this specific repository
+    private final DoctorRepository doctorRepository;
     private final WeeklyScheduleTemplateRepository weeklyScheduleTemplateRepository;
 
     public DoctorService(DoctorRepository doctorRepository, PasswordEncoder passwordEncoder, DoctorMapper doctorMapper,

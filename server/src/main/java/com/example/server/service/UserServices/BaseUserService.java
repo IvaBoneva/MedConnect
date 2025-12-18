@@ -7,9 +7,6 @@ import java.util.List;
 
 public interface BaseUserService<T extends User> {
 
-    //// ! HERE THERE IS NO METHOD CREATED BY JPA IN RUNTIME LIKE (find....) that's
-    //// why all they work
-
     public T saveUser(T user) throws  Exception;
 
     public T saveGoogleTokensToUser(T user) throws UsernameNotFoundException;
