@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Token Blacklisting (not mandatory)
 @Service
 public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
 

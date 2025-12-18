@@ -1,6 +1,5 @@
 package com.example.server.repository.CalendarRepositories;
 
-import com.example.server.models.CalendarModels.WeeklyScheduleTemplate;
 import com.example.server.models.CalendarModels.WorkDayException;
 import org.springframework.data.jpa.repository.JpaRepository;
 

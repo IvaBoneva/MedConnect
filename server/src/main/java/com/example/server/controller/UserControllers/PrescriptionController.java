@@ -86,16 +86,14 @@ public class PrescriptionController {
         List<PrescriptionEvents> prescriptionEvents = new ArrayList<>();
         LocalDate startDate = prescription.getStartDate();
         LocalDate endDate = prescription.getEndDate();
-        String takingHours = prescription.getTakingHour(); // Taking hours in the format "HH:mm, HH:mm"
+        String takingHours = prescription.getTakingHour();
 
-        // Split takingHour string into individual times (if multiple)
         String[] times = takingHours.split(",\\s*");
 
         // Loop through each day from startDate to endDate
         for (LocalDate currentDate = startDate; !currentDate.isAfter(endDate); currentDate = currentDate.plusDays(1)) {
 
             for (String time : times) {
-                // Parse each taking hour into LocalTime (i.e., HH:mm)
                 DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
                 LocalTime parsedTakingHour = LocalTime.parse(time, timeFormatter);
 

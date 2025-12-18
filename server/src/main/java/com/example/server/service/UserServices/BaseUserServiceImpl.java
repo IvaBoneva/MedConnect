@@ -55,8 +55,6 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         T existingUser = repository.findByEmail(user.getEmail());
         if (existingUser != null) {
 
-            existingUser.setGoogleAccessToken(user.getGoogleAccessToken());
-            existingUser.setGoogleRefreshToken(user.getGoogleRefreshToken());
             repository.save(existingUser);
             return existingUser;
         }

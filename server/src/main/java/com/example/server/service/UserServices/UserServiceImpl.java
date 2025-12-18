@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends BaseUserServiceImpl<User> {
 
-    private final UserRepository userRepository; // Declare the userRepository field
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, StorageRepository storageRepository) {
         super(userRepository, passwordEncoder,storageRepository);
-        this.userRepository = userRepository; // Initialize the userRepository
+        this.userRepository = userRepository;
 
     }
 

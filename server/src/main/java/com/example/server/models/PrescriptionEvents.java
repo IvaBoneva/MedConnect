@@ -22,13 +22,13 @@ public class PrescriptionEvents {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private LocalDateTime startDateTime;   // Use LocalDateTime for proper time formatting
+    private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private String takingHours;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // Lazy fetch for the User
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users", nullable = false)
-    @JsonIgnore  // Prevent infinite recursion or serialization issues
+    @JsonIgnore
     private User user;
 
 
