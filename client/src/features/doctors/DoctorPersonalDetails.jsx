@@ -9,7 +9,7 @@ import DoctorReviews from "./components/DoctorReviews";
 import PersonalReview from "./components/DoctorPersonalReview";
 import { useAuth } from "../../context/AuthContext";
 
-export const DoctorPersonalDetails = () => { 
+export const DoctorPersonalDetails = () => {
   const [coords, setCoords] = useState(null);
 
   const { slug } = useParams();
@@ -39,8 +39,8 @@ export const DoctorPersonalDetails = () => {
     };
   };
 
-useEffect(() => {
-  if (!doctor) return;
+  useEffect(() => {
+    if (!doctor) return;
 
     const fetchCoords = async () => {
       // 1. Prepare URL
@@ -58,12 +58,13 @@ useEffect(() => {
 
         const data = await res.json();
 
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon); 
+        if (data && data.length > 0) {
+          const lat = parseFloat(data[0].lat);
+          const lng = parseFloat(data[0].lon);
 
-        if (!isNaN(lat) && !isNaN(lng)) {
-          setCoords({ lat: lat, lng: lng });
+          if (!isNaN(lat) && !isNaN(lng)) {
+            setCoords({ lat: lat, lng: lng });
+          }
         }
       } catch (e) {
         console.error("Error fetching coordinates:", e);

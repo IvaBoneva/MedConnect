@@ -1,69 +1,82 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Button, Alert, Card, Form } from "react-bootstrap";
 
-const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
+const VaccinesAndProfilactics = ({ isPremium, user }) => {
   const [vaccines, setVaccines] = useState([]);
   const [profilactics, setProfilactics] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
 
-  const storageKey = `checkedItems-${userEmail}`; 
+  const storageKey = `checkedItems-${user?.email}`;
+
+  // ВЗИМА ВЪЗРАСТ ОТ СЪРВЪРА И Я ПРАВИ NUMBER
+  const effectiveAgeRaw = user?.role === "guardian" ? user?.wardAge : user?.age;
+
+  const effectiveAge = Number(effectiveAgeRaw);
+
+  /* -------------------- LOCAL STORAGE -------------------- */
 
   useEffect(() => {
+    if (!user?.email) return;
+
     const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      setCheckedItems(JSON.parse(saved)); 
-    } else {
-      setCheckedItems({}); 
-    }
-  }, [storageKey]);
+    setCheckedItems(saved ? JSON.parse(saved) : {});
+  }, [storageKey, user?.email]);
 
- 
   useEffect(() => {
+    if (!user?.email) return;
     localStorage.setItem(storageKey, JSON.stringify(checkedItems));
-  }, [checkedItems, storageKey]);
+  }, [checkedItems, storageKey, user?.email]);
+
+  /* -------------------- FETCH VACCINES -------------------- */
 
   useEffect(() => {
-    if (isPremium) {
-      fetch("/vaccines.json")
-        .then((res) => res.json())
-        .then((data) => {
-          const upcoming = data.filter((v) => v.age >= patientAge);
-          setVaccines(upcoming);
-        })
-        .catch((err) => console.error("Failed to load vaccines:", err));
-    }
-  }, [isPremium, patientAge]);
+    if (isPremium || Number.isNaN(effectiveAge)) return;
+
+    fetch("/vaccines.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const upcoming = data.filter((v) => v.age >= effectiveAge);
+        setVaccines(upcoming);
+      })
+      .catch((err) => console.error("Failed to load vaccines:", err));
+  }, [isPremium, effectiveAge]);
+
+  /* -------------------- FETCH PROFILACTICS -------------------- */
 
   useEffect(() => {
-    if (isPremium) {
-      fetch("/checks.json")
-        .then((res) => res.json())
-        .then((data) => {
-          let groupFiltered;
-          if (patientAge < 18) {
-            groupFiltered = data.filter((p) => p.age < 18);
-          } else {
-            groupFiltered = data.filter((p) => p.age >= 18);
-          }
-          const finalFiltered = groupFiltered.filter(
-            (p) => p.age <= patientAge
-          );
-          setProfilactics(finalFiltered);
-        })
-        .catch((err) => console.error("Failed to load profilactics:", err));
-    }
-  }, [isPremium, patientAge]);
+    if (isPremium || Number.isNaN(effectiveAge)) return;
+
+    fetch("/checks.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const groupFiltered =
+          effectiveAge < 18
+            ? data.filter((p) => p.age < 18)
+            : data.filter((p) => p.age >= 18);
+
+        const finalFiltered = groupFiltered.filter(
+          (p) => p.age <= effectiveAge
+        );
+
+        setProfilactics(finalFiltered);
+      })
+      .catch((err) => console.error("Failed to load profilactics:", err));
+  }, [isPremium, effectiveAge]);
+
+  /* -------------------- CHECK HANDLER -------------------- */
 
   const handleCheck = (type, age, name) => {
-    const key = `${type}-${age}-${name}`; 
+    const key = `${type}-${age}-${name}`;
     setCheckedItems((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
 
-  if (!isPremium) {
+  /* -------------------- PAYWALL -------------------- */
+
+  if (isPremium) {
     return (
       <Container className="py-5">
         <Alert variant="warning" className="text-center p-4">
@@ -80,12 +93,15 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
     );
   }
 
+  /* -------------------- UI -------------------- */
+
   return (
     <Container className="py-5">
       <h3 className="mb-4" style={{ color: "#2E8B57" }}>
         Имунизации и профилактични прегледи
       </h3>
 
+      {/* PDF CALENDAR */}
       <Card className="mb-5 p-3 shadow-sm text-center">
         <h5 style={{ color: "#2E8B57", marginBottom: "15px" }}>
           Национален имунизационен календар (PDF)
@@ -114,14 +130,16 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
             width="100%"
             height="100%"
             style={{ border: "none" }}
+            title="Vaccination Calendar"
           />
         </div>
       </Card>
 
+      {/* VACCINES */}
       <Card className="mb-5 p-3 shadow-sm">
-        <h5 style={{ color: "#2E8B57" }}> 💉 Предстоящи ваксини</h5>
+        <h5 style={{ color: "#2E8B57" }}>💉 Предстоящи ваксини</h5>
         {vaccines.length === 0 ? (
-          <p>Няма предстоящи ваксини за вашата възраст.</p>
+          <p>Няма предстоящи ваксини за тази възраст.</p>
         ) : (
           <Table striped bordered hover responsive>
             <thead>
@@ -160,10 +178,11 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
         )}
       </Card>
 
+      {/* PROFILACTICS */}
       <Card className="mb-5 p-3 shadow-sm">
         <h5 style={{ color: "#2E8B57" }}>🩺 Право на профилактични прегледи</h5>
         {profilactics.length === 0 ? (
-          <p>Няма налични прегледи за вашата възраст.</p>
+          <p>Няма налични прегледи за тази възраст.</p>
         ) : (
           <Table striped bordered hover responsive>
             <thead>
