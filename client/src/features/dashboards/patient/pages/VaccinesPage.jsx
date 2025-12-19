@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Button, Alert, Card, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const VaccinesAndProfilactics = ({ isPremium, user }) => {
   const [vaccines, setVaccines] = useState([]);
@@ -79,7 +80,17 @@ const VaccinesAndProfilactics = ({ isPremium, user }) => {
             Имунизационният календар и профилактичните прегледи са достъпни само
             за потребители с активен абонамент.
           </p>
-          <Button variant="success" href="/subscriptions">
+          <Button
+            as={Link}
+            to={
+              user?.role === "patient"
+                ? "/dashboard/patient/subscriptions"
+                : user?.role === "guardian"
+                ? "/dashboard/guardian/subscriptions"
+                : "/dashboard/patient/subscriptions" // fallback
+            }
+            variant="success"
+          >
             Отиди към абонаментите
           </Button>
         </Alert>
