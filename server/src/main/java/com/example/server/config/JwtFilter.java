@@ -41,7 +41,6 @@ public class JwtFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String servletPath = request.getServletPath();
-        String method = request.getMethod();
 
         if (servletPath.startsWith("/api/user/login") ||
                 servletPath.startsWith("/api/user/register") ||
@@ -65,10 +64,10 @@ public class JwtFilter extends GenericFilterBean {
                 servletPath.matches("/api/aiDoctor/callHello") ||
 
 
-                servletPath.startsWith("/api/storage/files") ||  // <-- This is the public file endpoint
+                servletPath.startsWith("/api/storage/files") ||
 
-                servletPath.startsWith("/api/storage/getFiles/") ||  // <-- Add this line to allow this URL
-                servletPath.startsWith("/api/storage/**") ||  //
+                servletPath.startsWith("/api/storage/getFiles/") ||
+                servletPath.startsWith("/api/storage/**") ||
 
 
                 servletPath.startsWith("/api/calendar/doctor/off") ||
@@ -84,7 +83,6 @@ public class JwtFilter extends GenericFilterBean {
                 servletPath.matches("/api/appointments") ||
 
                 servletPath.contains("/google") ||
-//                servletPath.equals("/google/callback") ||
                 servletPath.startsWith("/events") ||
 
                 servletPath.equals("/auth/me") ||
@@ -123,9 +121,6 @@ public class JwtFilter extends GenericFilterBean {
 
             String email = claims.getSubject();
             User realUser = baseUserService.getUserByEmail(email);
-
-
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
             // Create authentication token with the authenticated user and set it in security context
