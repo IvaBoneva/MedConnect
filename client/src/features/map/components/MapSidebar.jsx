@@ -18,13 +18,14 @@ export const MapSidebar = ({
 }) => {
   return (
     <div
+      className="shadow-sm"
       style={{
         width: isMobile ? "100%" : "300px",
         flexShrink: 0,
         overflowY: "auto",
         padding: "20px",
-        borderRight: isMobile ? "none" : "1px solid #ccc",
         borderBottom: isMobile ? "1px solid #ccc" : "none",
+        borderRadius: "15px",
         background: "#f9f9f9",
         maxHeight: "100%", // Взима височината на контейнера
       }}

@@ -24,7 +24,7 @@ export const PlaceItem = ({ place, isSelected, onClick, type }) => {
         onClick={(e) => e.stopPropagation()}
         style={{ color: "#2e8b57", fontWeight: "bold" }}
       >
-        {type === "hospital" ? "➜ Навигирай" : "Навигирай →"}
+        Навигирай →
       </a>
     </div>
   );

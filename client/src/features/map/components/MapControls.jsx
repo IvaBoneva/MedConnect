@@ -1,7 +1,12 @@
 import React from "react";
-import { Button } from "react-bootstrap"; 
+import { Button } from "react-bootstrap";
 
-export const MapControls = ({ gpsEnabled, setGpsEnabled, darkMode, setDarkMode }) => {
+export const MapControls = ({
+  gpsEnabled,
+  setGpsEnabled,
+  darkMode,
+  setDarkMode,
+}) => {
   return (
     <div className="mb-3">
       <button
