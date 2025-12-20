@@ -48,6 +48,7 @@ public class AppointmentController {
             @RequestParam Long doctorId,
             @RequestParam Appointment.Status status) {
 
+//        gets Compleated apppointments
         List<Appointment> appointments = service.getDoctorAppointments(doctorId, status);
 
         List<AppointmentReviewableDTO> dtos = appointments.stream()
@@ -80,6 +81,7 @@ public class AppointmentController {
             @RequestParam Appointment.Status status,
             @RequestParam Long patientId) {
 
+//        returns completed appointments related to current user and selected doctor
         List<Appointment> appointments = service.getDoctorAppointmentToUser(doctorId, status, patientId);
         System.out.println(appointments);
         List<AppointmentReviewableDTO> dtos = appointments.stream()

@@ -22,17 +22,14 @@ public class StorageController {
         this.storageService = storageService;
     }
 
-    // Endpoint to get the files for a given user based on their ID
     @GetMapping("/getFiles/{userId}")
     public List<UserFileExtractDTO> getFilesForUser(@PathVariable Long userId) {
-        // Fetch files for the user with the given ID
         Set<UserFile> userFiles = storageService.getFilesByUserId(userId);
 
         if (userFiles == null || userFiles.isEmpty()) {
-            return List.of();  // return empty list instead of crashing
+            return List.of();
         }
 
-        // Map the UserFile entities to UserFileDTO
         List<UserFileExtractDTO> userFileDTOs = userFiles.stream()
                 .map(userFile -> new UserFileExtractDTO(
                         userFile.getId(),

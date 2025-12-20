@@ -183,6 +183,13 @@ public class CalendarService {
         LocalDateTime newStartDateTime = newStartTime != null ? date.atTime(newStartTime) : null;
         LocalDateTime newEndDateTime = newEndTime != null ? date.atTime(newEndTime) : null;
 
+        if (newStartDateTime != null && newEndDateTime != null) {
+            if (!isAppointmentInRange(doctorId, newStartDateTime, newEndDateTime)) {
+                throw new RuntimeException(
+                        "Cannot set the new working hours because there are existing appointments during this time.");
+            }
+        }
+
         if (existingException != null) {
             if (workDayExceptionDTO.getWorking() != null) {
                 existingException.setWorking(workDayExceptionDTO.getWorking());
@@ -198,10 +205,6 @@ public class CalendarService {
 
             exceptionRepo.save(existingException);
         } else {
-            if (!isAppointmentInRange(doctorId, newStartDateTime, newEndDateTime)) {
-                throw new RuntimeException(
-                        "Cannot set the new working hours because there are existing appointments before the new start time.");
-            }
 
             WorkDayException newException = new WorkDayException();
             newException.setDate(workDayExceptionDTO.getDate());
@@ -225,9 +228,10 @@ public class CalendarService {
         LocalDateTime endOfDay = startDate.atTime(23, 59, 59);
 
         List<Appointment> appointments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(doctorId, start, end);
-        List<Appointment> allDayAppoinments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(doctorId, startOfDay,
+        List<Appointment> allDayAppointments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(doctorId, startOfDay,
                 endOfDay);
 
-        return appointments.size() == allDayAppoinments.size();
+        return appointments.size() == allDayAppointments.size();
     }
+
 }
