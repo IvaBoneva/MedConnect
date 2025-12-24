@@ -22,12 +22,12 @@ public class WeeklyScheduleTemplate {
     private Doctor doctor;
 
     @Enumerated(EnumType.STRING)
-    private DayOfWeek dayOfWeek;   // MONDAY → SUNDAY
+    private DayOfWeek dayOfWeek;
 
-    private boolean working;       // true = works this day, false = off
+    private boolean working;
 
-    private LocalTime startTime;   // null if not working
-    private LocalTime endTime;     // null if not working
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     private int slotDurationMinutes;
 

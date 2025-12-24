@@ -4,16 +4,28 @@ import { useAuth } from "../../context/AuthContext";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
+  const { refreshUser, user } = useAuth(); // вземаме и текущия потребител
 
   useEffect(() => {
     const timer = setTimeout(async () => {
-      await refreshUser(); 
-      navigate("/dashboard/patient/subscriptions");
-    }, 1500); 
+      await refreshUser();
+
+      // Пренасочване според role
+      if (user?.role === "guardian") {
+        navigate("/dashboard/guardian/subscriptions");
+      } else if (user?.role === "patient") {
+        // patient
+        navigate("/dashboard/patient/subscriptions");
+      } else {
+        navigate("/error");
+      }
+    }, 1500);
 
     return () => clearTimeout(timer);
-  }, [refreshUser, navigate]);
+  }, [refreshUser, navigate, user]);
+
+  if (!user || (user.role !== "guardian" && user.role !== "patient"))
+    return null;
 
   return (
     <div className="container text-center mt-5">

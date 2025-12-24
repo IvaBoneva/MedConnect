@@ -2,7 +2,6 @@ import { Image, Card, Container } from "react-bootstrap";
 import welcomeImage from "../../images/hello_img.png";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
-import PatientCalendarComponent from "../dashboards/patient/calendar/PatientCalendarComponent";
 import GuardianAndPatientCalendar from "../calendar/GuardianAndPatientCalendar";
 import { fetchGuardianAppointments } from "../../api/guardianApi";
 
@@ -32,7 +31,6 @@ const GuardianHome = () => {
           <p className="text-muted">Ето какво се случва със здравето на вашия пациент.</p>
         </motion.div>
       </Card>
-      {/* <PatientCalendarComponent /> */}
         <GuardianAndPatientCalendar fetchAppointments = {fetchGuardianAppointments} />
     </div>
   );

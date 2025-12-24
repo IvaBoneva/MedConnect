@@ -16,9 +16,8 @@ export const fetchPatientAppointments = async (token, patientId) => {
     throw new Error(`Error: ${response.statusText}. Response: ${text}`);
   }
 
-  // Check if the response contains JSON
   if (response.headers.get("Content-Type").includes("application/json")) {
-    return await response.json(); // return the JSON data directly
+    return await response.json(); 
   } else {
     throw new Error("Unexpected response format, expected JSON.");
   }
@@ -32,7 +31,7 @@ export const fetchPrescriptionEvents = async (userId, token) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Include the Bearer token here
+        'Authorization': `Bearer ${token}`, 
       },
     });
 
@@ -42,7 +41,7 @@ export const fetchPrescriptionEvents = async (userId, token) => {
 
     const data = await response.json();
     console.log('Fetched prescription events:', data);
-    return data; // Returning the fetched data
+    return data; 
   } catch (error) {
     console.error('Error fetching prescription events:', error);
   }

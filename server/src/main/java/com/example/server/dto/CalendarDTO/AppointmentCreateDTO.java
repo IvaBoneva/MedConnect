@@ -20,7 +20,7 @@ public class AppointmentCreateDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @JsonFormat(pattern = "HH:mm")     // yyyy-MM-dd
+    @JsonFormat(pattern = "HH:mm")     
     private LocalTime start;
 
     private String comment;

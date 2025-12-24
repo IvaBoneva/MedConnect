@@ -39,11 +39,11 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         user.setSubscription("free");
         user.setSubscriptionExpiry(LocalDate.now().plusYears(100));
 
-        Storage storage = new Storage();
-        storageRepository.save(storage);
-
-        user.setStorage(storage);
         repository.save(user);
+
+        Storage storage = new Storage();
+        storage.setUser(user);
+        storageRepository.save(storage);
 
         return user;
 
@@ -55,8 +55,6 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         T existingUser = repository.findByEmail(user.getEmail());
         if (existingUser != null) {
 
-            existingUser.setGoogleAccessToken(user.getGoogleAccessToken());
-            existingUser.setGoogleRefreshToken(user.getGoogleRefreshToken());
             repository.save(existingUser);
             return existingUser;
         }

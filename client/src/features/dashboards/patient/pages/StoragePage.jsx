@@ -10,7 +10,6 @@ import {
 } from "../../../../api/storageApi";
 import fileDownload from "js-file-download";
 
-/* helper – премахва дубликати */
 const mergeUniqueFiles = (prev, next) => {
   const map = new Map();
   [...prev, ...next].forEach((file) => {
@@ -34,8 +33,6 @@ const StoragePage = () => {
     if (!user?.id) return;
     fetchFiles(user.id, token).then(setFiles);
   }, [user, token]);
-
-  /* ================= DRAG & DROP ================= */
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -62,8 +59,6 @@ const StoragePage = () => {
     setTimeout(() => setDropSuccess(false), 800);
   };
 
-  /* ================= FILE SELECT ================= */
-
   const handleFileSelect = (e) => {
     const selected = Array.from(e.target.files);
     if (!selected.length) return;
@@ -73,8 +68,6 @@ const StoragePage = () => {
       ...new Set([...prev, ...selected.map((f) => f.name)]),
     ]);
   };
-
-  /* ================= UPLOAD ================= */
 
   const handleUpload = async () => {
     if (!newFiles.length) return;
@@ -115,16 +108,45 @@ const StoragePage = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  /* ================= ACTIONS ================= */
-
   const handleDownload = (file) => {
-    fetch(file.fileCloudinaryUrl)
-      .then((r) => r.blob())
-      .then((blob) => fileDownload(blob, file.name));
+    const url = file.fileCloudinaryUrl.replace(
+      "/upload/",
+      "/upload/fl_attachment/"
+    );
+    window.location.href = url;
   };
 
   const handlePrint = (file) => {
-    window.open(file.fileCloudinaryUrl, "_blank")?.print();
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    const isImage = file.type?.startsWith("image/");
+
+    if (isImage) {
+      printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+          <style>
+            body {
+              margin: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${file.fileCloudinaryUrl}" onload="window.print()" />
+        </body>
+      </html>
+    `);
+      printWindow.document.close();
+    }
   };
 
   const handleRemove = async (fileId) => {
@@ -135,7 +157,7 @@ const StoragePage = () => {
   const isPreviewable = (type) =>
     type?.startsWith("image/") || type === "application/pdf";
 
-  /* ================= UI ================= */
+  const imageFiles = files.filter((file) => file.type?.startsWith("image/"));
 
   return (
     <Container className="py-5">
@@ -143,7 +165,6 @@ const StoragePage = () => {
         📁 Хранилище
       </h3>
 
-      {/* DRAG & DROP */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -190,7 +211,6 @@ const StoragePage = () => {
         )}
       </div>
 
-      {/* FILE INPUT */}
       <Form className="mb-3 d-flex">
         <Form.Control
           type="file"
@@ -208,7 +228,6 @@ const StoragePage = () => {
         </Button>
       </Form>
 
-      {/* PROGRESS */}
       {uploadProgress > 0 && (
         <div className="mb-4">
           <h6>Качване... {uploadProgress}%</h6>
@@ -230,7 +249,6 @@ const StoragePage = () => {
         </div>
       )}
 
-      {/* TABLE */}
       {files.length === 0 ? (
         <p>Все още няма документи.</p>
       ) : (
@@ -289,6 +307,68 @@ const StoragePage = () => {
             ))}
           </tbody>
         </Table>
+      )}
+      {imageFiles.length > 0 && (
+        <>
+          <h4 className="mt-5 mb-3" style={{ color: "#2E8B57" }}>
+            🖼️ Галерия
+          </h4>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+              gap: "16px",
+            }}
+          >
+            {imageFiles.map((file) => (
+              <div
+                key={file.id}
+                style={{
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                  cursor: "pointer",
+                  transition: "transform 0.3s, box-shadow 0.3s",
+                }}
+                onClick={() => window.open(file.fileCloudinaryUrl, "_blank")}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 18px rgba(0,0,0,0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 10px rgba(0,0,0,0.15)";
+                }}
+              >
+                <img
+                  src={file.fileCloudinaryUrl}
+                  alt={file.name}
+                  style={{
+                    width: "100%",
+                    height: "180px",
+                    objectFit: "cover",
+                  }}
+                />
+
+                <div
+                  style={{
+                    padding: "8px",
+                    background: "#fff",
+                    textAlign: "center",
+                    fontSize: "13px",
+                    color: "#2E8B57",
+                    fontWeight: "500",
+                  }}
+                >
+                  {file.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </Container>
   );

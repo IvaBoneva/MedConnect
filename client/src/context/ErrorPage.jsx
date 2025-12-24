@@ -10,7 +10,7 @@ const ErrorPage = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setVisible(true), 100); // малко закъснение за плавно появяване
+    const timeout = setTimeout(() => setVisible(true), 100); 
     return () => clearTimeout(timeout);
   }, []);
 

@@ -19,7 +19,6 @@ export const fetchGuardianAppointments = async (token, guardianId) => {
     throw new Error(`Error: ${response.statusText}. Response: ${text}`);
   }
 
-  // Ensure JSON response
   const contentType = response.headers.get("Content-Type");
   if (contentType && contentType.includes("application/json")) {
     return await response.json();

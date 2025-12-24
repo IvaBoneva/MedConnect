@@ -16,8 +16,6 @@ export const AppointmentsSwiper = ({ days, refreshCalendar, doctorId }) => {
     createAppointment, 
     cancel 
   } = useAppointment({days, refreshCalendar,doctorId});
-//   TODO: CHECK THIS AS WELL
-//   } = useAppointment({days, doctorId, refreshCalendar});
 
   return (
     <>

@@ -1,5 +1,3 @@
-// TODO: download contend in cloudinary
-
 export async function uploadToCloudinary(file) {
   const data = new FormData();
   data.append("file", file);
@@ -15,18 +13,16 @@ export async function uploadToCloudinary(file) {
     );
 
     if (!res.ok) {
-      // If the response is not ok, throw an error with the response message
       const errorData = await res.json();
       throw new Error(errorData.error.message || "Unknown error occurred during upload.");
     }
 
     const json = await res.json();
-    return json.secure_url; // Return the secure URL if the upload is successful
+    return json.secure_url; 
 
   } catch (error) {
-    // Handle the error here without blocking the program
     console.error("Upload failed:", error.message);
-    return null; // Return null or any other value indicating failure
+    return null; 
   }
 }
 

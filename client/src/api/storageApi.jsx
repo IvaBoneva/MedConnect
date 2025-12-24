@@ -1,5 +1,3 @@
-
-
 export const fetchFiles = async (userId, token) => {
   try {
     const response = await fetch(
@@ -14,13 +12,13 @@ export const fetchFiles = async (userId, token) => {
     );
     if (response.ok) {
       const data = await response.json();
-      return data; // Return fetched data
+      return data; 
     } else {
       throw new Error("Failed to fetch files");
     }
   } catch (error) {
     console.error("Error fetching files:", error);
-    throw error; // Rethrow the error to be handled by the calling component
+    throw error; 
   }
 };
 
@@ -34,11 +32,11 @@ export const saveFileToDatabase = async (file, userId, token) => {
       },
       body: JSON.stringify({
         userId: userId,
-        name: file.name, // File name
-        size: file.size, // File size (MB or KB)
-        type: file.type, // File type
-        dateOfUpload: file.dateOfUpload, // Upload date
-        fileCloudinaryUrl: file.fileCloudinaryUrl, // Cloudinary URL
+        name: file.name, 
+        size: file.size, 
+        type: file.type, 
+        dateOfUpload: file.dateOfUpload, 
+        fileCloudinaryUrl: file.fileCloudinaryUrl, 
       }),
     });
 
@@ -47,7 +45,7 @@ export const saveFileToDatabase = async (file, userId, token) => {
     }
   } catch (error) {
     console.error("Failed to save file to the database", error);
-    throw error; // Rethrow the error to be handled by the calling component
+    throw error; 
   }
 };
 
@@ -66,9 +64,9 @@ export const deleteFileFromDatabase = async (fileId, token) => {
       throw new Error("Error deleting the file");
     }
 
-    return "File deleted successfully"; // Return success message
+    return "File deleted successfully"; 
   } catch (error) {
     console.error("Error deleting the file:", error);
-    throw error; // Rethrow the error to be handled by the calling component
+    throw error; 
   }
 };

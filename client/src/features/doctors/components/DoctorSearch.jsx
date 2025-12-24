@@ -9,15 +9,15 @@ const DoctorSearch = () => {
   const [cityFilter, setCityFilter] = useState("");
   const [sort, setSort] = useState("");
   const [doctors, setDoctors] = useState([]);
-  const [cities, setCities] = useState([]); 
-  const [specialties, setSpecialties] = useState([]); 
+  const [cities, setCities] = useState([]);
+  const [specialties, setSpecialties] = useState([]);
 
   const fetchDoctors = async () => {
     try {
       const doctorsData = await getDoctors();
       setDoctors(doctorsData);
       const topCities = [
-        ...new Set(doctorsData.map((doc) => doc.city).filter((city) => city)), 
+        ...new Set(doctorsData.map((doc) => doc.city).filter((city) => city)),
       ];
       setCities(topCities.slice(0, 5));
 
@@ -60,7 +60,6 @@ const DoctorSearch = () => {
       <h3 className="mb-4 text-success">Търсене на лекар</h3>
       <Form className="mb-4">
         <Row className="g-2 align-items-center">
-         
           <Col md={4}>
             <InputGroup>
               <InputGroup.Text className="bg-white border-end-0">
@@ -78,7 +77,6 @@ const DoctorSearch = () => {
             </InputGroup>
           </Col>
 
-         
           <Col md={3}>
             <Form.Select
               value={specialtyFilter}
@@ -96,8 +94,6 @@ const DoctorSearch = () => {
             </Form.Select>
           </Col>
 
-
-          
           <Col md={3}>
             <Form.Select
               value={cityFilter}

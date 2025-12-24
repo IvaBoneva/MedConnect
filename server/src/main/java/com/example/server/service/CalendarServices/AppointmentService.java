@@ -76,7 +76,6 @@ public class AppointmentService {
         appt.setDurationInMinutes(30L);
 
 
-        // Default status for new appointment
         appt.setStatus(Appointment.Status.Booked);
         appt.setDoctor(doctor);
 

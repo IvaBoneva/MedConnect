@@ -36,7 +36,6 @@ public class Doctor extends User {
             this.setPhotoURL(DEFAULT_PHOTO_URL);
         }
 
-        // Generate the slug based on name and email (or other unique field)
         this.slug = (this.getFirstName() + "-" + this.getLastName() + "-" + UUID.randomUUID().toString()).toLowerCase().replaceAll("[^a-z0-9-]", "-");
     }
 

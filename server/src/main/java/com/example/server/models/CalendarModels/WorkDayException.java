@@ -21,13 +21,10 @@ public class WorkDayException {
     @ManyToOne
     private Doctor doctor;
 
-    // The specific date being changed
     private LocalDate date;
 
-    // If doctor is working this date (null = follow template)
     private Boolean working;
 
-    // Override start/end (null = follow template)
     private LocalTime overrideStartTime;
     private LocalTime overrideEndTime;
 }

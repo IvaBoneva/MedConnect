@@ -67,7 +67,6 @@ const LoginForm = () => {
           setMessage("Възникна грешка при вход. Моля, опитайте отново.");
         }
       } else {
-        // Реален network error (fetch не е стигнал до backend)
         setMessage("Няма връзка със сървъра.");
       }
     } finally {

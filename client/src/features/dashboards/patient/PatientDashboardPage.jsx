@@ -9,7 +9,6 @@ import EditPersonalInformation from "../patient/pages/EditPersonalInformation";
 import Prescriptions from "../patient/pages/PrescriptionsPage";
 import Appointments from "../patient/pages/AppointmentsPage";
 import Storage from "../patient/pages/StoragePage";
-import PaymentPage from "../patient/pages/PaymentPage";
 import SymptomCheck from "../patient/pages/SymptomsCheckPage";
 import VaccinesAndProfilactics from "../patient/pages/VaccinesPage";
 
@@ -43,8 +42,6 @@ const PatientDashboardPage = () => {
 
         <Route path="pharmacies_hospitals" element={<PharmacyMapPage />} />
 
-        <Route path="subscriptions/payment" element={<PaymentPage />} />
-
         <Route path="prescriptions" element={<Prescriptions />} />
 
         <Route path="appointments" element={<Appointments />} />
@@ -58,16 +55,15 @@ const PatientDashboardPage = () => {
 
         <Route
           path="symptom_check"
-          element={<SymptomCheck isPremium={user?.subscription == "free"} />} //developer (premium --> correct)
+          element={<SymptomCheck isPremium={user?.subscription == "premium"} />}
         />
 
         <Route
           path="vaccines_profilactics"
           element={
             <VaccinesAndProfilactics
-              isPremium={user?.subscription == "free"} //developer (premium --> correct)
-              patientAge={user?.age}
-              userEmail={user?.email}
+              isPremium={user?.subscription === "premium"}
+              user={user}
             />
           }
         />

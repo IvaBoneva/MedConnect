@@ -37,18 +37,18 @@ public class AppointmentController {
 
         } catch (Exception e) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST) // HTTP status 400
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
         }
     }
 
-    // В AppointmentController.java
 
     @GetMapping("/doctor")
     public ResponseEntity<List<AppointmentReviewableDTO>> getDoctorAppointments(
             @RequestParam Long doctorId,
             @RequestParam Appointment.Status status) {
 
+//        gets Compleated apppointments
         List<Appointment> appointments = service.getDoctorAppointments(doctorId, status);
 
         List<AppointmentReviewableDTO> dtos = appointments.stream()
@@ -81,6 +81,7 @@ public class AppointmentController {
             @RequestParam Appointment.Status status,
             @RequestParam Long patientId) {
 
+//        returns completed appointments related to current user and selected doctor
         List<Appointment> appointments = service.getDoctorAppointmentToUser(doctorId, status, patientId);
         System.out.println(appointments);
         List<AppointmentReviewableDTO> dtos = appointments.stream()

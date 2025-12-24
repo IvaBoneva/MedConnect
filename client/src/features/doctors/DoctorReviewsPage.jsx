@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Badge, Spinner, Alert } from "react-bootstrap";
-import { FaStar } from "react-icons/fa"; // Using real icons for better visuals
+import { FaStar } from "react-icons/fa"; 
 import { fetchDoctorAppointments } from "../../api/appointmentApi"
 import { useAuth } from "../../context/AuthContext";
 

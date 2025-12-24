@@ -67,12 +67,54 @@ const Routes = () => {
           ),
         },
 
+<<<<<<< HEAD
         { path: "dashboard/patient/*", element: <ProtectedRoleRoute allowedRoles={["patient"]}><DashboardPatient /></ProtectedRoleRoute> },
         { path: "dashboard/doctor/*", element: <ProtectedRoleRoute allowedRoles={["doctor"]}><DashboardDoctor /></ProtectedRoleRoute> },
         { path: "dashboard/guardian/*", element: <ProtectedRoleRoute allowedRoles={["guardian"]}><DashboardGuardian /></ProtectedRoleRoute> },
 
         { path: "payment-success", element: <PaymentSuccess /> },
         { path: "doctor/:slug", element: <DoctorPersonalDetails /> },
+=======
+        {
+          path: "dashboard/patient/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["patient"]}>
+              <DashboardPatient />
+            </ProtectedRoleRoute>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "dashboard/doctor/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["doctor"]}>
+              <DashboardDoctor />
+            </ProtectedRoleRoute>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "dashboard/guardian/*",
+          element: (
+            <ProtectedRoleRoute allowedRoles={["guardian"]}>
+              <DashboardGuardian />
+            </ProtectedRoleRoute>
+          ),
+          errorElement: <ErrorPage />,
+        },
+
+        {
+          path: "payment-success",
+          element: <PaymentSuccess />,
+          errorElement: <ErrorPage />,
+        },
+
+        {
+          path: "doctor/:slug", 
+          element: <DoctorPersonalDetails />, 
+          errorElement: <ErrorPage />,
+        },
+>>>>>>> 98b16e23575f8da0abb60ebd5119ae8a1c41d642
       ],
     },
   ]);

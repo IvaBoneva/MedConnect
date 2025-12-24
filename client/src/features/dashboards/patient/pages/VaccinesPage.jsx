@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { Container, Table, Button, Alert, Card, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
+const VaccinesAndProfilactics = ({ isPremium, user }) => {
   const [vaccines, setVaccines] = useState([]);
   const [profilactics, setProfilactics] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
 
-  const storageKey = `checkedItems-${userEmail}`; // уникален ключ за текущия потребител
+  // Определяме възрастта според role
+  const patientAge = user.role === "guardian" ? user.wardAge : user.age;
+
+  const storageKey = `checkedItems-${user.email}`; // уникален ключ за текущия потребител
 
   // Зареждане на отметките при зареждане на компонента
   useEffect(() => {
@@ -76,7 +80,17 @@ const VaccinesAndProfilactics = ({ isPremium, patientAge, userEmail }) => {
             Имунизационният календар и профилактичните прегледи са достъпни само
             за потребители с активен абонамент.
           </p>
-          <Button variant="success" href="/subscriptions">
+          <Button
+            as={Link}
+            to={
+              user?.role === "patient"
+                ? "/dashboard/patient/subscriptions"
+                : user?.role === "guardian"
+                ? "/dashboard/guardian/subscriptions"
+                : "/dashboard/patient/subscriptions" // fallback
+            }
+            variant="success"
+          >
             Отиди към абонаментите
           </Button>
         </Alert>

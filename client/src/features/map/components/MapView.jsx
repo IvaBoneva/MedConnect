@@ -42,7 +42,7 @@ export const MapView = ({
   isMobile,
 }) => {
   return (
-    <div style={{ flex: 1, height: isMobile ? "400px" : "100%" }}>
+    <div style={{ flex: 1, height: "100%" }}>
       <MapContainer
         center={coords}
         zoom={15}

@@ -1,4 +1,3 @@
-// src/context/ProtectedRoleRoute.js
 import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 

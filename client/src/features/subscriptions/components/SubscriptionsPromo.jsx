@@ -21,7 +21,7 @@ export const SubscriptionPromo = () => {
         <h2 className="mb-3">Започни да се грижиш за здравето си още днес!</h2>
         <p className="mb-4" style={{ fontSize: "1.5rem" }}>
           Избери своя абонаментен план и се възползвай от всички функции на
-          MedConnect.
+          MedConnect+.
         </p>
       </Container>
     </div>

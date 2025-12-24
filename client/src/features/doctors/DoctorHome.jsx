@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Ако се ползва
+import { useState, useEffect } from "react"; 
 import { Container, Row, Col, Card, Image } from "react-bootstrap";
 import {
   BarChart,
@@ -12,9 +12,6 @@ import {
 import { motion } from "framer-motion";
 import welcomeImage from "../../images/hello_img.png";
 import { useAuth } from "../../context/AuthContext";
-
-// Импорт на календара от новата му локация
-import GoogleCalendarComponent from "./calendar/DoctorCalendarComponent";
 import DoctorCalendarComponent from "./calendar/DoctorCalendarComponent";
 import { fetchAppointmentStatistics } from "../../api/appointmentApi";
 
@@ -79,7 +76,6 @@ const DoctorHome = () => {
 
   return (
     <Container fluid className="p-4">
-      {/* Welcome Section */}
       <Card className="d-flex flex-row align-items-center p-4 mb-4 shadow-sm">
         <Image
           src={welcomeImage}
@@ -105,12 +101,8 @@ const DoctorHome = () => {
         </motion.div>
       </Card>
 
-      {/* Календарът */}
-      {/* I Separated Calendar into google and doctor one */}
       <DoctorCalendarComponent onAppointmentUpdate = {refreshStats} />
-       {/* <GoogleCalendarComponent />  */}
 
-      {/* Summary Cards */}
       <Row className="g-4 mt-2 mb-4 justify-content-center">
         <Col xs={12} md={5}>
           <Card className="shadow-sm h-100">

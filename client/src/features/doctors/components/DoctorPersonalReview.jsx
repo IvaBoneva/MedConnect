@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Button, Form } from "react-bootstrap";
-import { FaStar } from "react-icons/fa"; // Import Star Icon
+import { FaStar } from "react-icons/fa"; 
 import {
   fetchPastAppointmentsForReview,
   submitFeedback,
@@ -9,11 +9,8 @@ import { useAuth } from "../../../context/AuthContext";
 
 export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-
-  // New State for Rating and Hover effect
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,13 +18,12 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
   const [feedbackError, setFeedbackError] = useState("");
   const { user, token } = useAuth();
 
-  // Validate that feedback exists AND a rating (> 0) is selected
   const isFeedbackValid = feedback.trim().length > 0 && rating > 0;
 
   const handleAppointmentSelect = (appointment) => {
     setSelectedAppointment(appointment);
-    setFeedback(appointment.feedback || ""); // Зареждаме вече подадения feedback, ако има
-    setRating(appointment.rating || 0); // Зареждаме вече подадената оценка, ако има
+    setFeedback(appointment.feedback || ""); 
+    setRating(appointment.rating || 0); 
     setHover(0);
   };
 
@@ -38,7 +34,6 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
     try {
       setLoading(true);
 
-      // PASS RATING TO API
       await submitFeedback(
         selectedAppointment.id,
         feedback.trim(),
@@ -46,7 +41,6 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
         token
       );
 
-      // Обновяваме локално appointmentsToReview, за да се запази вече подаденото
       setAppointmentsToReview((prev) =>
         prev.map((a) =>
           a.id === selectedAppointment.id
@@ -70,7 +64,6 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
     }
   };
 
-  // Always fetch past appointments from API (true source of truth)
   useEffect(() => {
     if (!doctorId || !token || !user) return;
 
@@ -158,7 +151,6 @@ export const PersonalReview = ({ onFeedbackSubmitted, doctorId }) => {
             <div style={{ marginTop: "20px", padding: "0 10%" }}>
               <h5>Напишете обратна връзка за прегледа</h5>
               <Form>
-                {/* --- STAR RATING SECTION --- */}
                 <Form.Group
                   controlId="ratingStars"
                   style={{ marginBottom: "15px" }}

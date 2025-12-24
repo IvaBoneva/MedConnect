@@ -43,7 +43,7 @@ public class StorageService {
 
         int maxFiles = user.getSubscription().equals("free") ? 5 : 15;
 
-        long currentFileCount = userFileRepository.countByStorageId(storage.getId()); // Assuming you have a method to count files by storage ID
+        long currentFileCount = userFileRepository.countByStorageId(storage.getId());
 
         if (currentFileCount >= maxFiles) {
             throw new RuntimeException("File limit exceeded for user ID: " + userId + ". Maximum allowed files: " + maxFiles);

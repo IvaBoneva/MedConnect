@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// Пътищата към API са 3 нива нагоре (../../api)
 import { currentUser, logIn, register } from "../../api/userApi";
 import { uploadToCloudinary } from "../../api/cloudinaryApi";
 import { useAuth } from "../../context/AuthContext";
@@ -24,7 +23,7 @@ const transformFormToBackend = (form) => {
     firstName: form.fname,
     lastName: form.lname,
     birthDate: form.birthDate || null,
-    age: form.age || null, // <-- ADD THIS
+    age: form.age || null, 
     phoneNumber: form.phone,
     role: form.role || "",
     photoURL: form.photoURL || null,
@@ -129,7 +128,6 @@ const RegisterForm = () => {
     let newValue = value;
     const newErrors = { ...errors };
 
-    // BIRTHDATE & AGE
     if (name === "birthDate") {
       const age = calculateAge(value);
       setFormData((prev) => ({ ...prev, birthDate: value, age }));
@@ -168,7 +166,6 @@ const RegisterForm = () => {
       else newErrors.patientBirthDateError = "";
     }
 
-    // EXPERIENCE
     if (name === "experience") {
       newValue = value.replace(/\D/g, "");
       const experience = Number(newValue);
@@ -192,7 +189,6 @@ const RegisterForm = () => {
       }
     }
 
-    // EMAIL
     if (name === "email") {
       const latinOnly = /^[A-Za-z0-9@._-]+$/;
       const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -203,7 +199,6 @@ const RegisterForm = () => {
       else newErrors.emailError = "";
     }
 
-    // PHONE
     if (name === "phone") {
       const onlyDigitsOrPlus = /^[0-9+]+$/;
       const bgMobileRegex = /^(\+359|0)8[7-9][0-9]{7}$/;
@@ -216,13 +211,11 @@ const RegisterForm = () => {
       else newErrors.phoneError = "";
     }
 
-    // PASSWORD CONFIRM
     if (name === "confirmPassword") {
       newErrors.confirmPasswordError =
         value !== formData.password ? "Паролите не съвпадат." : "";
     }
 
-    // NAME VALIDATION
     const namePattern = /^[А-Я][а-я]+(-[А-Я][а-я]+)?$/;
     if (name === "fname")
       newErrors.fnameError =
@@ -247,7 +240,6 @@ const RegisterForm = () => {
 
     if (name === "password") newErrors.passwordErrors = validatePassword(value);
 
-    // Roles Toggle Logic
     if (name === "role") {
       setToggles((prev) => ({
         ...prev,
@@ -269,7 +261,6 @@ const RegisterForm = () => {
     if (errors.passwordErrors.length > 0)
       return setMessage("Моля, коригирайте изискванията за паролата.");
 
-    // Проверка за грешки (освен passwordErrors, които са масив)
     const hasStringErrors = Object.entries(errors).some(
       ([key, val]) => key !== "passwordErrors" && val
     );

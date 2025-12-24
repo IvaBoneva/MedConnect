@@ -1,8 +1,5 @@
 const DOCTOR_API_ENPOINT = "http://localhost:8080/api/user/doctors";
 
-const DOCTOR_ALL_WORKDAYS =
-  "http://localhost:8080/api/calendar/doctor?doctorId=6&from=2025-11-01&to=2025-11-30";
-
 function formatDate(date) {
   return date.toISOString().split("T")[0];
 }
@@ -76,7 +73,7 @@ export async function updateWorkingHours(doctorId, date, startTime, endTime) {
     date: date,
     overrideStartTime: startTime,
     overrideEndTime: endTime,
-    working: true, // Assuming the doctor is working on this day after modifying the time
+    working: true, 
   };
 
   const res = await fetch(
@@ -102,9 +99,8 @@ export const completeAppointment = async (appointmentId) => {
   });
 
   if (!response.ok) {
-    // Четем текста, който сървърът ни връща (там пише истинската причина!)
     const errorMessage = await response.text(); 
-    console.error("Server Error:", errorMessage); // Виж това в конзолата на браузъра
+    console.error("Server Error:", errorMessage); 
     throw new Error(errorMessage || "Failed to complete appointment");
   }
   return await response.text();

@@ -32,9 +32,9 @@ public class SecurityConfig {
         // disable CSRF since we use fronted (any other port, not server side rendered
         // app)
         http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults()); // ✅ Enable the CORS config you defined
+        http.cors(Customizer.withDefaults());
 
-        // permit specific request (3), other authenticated (using our JWT filter)
+        // permit specific request, other authenticated (using our JWT filter)
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/user/**",
@@ -51,14 +51,6 @@ public class SecurityConfig {
 
                         "/api/workDays/allWorkDays",
 
-//                        "/google",
-//                        "/google/callback",
-
-
-                        "/google",
-                        "/google/*",
-                        "/google/**",
-
                         "/events",
 
                         "/auth/me",
@@ -67,9 +59,9 @@ public class SecurityConfig {
                         "/api/aiDoctor/callGemini",
 
 
-                        "/api/storage/files",      // Public file upload endpoint
+                        "/api/storage/files",
                         "/api/storage/getFiles/**",
-                        "/api/storage/files/{fileId}", // Protected file deletion endpoint (JWT required)
+                        "/api/storage/files/{fileId}",
 
                         "/api/appointments/patient/**",
                         "/api/appointment/guardian/**",
@@ -91,17 +83,9 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest().authenticated());
 
-        // .permitAll()
-        // .anyRequest().authenticated());
-
         // don't use sessions because again we use JWT
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // runs before the UsernamePassword filter
-        // but since we added the user to trusted/authenticated users in the aut local
-        // storage (see JwtFilter.java)
-        // the logic of UsernamePasswordAuthenticationFilter is skipped since user
-        // already trusted
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

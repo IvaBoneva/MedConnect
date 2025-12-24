@@ -1,6 +1,5 @@
 package com.example.server.models.UserModels;
 
-import com.example.server.models.MedicalActionsModels.MedicalProcedure;
 import com.example.server.models.StorageModels.Storage;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -56,15 +55,8 @@ public class User {
 
     private String photoURL;
 
-    private String googleAccessToken;
-
-    private String googleRefreshToken;
-
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private Storage storage;
-
-    @ManyToMany(mappedBy = "users")
-    private Set<MedicalProcedure> medicalProcedureSet;
 
 }

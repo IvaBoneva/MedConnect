@@ -35,7 +35,6 @@ const DoctorDashboardPage = () => {
 
         <Route path="doctor_reviews" element={<DoctorReviews />} />
 
-        {/* 404 inside dashboard */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </DoctorDashboardLayout>

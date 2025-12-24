@@ -1,7 +1,7 @@
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { RegisterInput } from "./RegisterInput"; // Увери се, че е Named Export
-import { PasswordInput } from "./PasswordInput"; // Увери се, че е Named Export
+import { RegisterInput } from "./RegisterInput"; 
+import { PasswordInput } from "./PasswordInput";
 
 export const RegisterFormLayout = ({
   formData,

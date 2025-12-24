@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Token Blacklisting (not mandatory)
 @Service
 public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
 
@@ -31,7 +30,6 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
         jwtToken = Jwts.builder()
                 .claims()
 //               Begins adding claims (payload info).
-
 //                subject is put into the token - ACTUAL INFO IN IT
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -39,7 +37,6 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .and()
 //                end of jwt builder back to main one
-
                 .signWith(getSignInKey())
                 .compact();
 

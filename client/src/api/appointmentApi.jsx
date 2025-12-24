@@ -1,4 +1,3 @@
-
 export async function createAppointmentRequest(payload, token) {
   const res = await fetch("http://localhost:8080/api/appointments", {
     method: "POST",
@@ -14,7 +13,7 @@ export async function createAppointmentRequest(payload, token) {
     throw new Error("Failed to create appointment: " + errorText);
   }
 
-  return res.json(); // return JSON or whatever backend sends
+  return res.json(); 
 }
 
 export async function fetchDoctorAppointments(doctorId, status, token) {
@@ -34,7 +33,7 @@ export async function fetchDoctorAppointments(doctorId, status, token) {
     throw new Error("Failed to fetch appointments: " + errorText);
   }
 
-  return res.json(); // return JSON with the list of appointments
+  return res.json(); 
 }
 
 export async function fetchPastAppointmentsForReview(
