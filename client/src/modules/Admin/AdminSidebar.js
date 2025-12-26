@@ -1,30 +1,40 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import { Nav } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 
-export default function AdminSidebar() {
+export const AdminSidebar = ({ basePath = "/admin" }) => {
   return (
     <div
+      className="mb-3 sidebar"
       style={{
-        width: "200px",
-        background: "#f2f2f2",
+        backgroundColor: "#2e8b57",
+        borderRadius: "10px",
         padding: "20px",
-        height: "100vh",
+        minHeight: "100vh",
       }}
     >
-      <h3>Navigation</h3>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        <li style={{ marginBottom: "10px" }}>
-          <Link to="/admin/users">Users</Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link to="/admin/doctors">Doctors</Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link to="/admin/appointments">Appointments</Link>
-        </li>
-        <li style={{ marginBottom: "10px" }}>
-          <Link to="/admin/reviews">Reviews</Link>
-        </li>
-      </ul>
+      <Nav className="flex-column">
+        <Nav.Item>
+          <Nav.Link as={NavLink} to={`${basePath}/users`} end>
+            <i className="bi bi-people me-1"></i>Users
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to={`${basePath}/doctors`}>
+            <i className="bi bi-person-badge me-1"></i>Doctors
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to={`${basePath}/appointments`}>
+            <i className="bi bi-calendar-check me-1"></i>Appointments
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link as={NavLink} to={`${basePath}/reviews`}>
+            <i className="bi bi-chat-left-text me-1"></i>Reviews
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
     </div>
   );
-}
+};

@@ -3,7 +3,13 @@ import { HomePageLayout } from "./components/HomePageLayout";
 
 const HomePage = () => {
   const { user } = useAuth();
-  return <HomePageLayout user={user} />;
+
+  return (
+    <HomePageLayout
+      user={user}
+      adminLoginLink="/admin/login"
+    />
+  );
 };
 
 export default HomePage;
