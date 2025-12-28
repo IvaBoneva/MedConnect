@@ -5,15 +5,13 @@ import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 
 const DoctorPersonalInformation = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const basePath = location.pathname.startsWith("/test")
     ? "/test/doctor"
     : "/dashboard/doctor";
 
-  const { user } = useAuth();
-  
-  
   const [displayUser, setDisplayUser] = useState(user || {});
 
   useEffect(() => {

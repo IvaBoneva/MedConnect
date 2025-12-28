@@ -22,8 +22,10 @@ import { DoctorPersonalDetails } from "../features/doctors/DoctorPersonalDetails
 
 import AdminLogin from "../modules/Admin/AdminLogin";
 import AdminPanel from "../modules/Admin/AdminPanel";
-import ErrorPage from "./ErrorPage";
+import UsersPage from "../modules/Admin/pages/UsersPage";
+import UserDetailsPage from "../modules/Admin/pages/UserDetailsPage";
 
+import ErrorPage from "./ErrorPage";
 import { useEffect, useState } from "react";
 
 const Routes = () => {
@@ -40,17 +42,11 @@ const Routes = () => {
       errorElement: <ErrorPage />,
       children: [
         { index: true, element: <HomePage /> },
-
         { path: "login", element: token ? <Navigate to="/" /> : <LoginPage /> },
         { path: "register", element: token ? <Navigate to="/" /> : <RegisterPage /> },
         { path: "logout", element: token ? <LogoutPage /> : <Navigate to="/" /> },
-        {
-          path: "admin/login",
-          element: user?.role === "admin" 
-            ? <Navigate to="/admin" replace />
-            : <AdminLogin />
-        },
 
+        { path: "admin/login", element: user?.role === "admin" ? <Navigate to="/admin" replace /> : <AdminLogin /> },
         {
           path: "admin",
           element: (
@@ -60,7 +56,8 @@ const Routes = () => {
           ),
           children: [
             { index: true, element: <div>Изберете секция от менюто</div> },
-            { path: "users", element: <div>Users page</div> },
+            { path: "users", element: <UsersPage /> },
+            { path: "users/:id", element: <UserDetailsPage /> },
             { path: "doctors", element: <div>Doctors page</div> },
             { path: "appointments", element: <div>Appointments page</div> },
             { path: "reviews", element: <div>Reviews page</div> },
@@ -68,7 +65,6 @@ const Routes = () => {
           ],
         },
 
-        // Dashboard redirect
         {
           path: "dashboard/*",
           element: (

@@ -5,9 +5,9 @@ import profileImage from "../../../../images/profile.png";
 import { useAuth } from "../../../../context/AuthContext";
 
 const PersonalInformation = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
   const [displayUser, setDisplayUser] = useState(user || {});
 
   const basePath = location.pathname.startsWith("/test")
