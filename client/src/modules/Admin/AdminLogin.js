@@ -6,12 +6,10 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setAuthData } = useAuth(); // взимаме метода за логин
+  const { setAuthData } = useAuth();
 
   const handleLogin = () => {
-    // MOCK login данни
     if (email === "admin@medconnect.bg" && password === "admin123") {
-      // Задаваме роля admin в AuthContext
       setAuthData("dummyAdminToken", { email, role: "admin" });
       navigate("/admin");
     } else {

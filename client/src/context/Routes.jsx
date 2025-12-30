@@ -28,6 +28,8 @@ import UserDetailsPage from "../modules/Admin/pages/UserDetailsPage";
 import ErrorPage from "./ErrorPage";
 import { useEffect, useState } from "react";
 import DoctorsPage from "../modules/Admin/pages/DoctorsPage";
+import ReviewsPage from "../modules/Admin/pages/ReviewsPage";
+import DoctorReview from "../modules/Admin/pages/DoctorReview";
 
 const Routes = () => {
   const { user, token } = useAuth();
@@ -62,7 +64,8 @@ const Routes = () => {
             { path: "doctors", element: <DoctorsPage /> },
             { path: "doctors/:id", element: <UserDetailsPage /> },
             { path: "appointments", element: <div>Appointments page</div> },
-            { path: "reviews", element: <div>Reviews page</div> },
+            { path: "reviews", element: <ReviewsPage /> },
+            { path: "reviews/:id", element: <DoctorReview /> },
             { path: "*", element: <ErrorPage /> },
           ],
         },

@@ -15,7 +15,7 @@ const PersonalInformation = ({ user: mockUser, readOnly = false }) => {
     : "/dashboard/patient";
 
   useEffect(() => {
-    if (mockUser || !authUser?.id) return; // няма нужда от fetch за mock
+    if (mockUser || !authUser?.id) return;
     const fetchLatestData = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
