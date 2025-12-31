@@ -1,59 +1,73 @@
 import { useState } from "react";
-import { Table, Button, Badge, Form } from "react-bootstrap";
+import { Table, Button, Badge, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { usersMock } from "../mock data/Users";
 
 const roleVariant = {
   PATIENT: "primary",
-  GUARDIAN: "warning",
   DOCTOR: "success",
+  GUARDIAN: "warning",
 };
 
+// mapping на английските роли към български
 const roleLabel = {
   PATIENT: "Пациент",
-  GUARDIAN: "Настойник",
   DOCTOR: "Лекар",
+  GUARDIAN: "Настойник",
+};
+
+const subscriptionVariant = {
+  FREE: "secondary",
+  STANDARD: "info",
+  PREMIUM: "success",
 };
 
 const UsersPage = () => {
   const [users, setUsers] = useState(usersMock);
-  const [editingId, setEditingId] = useState(null);
-  const [selectedRoles, setSelectedRoles] = useState([]);
 
-  const toggleStatus = (id) => {
-    setUsers(prev =>
-      prev.map(u =>
+  const toggleActive = (id) => {
+    setUsers((prev) =>
+      prev.map((u) =>
         u.id === id ? { ...u, isActive: !u.isActive } : u
       )
     );
   };
 
-  const startEditing = (user) => {
-    setEditingId(user.id);
-    setSelectedRoles(user.roles.filter(r => r !== "DOCTOR"));
+  const upgradeSubscription = (id) => {
+    setUsers((prev) =>
+      prev.map((u) => {
+        if (
+          u.id === id &&
+          u.subscription &&
+          u.subscription.paidFor &&
+          u.subscription.active !== u.subscription.paidFor
+        ) {
+          return {
+            ...u,
+            subscription: {
+              ...u.subscription,
+              active: u.subscription.paidFor,
+            },
+          };
+        }
+        return u;
+      })
+    );
   };
 
-  const saveRoles = (id) => {
-    if (!selectedRoles.length) {
-      alert("Изберете поне една роля");
-      return;
-    }
-    setUsers(prev =>
-      prev.map(u =>
-        u.id === id
-          ? { ...u, roles: [...selectedRoles, ...(u.roles.includes("DOCTOR") ? ["DOCTOR"] : [])] }
-          : u
-      )
+  const changeRole = (id, newRoles) => {
+    setUsers((prev) =>
+      prev.map((u) => (u.id === id ? { ...u, roles: newRoles } : u))
     );
-    setEditingId(null);
-    setSelectedRoles([]);
   };
+
+  const isDoctor = (user) => user.roles.includes("DOCTOR");
 
   return (
     <>
       <h2>Потребители</h2>
 
-      <Table striped bordered hover className="mt-3">
+      <Table striped bordered hover responsive className="mt-3">
         <thead>
           <tr>
             <th>ID</th>
@@ -61,85 +75,126 @@ const UsersPage = () => {
             <th>Email</th>
             <th>Роли</th>
             <th>Статус</th>
+            <th>Абонамент</th>
             <th>Действия</th>
           </tr>
         </thead>
+
         <tbody>
-          {users.map(user => {
-            const orderedRoles = ["PATIENT", "GUARDIAN", "DOCTOR"]
-              .filter(r => user.roles.includes(r));
+          {users.map((user) => {
+            const sub = user.subscription;
 
             return (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.firstName} {user.lastName}</td>
-                <td>{user.email}</td>
                 <td>
-                  {orderedRoles.map(r => (
-                    <Badge key={r} bg={roleVariant[r]} className="me-1">
-                      {roleLabel[r]}
-                    </Badge>
-                  ))}
+                  {user.firstName} {user.lastName}
+                </td>
+                <td>{user.email}</td>
 
-                  {editingId === user.id && (
-                    <div className="mt-2">
-                      <Form.Check
-                        inline
-                        label="Пациент"
-                        checked={selectedRoles.includes("PATIENT")}
-                        onChange={() =>
-                          setSelectedRoles(prev =>
-                            prev.includes("PATIENT")
-                              ? prev.filter(r => r !== "PATIENT")
-                              : [...prev, "PATIENT"]
-                          )
-                        }
-                      />
-                      <Form.Check
-                        inline
-                        label="Настойник"
-                        checked={selectedRoles.includes("GUARDIAN")}
-                        onChange={() =>
-                          setSelectedRoles(prev =>
-                            prev.includes("GUARDIAN")
-                              ? prev.filter(r => r !== "GUARDIAN")
-                              : [...prev, "GUARDIAN"]
-                          )
-                        }
-                      />
-                      <div className="mt-2">
-                        <Button size="sm" variant="success" onClick={() => saveRoles(user.id)} className="me-2">
-                          Запази
-                        </Button>
-                        <Button size="sm" variant="secondary" onClick={() => setEditingId(null)}>
-                          Откажи
-                        </Button>
-                      </div>
-                    </div>
+                {/* Роли */}
+                <td>
+                  {user.roles.length > 0 ? (
+                    user.roles.map((role) => (
+                      <Badge
+                        key={role}
+                        bg={roleVariant[role] || "secondary"}
+                        className="me-1"
+                      >
+                        {roleLabel[role] || role}
+                      </Badge>
+                    ))
+                  ) : (
+                    <span className="text-muted">— Няма зададена роля —</span>
                   )}
                 </td>
+
+                {/* Статус на профила */}
                 <td>
-                  {user.isActive ? "Активен" : "Блокиран"}
+                  <Badge bg={user.isActive ? "success" : "danger"}>
+                    {user.isActive ? "Активен" : "Блокиран"}
+                  </Badge>
                 </td>
+
+                {/* Абонамент */}
                 <td>
+                  {!isDoctor(user) && sub ? (
+                    <>
+                      <Badge bg={subscriptionVariant[sub.active]}>
+                        {sub.active}
+                      </Badge>
+
+                      {sub.paidFor && sub.paidFor !== sub.active && (
+                        <>
+                          {" "}→{" "}
+                          <Badge bg={subscriptionVariant[sub.paidFor]}>
+                            {sub.paidFor}
+                          </Badge>
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+
+                {/* Действия */}
+                <td className="d-flex gap-1 flex-wrap">
                   <Link to={`/admin/users/${user.id}`}>
-                    <Button size="sm" variant="outline-secondary" className="me-2">
+                    <Button size="sm" variant="outline-secondary">
                       Детайли
                     </Button>
                   </Link>
 
-                  {!user.roles.includes("DOCTOR") && editingId !== user.id && (
-                    <Button size="sm" variant="outline-primary" onClick={() => startEditing(user)} className="me-2">
-                      Промяна на роля
-                    </Button>
-                  )}
-
-                  <Button size="sm" variant="outline-danger" onClick={() => {}}>
-                    Изтрий
+                  <Button
+                    size="sm"
+                    variant={user.isActive ? "warning" : "success"}
+                    onClick={() => toggleActive(user.id)}
+                  >
+                    {user.isActive ? "Блокирай" : "Активирай"}
                   </Button>
 
-                  <Button size="sm" variant={user.isActive ? "outline-danger" : "outline-success"} onClick={() => toggleStatus(user.id)} className="ms-2">
-                    {user.isActive ? "Блокирай" : "Активирай"}
+                  {/* Смяна на абонамент */}
+                  {!isDoctor(user) &&
+                    sub?.paidFor &&
+                    sub.active !== sub.paidFor && (
+                      <Button
+                        size="sm"
+                        variant="success"
+                        onClick={() => upgradeSubscription(user.id)}
+                      >
+                        Смяна към {sub.paidFor}
+                      </Button>
+                    )}
+
+                  {/* Смяна на роля - само за непотребители */}
+                  {!isDoctor(user) && (
+                    <Dropdown>
+                      <Dropdown.Toggle size="sm" variant="outline-primary">
+                        Смяна на роля
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() => changeRole(user.id, ["PATIENT"])}
+                        >
+                          Само Пациент
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => changeRole(user.id, ["GUARDIAN"])}
+                        >
+                          Само Настойник
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                          onClick={() => changeRole(user.id, ["PATIENT", "GUARDIAN"])}
+                        >
+                          И двете
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
+
+                  <Button size="sm" variant="outline-danger" disabled>
+                    Изтрий
                   </Button>
                 </td>
               </tr>

@@ -7,6 +7,10 @@ export const usersMock = [
     lastName: "Doe",
     isActive: true,
     createdAt: "2024-03-10",
+    subscription: {
+      active: "FREE",
+      paidFor: "PREMIUM",
+    },
   },
   {
     id: 2,
@@ -25,6 +29,10 @@ export const usersMock = [
     lastName: "Petrov",
     isActive: false,
     createdAt: "2024-01-15",
+    subscription: {
+      active: "STANDARD",
+      paidFor: "STANDARD",
+    },
   },
   {
     id: 4,
@@ -34,6 +42,10 @@ export const usersMock = [
     lastName: "Georgieva",
     isActive: true,
     createdAt: "2024-04-01",
+    subscription: {
+      active: "FREE",
+      paidFor: "STANDARD",
+    },
   },
   {
     id: 5,
@@ -52,6 +64,10 @@ export const usersMock = [
     lastName: "Nikolov",
     isActive: false,
     createdAt: "2023-12-05",
+    subscription: {
+      active: "FREE",
+      paidFor: null,
+    },
   },
   {
     id: 7,
@@ -61,6 +77,10 @@ export const usersMock = [
     lastName: "Dimitrova",
     isActive: true,
     createdAt: "2024-02-10",
+    subscription: {
+      active: "PREMIUM",
+      paidFor: "PREMIUM",
+    },
   },
   {
     id: 8,
@@ -79,6 +99,10 @@ export const usersMock = [
     lastName: "Popova",
     isActive: true,
     createdAt: "2024-04-12",
+    subscription: {
+      active: "STANDARD",
+      paidFor: "PREMIUM",
+    },
   },
   {
     id: 10,
@@ -88,5 +112,9 @@ export const usersMock = [
     lastName: "User",
     isActive: true,
     createdAt: "2024-05-01",
+    subscription: {
+      active: "FREE",
+      paidFor: "FREE",
+    },
   },
 ];
