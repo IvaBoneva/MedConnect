@@ -33,7 +33,7 @@ public class DoctorController {
         this.doctorMapper = doctorMapper;
     }
 
-    @PostMapping("/doctor/register")
+    /*@PostMapping("/doctor/register")
     public ResponseEntity<?> createUser(@RequestBody Doctor doctor) {
 
         try {
@@ -43,7 +43,7 @@ public class DoctorController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
-    }
+    }*/
 
     @GetMapping("/doctors")
     public List<DoctorDTO> getAllDoctorsDTO() {
