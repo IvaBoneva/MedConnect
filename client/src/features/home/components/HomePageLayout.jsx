@@ -78,7 +78,7 @@ export const HomePageLayout = ({ user }) => {
             to="/admin/login"
             style={{
               fontWeight: "bold",
-              color: "#0d6efd",
+              color: "#2e8b57",
               textDecoration: "underline",
               fontSize: "1.1rem",
             }}

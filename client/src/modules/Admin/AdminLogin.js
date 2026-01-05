@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Container, Card, Form, Button } from "react-bootstrap";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -18,27 +19,61 @@ export default function AdminLogin() {
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Вход за администратор</h2>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ minHeight: "80vh" }}
+    >
+      <Card
+        className="p-4 shadow-sm"
+        style={{
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "20px",
+          border: "1px solid #dcdcdc",
+        }}
+      >
+        <h3 className="text-center mb-4" style={{ color: "#2E8B57" }}>
+          Вход за администратор
+        </h3>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br /><br />
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+        >
+          <Form.Group className="mb-3">
+            <Form.Label>Имейл адрес</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Въведи имейл"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /><br />
+          <Form.Group className="mb-4">
+            <Form.Label>Парола</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Въведи парола"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      <button onClick={handleLogin}>Login</button>
-    </div>
+          <Button
+            variant="success"
+            type="submit"
+            className="w-100"
+            style={{ borderRadius: "10px" }}
+          >
+            Вход
+          </Button>
+        </Form>
+      </Card>
+    </Container>
   );
 }
-
