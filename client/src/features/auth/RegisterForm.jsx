@@ -37,6 +37,7 @@ const transformFormToBackend = (form) => {
         yearsOfExperience: Number(form.experience) || 0,
         city: form.city || null,
         hospital: form.hospital || null,
+        status: "PENDING"
       };
 
     case "guardian":
@@ -61,6 +62,7 @@ const transformFormToBackend = (form) => {
         diseases: form.diseases || null,
       };
   }
+
 };
 
 const RegisterForm = () => {
@@ -298,6 +300,7 @@ const RegisterForm = () => {
         ...formData,
         photoURL: uploadedPhotoURL,
       });
+
       await register(backendPayload);
 
       setMessage("Успешна заявка за регистрация");

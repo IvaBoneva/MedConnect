@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/api/user")
+@RestController
 public class DoctorRegistrationController {
     private final DoctorRegistrationService service;
 
