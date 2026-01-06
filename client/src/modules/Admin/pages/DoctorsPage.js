@@ -1,5 +1,6 @@
 import { Table, Button, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { getAllRegisterRequests } from "../../../api/DoctorRegisterRequestsApi";
 import { pendingDoctorsMock } from "../mock data/PendingDoctors";
 import { useState } from "react";
 
@@ -11,7 +12,8 @@ const statusVariant = {
 
 const DoctorsPage = () => {
   const [doctors, setDoctors] = useState(pendingDoctorsMock);
-
+  const [doctorsReal, setDoctorsReal] = useState(getAllRegisterRequests);
+  
   const updateStatus = (id, newStatus) => {
     setDoctors(prev =>
       prev.map(doc =>

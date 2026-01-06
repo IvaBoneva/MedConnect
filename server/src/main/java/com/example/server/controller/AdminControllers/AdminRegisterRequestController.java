@@ -1,8 +1,10 @@
-package com.example.server.controller.RegistrationControllers;
+package com.example.server.controller.AdminControllers;
 
 import com.example.server.service.RegistrationServices.DoctorRegistrationService;
+import com.example.server.dto.ExposedUserDTO.DoctorRegisterRequestDTO;
 import com.example.server.models.RegistrationModels.DoctorRegisterRequest;
 
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -15,25 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/user")
+@RequestMapping("/api/admin")
 @RestController
-public class DoctorRegistrationController {
+public class AdminRegisterRequestController {
+
     private final DoctorRegistrationService service;
 
-    public DoctorRegistrationController(DoctorRegistrationService service){
+    public AdminRegisterRequestController(DoctorRegistrationService service){
         this.service = service;
     }
 
-    @PostMapping("/doctor/register")
-    public ResponseEntity<?> create(@RequestBody DoctorRegisterRequest dto){
-            try {
-            service.createRequest(dto);
-            return new ResponseEntity<>(dto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
+
+    @GetMapping("/doctor")
+    public List<DoctorRegisterRequestDTO> getAllRegisterRequests(){
+        return service.getPendingRequestsDTO();
     }
-
-
-
+    
 }

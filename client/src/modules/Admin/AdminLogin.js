@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { currentUser, logIn } from "../../api/userApi";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -8,13 +9,18 @@ export default function AdminLogin() {
   const navigate = useNavigate();
   const { setAuthData } = useAuth();
 
-  const handleLogin = () => {
-    if (email === "admin@medconnect.bg" && password === "admin123") {
-      setAuthData("dummyAdminToken", { email, role: "admin" });
-      navigate("/admin");
-    } else {
-      alert("Невалидни администраторски данни");
-    }
+  const handleLogin = async () => {
+
+      const res = await logIn({ email, password });
+      if (res && res.token) {
+        try {
+          const currentUserData = await currentUser();
+          setAuthData(res.token, currentUserData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+        setTimeout(() => navigate("/admin"), 1500);
+      }
   };
 
   return (

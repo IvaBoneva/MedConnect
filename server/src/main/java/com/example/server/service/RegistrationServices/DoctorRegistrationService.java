@@ -3,6 +3,8 @@ package com.example.server.service.RegistrationServices;
 import com.example.server.repository.RegistrationRepositories.DoctorRegistrationRequestRepository;
 import com.example.server.models.RegistrationModels.DoctorRegisterRequest;
 import com.example.server.repository.UserRepositories.DoctorRepository;
+import com.example.server.dto.ExposedUserDTO.DoctorRegisterRequestDTO;
+import com.example.server.mappers.RegistrationMappers.DoctorRegistrationMapper;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,16 @@ public class DoctorRegistrationService {
     private final DoctorRegistrationRequestRepository regRequestRepo;
     private final DoctorRepository doctorRepo;
     private final PasswordEncoder passwordEncoder;
+    private final DoctorRegistrationMapper mapper;
 
 
     @Autowired
-    public DoctorRegistrationService(DoctorRegistrationRequestRepository regRequestRepo, DoctorRepository doctorRepo, PasswordEncoder passwordEncoder) {
+    public DoctorRegistrationService(DoctorRegistrationRequestRepository regRequestRepo, DoctorRepository doctorRepo, 
+    PasswordEncoder passwordEncoder, DoctorRegistrationMapper mapper) {
         this.regRequestRepo = regRequestRepo;
         this.doctorRepo = doctorRepo;
         this.passwordEncoder = passwordEncoder;
+        this.mapper = mapper;
     }
 
     public DoctorRegisterRequest createRequest(DoctorRegisterRequest dto){
@@ -47,15 +52,13 @@ public class DoctorRegistrationService {
 
     }
 
-        public List<DoctorRegisterRequest> listPendingRequests(){
-            return regRequestRepo.findAll().stream()
+        public List<DoctorRegisterRequestDTO> getPendingRequestsDTO(){
+            List<DoctorRegisterRequest> requests = regRequestRepo.findAll().stream()
             .filter(r -> r.getStatus() == DoctorRegisterRequest.Status.PENDING)
             .toList();
+            return requests.stream()
+                .map(mapper::convertToDTO)
+                .toList();
         }
-
-
-    
-
-
 
 }

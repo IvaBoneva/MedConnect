@@ -5,10 +5,10 @@ import { AdminSidebar } from "./AdminSidebar";
 export default function AdminPanel() {
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     const isAdmin = localStorage.getItem("adminLoggedIn");
     if (!isAdmin) navigate("/admin/login");
-  }, [navigate]);
+  }, [navigate]);*/
 
   return (
     <div style={{ display: "flex" }}>

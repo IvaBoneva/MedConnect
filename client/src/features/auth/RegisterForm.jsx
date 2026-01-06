@@ -303,9 +303,13 @@ const RegisterForm = () => {
 
       await register(backendPayload);
 
-      setMessage("Успешна заявка за регистрация");
+      if(formData.role === "doctor"){
+        setMessage("Успешна заявка за регистрация!");
+      }else {      
+        
+        setMessage("Успешна регистрация");
 
-      /*const loginResponse = await logIn({
+      const loginResponse = await logIn({
         email: formData.email,
         password: formData.password,
       });
@@ -314,7 +318,10 @@ const RegisterForm = () => {
         const currentUserData = await currentUser();
         setAuthData(loginResponse.token, currentUserData);
         navigate("/");
-      } else setMessage("Неуспешен вход след регистрация.");*/
+      } else setMessage("Неуспешен вход след регистрация.");
+
+      }
+
 
     } catch {
       setMessage("Възникна грешка. Моля, опитайте отново.");
