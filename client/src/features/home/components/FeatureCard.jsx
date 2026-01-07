@@ -1,13 +1,16 @@
 import { Col, Card, Badge } from "react-bootstrap";
+import { useAuth } from "../../../context/AuthContext";
 
 export const FeatureCard = ({ title, description, isPremium = false }) => {
+  const { user, token } = useAuth();
   return (
-    <Col xs={12} sm={10} md={4} lg={3}>
+    <Col xs={12} sm={10} md={4} lg={3} style={{ marginBottom: "40px" }}>
       <Card
         className="p-4 text-left h-100 shadow-sm card-hover"
         style={{
           minHeight: "320px",
           border: isPremium ? "2px solid #d4af37" : "none",
+          marginBottom: "40px",
         }}
       >
         {/* PREMIUM BADGE */}
