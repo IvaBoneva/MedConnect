@@ -38,7 +38,7 @@ public class SmsScheduler {
         this.twilioService = twilioService;
     }
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/5 * * * *")
     public void scheduleTodaysMedicationReminders() {
         LocalDate today = LocalDate.now(ZoneId.of("Europe/Sofia"));
         logger.info("Scheduler running at {} to {}", OffsetDateTime.now(ZoneOffset.UTC), today);

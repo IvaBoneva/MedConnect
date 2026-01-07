@@ -14,8 +14,8 @@ const SubscriptionPage = () => {
   });
 
   const PRICE_IDS = {
-    monthly: "price_1SSFR9RTNyC3ef1LQhZ0VACG",
-    yearly: "price_1SSFR9RTNyC3ef1L5o89uciw",
+    monthly: "price_1Smw7nRTNyC3ef1LUIVtDOdG",
+    yearly: "price_1Smw8MRTNyC3ef1Lyr4gnROi",
   };
 
   useEffect(() => {
@@ -165,7 +165,7 @@ const SubscriptionPage = () => {
     {
       key: "monthly",
       title: "MedConnect+ Premium",
-      price: "19.99 лв / месец",
+      price: "9.90€ / 19.36 лв. / месец",
       description:
         "Пълният пакет: неограничено хранилище, списъци с ваксини и профилактични прегледи, проверка на симптоми, СМС съобщения",
       buttonText: "Избери месечен план",
@@ -179,7 +179,7 @@ const SubscriptionPage = () => {
     {
       key: "yearly",
       title: "MedConnect+ Premium",
-      price: "220.00 лв / година",
+      price: "112.49€ / 220.01 лв. / година",
       description: "Всички Premium функции плюс 1 безплатен месец.",
       buttonText: "Избери годишен план",
       buttonVariant: "success",
