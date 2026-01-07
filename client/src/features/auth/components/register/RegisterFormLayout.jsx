@@ -1,6 +1,6 @@
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { RegisterInput } from "./RegisterInput"; 
+import { RegisterInput } from "./RegisterInput";
 import { PasswordInput } from "./PasswordInput";
 
 export const RegisterFormLayout = ({
@@ -12,21 +12,34 @@ export const RegisterFormLayout = ({
   message,
   errors,
   toggles,
-  toggleHandlers
+  toggleHandlers,
 }) => {
-  const { 
-    fnameError, lnameError, birthDateError, emailError, phoneError, 
-    experienceError, patientfnameError, patientlnameError, patientBirthDateError, 
-    passwordErrors, confirmPasswordError 
+  const {
+    fnameError,
+    lnameError,
+    birthDateError,
+    emailError,
+    phoneError,
+    experienceError,
+    patientfnameError,
+    patientlnameError,
+    patientBirthDateError,
+    passwordErrors,
+    confirmPasswordError,
   } = errors;
 
-  const { showDoctorFields, showPatientFields, showPassword, showConfirmPassword } = toggles;
+  const {
+    showDoctorFields,
+    showPatientFields,
+    showPassword,
+    showConfirmPassword,
+  } = toggles;
   const { toggleShowPassword, toggleShowConfirmPassword } = toggleHandlers;
 
   return (
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
       <h3 className="mb-4 text-center text-success">
-        Създайте своя MedConnect акаунт
+        Създайте своя MedConnect+ акаунт
       </h3>
 
       {message && (
