@@ -37,6 +37,10 @@ public class SecurityConfig {
         // permit specific request, other authenticated (using our JWT filter)
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                        "/api/admin/**",
+                        "/api/admin/doctor_register_requests",
+                        "/api/admin/login",
+
                         "/api/user/**",
                         "/api/user/register",
                         "/api/blog/unrestricted",

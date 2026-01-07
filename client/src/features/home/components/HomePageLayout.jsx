@@ -70,23 +70,6 @@ export const HomePageLayout = ({ user }) => {
           )}
         </Row>
       </Container>
-
-      {/* Линк към вход за администратор, само ако не е логнат админ */}
-      {(!user || user.role !== "admin") && (
-        <Container className="mt-4 mb-5 text-center">
-          <Link
-            to="/admin/login"
-            style={{
-              fontWeight: "bold",
-              color: "#0d6efd",
-              textDecoration: "underline",
-              fontSize: "1.1rem",
-            }}
-          >
-            Вход за администратор
-          </Link>
-        </Container>
-      )}
     </>
   );
 };

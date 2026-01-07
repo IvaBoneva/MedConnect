@@ -42,7 +42,8 @@ public class JwtFilter extends GenericFilterBean {
 
         String servletPath = request.getServletPath();
 
-        if (servletPath.startsWith("/api/user/login") ||
+        if (servletPath.startsWith("/api/admin/login") ||
+            servletPath.startsWith("/api/user/login") ||
                 servletPath.startsWith("/api/user/register") ||
                 servletPath.startsWith("/api/blog/unrestricted") ||
                 servletPath.startsWith("/api/user/users") ||

@@ -9,6 +9,7 @@ import com.example.server.models.UserModels.Doctor;
 import com.example.server.models.UserModels.Guardian;
 import com.example.server.models.UserModels.Patient;
 import com.example.server.models.UserModels.User;
+import com.example.server.models.RegistrationModels.DoctorRegisterRequest;
 import com.example.server.repository.CalendarRepositories.AppointmentRepository;
 import com.example.server.repository.CalendarRepositories.WeeklyScheduleTemplateRepository;
 import com.example.server.repository.CalendarRepositories.WorkDayExceptionRepository;
@@ -18,6 +19,7 @@ import com.example.server.repository.UserRepositories.DoctorRepository;
 import com.example.server.repository.UserRepositories.GuardianRepository;
 import com.example.server.repository.UserRepositories.PatientRepository;
 import com.example.server.repository.UserRepositories.UserRepository;
+import com.example.server.repository.RegistrationRepositories.DoctorRegistrationRequestRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,10 +43,24 @@ public class DataSeeder {
             WorkDayExceptionRepository exceptionRepo,
             AppointmentRepository appointmentRepo,
             StorageRepository storageRepository,
-            UserFileRepository userFileRepository) {
+            UserFileRepository userFileRepository,
+            DoctorRegistrationRequestRepository docRegReqRepository) {
         return args -> {
 
             if (userRepository.count() == 0) {
+
+                // ========================
+                // ADMIN
+                // ========================
+                User admin = new User();
+                admin.setFirstName("ad");
+                admin.setLastName("min");
+                admin.setEmail("ad@min.bg");
+                admin.setPassword(passwordEncoder.encode("321nimda"));
+                admin.setBirthDate(LocalDate.of(2001, 1, 1));
+                admin.setAge(24);
+                admin.setPhoneNumber("123456789");
+                admin.setRole("admin");
 
                 // ========================
                 // USERS
@@ -326,6 +342,28 @@ public class DataSeeder {
                 doctor10.setCity("София");
 
                 // ========================
+                // DOCTOR REGISTER REQUEST
+                // ========================
+
+                DoctorRegisterRequest regReq = new DoctorRegisterRequest();
+                regReq.setFirstName("Doctor");
+                regReq.setLastName("Mundo");
+                regReq.setEmail("goes@where.pls");
+                regReq.setPassword(passwordEncoder.encode("doc123456"));
+                regReq.setBirthDate(LocalDate.of(1983, 1, 1));
+                regReq.setAge(41);
+                regReq.setPhoneNumber("0888696969");
+                regReq.setRole("doctor");
+                regReq.setSpecialization("Top");
+                regReq.setRating(5F);
+                regReq.setYearsOfExperience(13);
+                regReq.setHospital("УМБАЛ „Лозенец“");
+                regReq.setCity("София");
+
+                docRegReqRepository.save(regReq);
+
+
+                // ========================
                 // GUARDIAN
                 // ========================
                 Guardian guardian = new Guardian();
@@ -352,6 +390,7 @@ public class DataSeeder {
                 // ========================
                 // SAVE ALL
                 // ========================
+                userRepository.save(admin);
                 userRepository.save(user1);
                 userRepository.save(user2);
                 userRepository.save(user3);
@@ -500,7 +539,7 @@ public class DataSeeder {
 
                 appointmentRepo.save(guardianAppointment);
 
-                System.out.println("✅ Users, doctors, schedules, and appointments seeded successfully!");
+                System.out.println("✅ Users, doctors, doctor register requests, schedules, and appointments seeded successfully!");
             }
         };
     }
