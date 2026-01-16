@@ -19,7 +19,8 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
     private final PasswordEncoder passwordEncoder;
     private final StorageRepository storageRepository;
 
-    public BaseUserServiceImpl(BaseUserRepository<T> repository, PasswordEncoder passwordEncoder, StorageRepository storageRepository) {
+    public BaseUserServiceImpl(BaseUserRepository<T> repository, PasswordEncoder passwordEncoder,
+            StorageRepository storageRepository) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.storageRepository = storageRepository;
@@ -29,7 +30,7 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
     public T saveUser(T user) throws Exception {
 
         User existingUser = repository.findByEmail(user.getEmail());
-        if (existingUser != null){
+        if (existingUser != null) {
             throw new Exception("Username with tihs email aready exists");
         }
 
@@ -50,7 +51,7 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
     }
 
     @Override
-    public T saveGoogleTokensToUser(T user) throws UsernameNotFoundException{
+    public T saveGoogleTokensToUser(T user) throws UsernameNotFoundException {
 
         T existingUser = repository.findByEmail(user.getEmail());
         if (existingUser != null) {
@@ -62,11 +63,9 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         throw new UsernameNotFoundException("User not found");
     }
 
-
-
     @Override
     public void upgradeSubscription(String email, String planId) {
-        
+
         Optional<T> optionalUser = Optional.ofNullable(repository.findByEmail(email));
         if (optionalUser.isEmpty()) {
             System.out.println("No user found with email: " + email);
@@ -80,12 +79,12 @@ public abstract class BaseUserServiceImpl<T extends User> implements BaseUserSer
         LocalDate expiry;
 
         switch (planId) {
-            case "price_1SSFR9RTNyC3ef1LQhZ0VACG": // monthly plan
+            case "price_1Smw7nRTNyC3ef1LUIVtDOdG": // monthly plan
                 subscriptionStatus = "premium";
                 subscriptionType = "monthly";
                 expiry = LocalDate.now().plusMonths(1);
                 break;
-            case "price_1SSFR9RTNyC3ef1L5o89uciw": // yearly plan
+            case "price_1Smw8MRTNyC3ef1Lyr4gnROi": // yearly plan
                 subscriptionStatus = "premium";
                 subscriptionType = "yearly";
                 expiry = LocalDate.now().plusYears(1);
