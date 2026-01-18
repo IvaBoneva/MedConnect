@@ -9,6 +9,28 @@ In summary, the software simplifies healthcare administration by automating appo
 ---
 ![MedConnect HommePage](resources/home-page.png)
 
+## 📋 Table of Contents
+
+* [About the Project](#medconnect)
+* [Functionalities ⚙️](#functionalities-️)
+    * [User Management](#1-user-management)
+    * [Doctor Selection & Scheduling](#2-doctor-selection--scheduling)
+    * [Hospitals and Pharmacies](#3-hospital-and-pharmacies-around-me)
+    * [Vaccines Scheduler](#4-vaccines-scheduler)
+    * [File Storage](#5-file-storage)
+    * [User Calendar](#6-user-calendar)
+    * [Subscriptions](#7-subscriptions)
+    * [Prescription Reminder](#8-prescription-reminder-semi-premium-feature)
+    * [AI Doctor Assistant](#9-ai-doctor-assistent-premium-feature)
+* [Technology Stack](#tech-stack)
+* [Installation & Setup](#installation--setup)
+    * [Prerequisites](#prerequisites)
+    * [Server Setup](#server-setup)
+    * [Client Setup](#client-setup)
+* [Application Usage](#api-key-configuration)
+* [Documentation](#documentation)
+
+---
 
 ## Functionalities ⚙️
 
@@ -51,7 +73,7 @@ Patients and Guardians can select from a directory of available Doctors to sched
   <img src="resources/doctor-list.png" width="90%" alt="User Profile Management">
 </p>
 
-### 3. Hospiral and Pharmacies around me
+### 3. Hospital and Pharmacies around me
 
 Patients and guardians can check nearby hospitals and pharmacies by enabling geolocation.
 
@@ -59,7 +81,15 @@ Patients and guardians can check nearby hospitals and pharmacies by enabling geo
   <img src="resources/patient-pharmacies-around.png" width="90%" alt="Pharmacies Around Me">
 </p>
 
-### 4. File Storage
+### 4. Vaccines Scheduler
+
+The Vaccine Scheduler allows patients and guardians to manage vaccination schedules by tracking upcoming and completed vaccines. The feature provides calendar-based reminders to ensure timely vaccinations according to recommended schedules.
+
+<p align="center">
+  <img src="resources/patient-vaccine-scheduler.png" width="90%" alt="Pharmacies Around Me">
+</p>
+
+### 5. File Storage
 
 Patients and guardians can upload medical-related files such as laboratory results, medical reports, imaging summaries, and discharge documents, which are visible to doctors to support accurate diagnosis and treatment.
 
@@ -67,9 +97,8 @@ Patients and guardians can upload medical-related files such as laboratory resul
   <img src="resources/patient-storage.png" width="90%" alt="Pharmacies Around Me">
 </p>
 
-- **AI Doctor (Gemini)** – Symptom checking and AI-based medical consultations
 
-### 5. User Calendar
+### 6. User Calendar
 
 All users can access a personal calendar to track upcoming and past activities. Patients and guardians can review previous and scheduled doctor appointments, as well as follow medication reminders. Doctors can manage their timetables by viewing upcoming appointments and adjusting their schedules, either partially by modifying working hours or fully by marking specific days as non-working.
 
@@ -80,17 +109,27 @@ All users can access a personal calendar to track upcoming and past activities. 
   <img src="resources/doctor-calendar.png" width="90%" alt="Pharmacies Around Me">
 </p>
 
-### 6. Subscriptions
+### 7. Subscriptions
 
 Patients and guardians can choose between monthly and annual premium subscription plans, which unlock two premium features: an AI doctor assistant and medication reminders.
 
 <p align="center">
-  <img src="resources/payment-successful-payment.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-successful-payment.png" width="90%" alt="Pharmacies Around Me">
 </p>
 
-### 7. 
+### 8. Prescription Reminder (Semi-Premium feature)
 
-### 8. AI doctor assistent ( Premium feature )
+Medication reminders are displayed as calendar entries based on the medicines provided by the user. Each reminder appears on the calendar at the scheduled time to help users follow their prescribed medication routine. With an active premium subscription, users additionally receive periodic SMS notifications to ensure timely medication intake.
+
+<p align="center">
+  <img src="resources/pills-reminder.png" width="90%" alt="Pharmacies Around Me">
+</p>
+<p align="center">
+  <img src="resources/601491747_2334876610322081_2446623063920264800_n.jpg" width="90%" alt="Pharmacies Around Me">
+</p>
+
+### 9. AI doctor assistent (Premium feature)
+
 
 The AI medical assistant provides medical-related advice exclusively to users with an active premium subscription. It assists with initial symptom checking and offers guidance for managing minor health issues, serving as a preliminary support tool rather than a replacement for professional medical care.
 
@@ -100,25 +139,22 @@ The AI medical assistant provides medical-related advice exclusively to users wi
 
 
 
-
 ## Tech Stack
 
 ### Client Side
 
 - **Framework:** React.js
-- **Styling:** CSS, PostCSS
+- **Styling:** React-Bootstrap
 - **Routing:** React Router
-- **API Communication:** Axios
-- **Maps:** Google Maps API
 
 ### Server Side
 
 - **Framework:** Java Spring Boot
 - **Build Tool:** Maven
-- **Database:** PostgreSQL or MySQL (configurable)
+- **Database:** PostgreSQL
 - **Security:** Spring Security, JWT (JSON Web Tokens)
 - **External Services:**
-  - Google Cloud (Calendar API, Maps API, Gemini AI)
+  - Google Cloud (Gemini AI)
   - Stripe (Payments)
   - Twilio (SMS Notifications)
 
