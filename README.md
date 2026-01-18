@@ -1,4 +1,4 @@
-# MedConnect
+# MedConnect 🩺
 
 MedConnect is a healthcare management project developed for the [Software Technologies] course at [TU - Sofia]. It is a web-based ecosystem designed to bridge the communication gap between patients, and guardians and doctors, ensuring streamlined medical care and real-time health monitoring.
 
@@ -9,10 +9,9 @@ In summary, the software simplifies healthcare administration by automating appo
 ---
 ![MedConnect HommePage](resources/home-page.png)
 
-## 📋 Table of Contents
+## Table of Contents 📋
 
-* [About the Project](#medconnect)
-* [Functionalities ⚙️](#functionalities-️)
+* [Functionalities](#functionalities-️)
     * [User Management](#1-user-management)
     * [Doctor Selection & Scheduling](#2-doctor-selection--scheduling)
     * [Hospitals and Pharmacies](#3-hospital-and-pharmacies-around-me)
@@ -59,7 +58,7 @@ Once authenticated, every user has access to a dedicated profile tab. Users can 
   <img src="resources/patient-profile-managment.png" width="90%" alt="User Profile Management">
 </p>
 <p align="center">
-  <img src="resources/doctor-personal-information.png" width="90%" alt="User Profile Management">
+  <img src="resources/doctor-personal-information.png" width="90%" alt="Doctor Profile Management">
 </p>
 
 ### 2. Doctor Selection & Scheduling
@@ -67,11 +66,12 @@ Once authenticated, every user has access to a dedicated profile tab. Users can 
 Patients and Guardians can select from a directory of available Doctors to schedule appointments at mutually convenient times. Following a completed examination, users can provide feedback by leaving a review and rating their experience.
 
 <p align="center">
-  <img src="resources/patint-doctor-details.png" width="90%" alt="User Profile Management">
+  <img src="resources/doctor-list.png" width="90%" alt="Doctor List">
 </p>
 <p align="center">
-  <img src="resources/doctor-list.png" width="90%" alt="User Profile Management">
+  <img src="resources/patint-doctor-details.png" width="90%" alt="Patient Doctor Details">
 </p>
+
 
 ### 3. Hospital and Pharmacies around me
 
@@ -86,7 +86,7 @@ Patients and guardians can check nearby hospitals and pharmacies by enabling geo
 The Vaccine Scheduler allows patients and guardians to manage vaccination schedules by tracking upcoming and completed vaccines. The feature provides calendar-based reminders to ensure timely vaccinations according to recommended schedules.
 
 <p align="center">
-  <img src="resources/patient-vaccine-scheduler.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-vaccine-scheduler.png" width="90%" alt="Patient Vaccine Scheduler">
 </p>
 
 ### 5. File Storage
@@ -94,7 +94,7 @@ The Vaccine Scheduler allows patients and guardians to manage vaccination schedu
 Patients and guardians can upload medical-related files such as laboratory results, medical reports, imaging summaries, and discharge documents, which are visible to doctors to support accurate diagnosis and treatment.
 
 <p align="center">
-  <img src="resources/patient-storage.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-storage.png" width="90%" alt="Patient Storage">
 </p>
 
 
@@ -103,10 +103,10 @@ Patients and guardians can upload medical-related files such as laboratory resul
 All users can access a personal calendar to track upcoming and past activities. Patients and guardians can review previous and scheduled doctor appointments, as well as follow medication reminders. Doctors can manage their timetables by viewing upcoming appointments and adjusting their schedules, either partially by modifying working hours or fully by marking specific days as non-working.
 
 <p align="center">
-  <img src="resources/patient-calendar.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-calendar.png" width="90%" alt="Patient Calendar">
 </p>
 <p align="center">
-  <img src="resources/doctor-calendar.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/doctor-calendar.png" width="90%" alt="Doctor Calendar">
 </p>
 
 ### 7. Subscriptions
@@ -114,7 +114,7 @@ All users can access a personal calendar to track upcoming and past activities. 
 Patients and guardians can choose between monthly and annual premium subscription plans, which unlock two premium features: an AI doctor assistant and medication reminders.
 
 <p align="center">
-  <img src="resources/patient-successful-payment.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-successful-payment.png" width="90%" alt="Patient Premium Plan Payment">
 </p>
 
 ### 8. Prescription Reminder (Semi-Premium feature)
@@ -122,10 +122,10 @@ Patients and guardians can choose between monthly and annual premium subscriptio
 Medication reminders are displayed as calendar entries based on the medicines provided by the user. Each reminder appears on the calendar at the scheduled time to help users follow their prescribed medication routine. With an active premium subscription, users additionally receive periodic SMS notifications to ensure timely medication intake.
 
 <p align="center">
-  <img src="resources/pills-reminder.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/pills-reminder.png" width="90%" alt="Pills Reminder">
 </p>
 <p align="center">
-  <img src="resources/601491747_2334876610322081_2446623063920264800_n.jpg" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/601491747_2334876610322081_2446623063920264800_n.jpg" width="90%" alt="Sent SMS">
 </p>
 
 ### 9. AI doctor assistent (Premium feature)
@@ -134,12 +134,12 @@ Medication reminders are displayed as calendar entries based on the medicines pr
 The AI medical assistant provides medical-related advice exclusively to users with an active premium subscription. It assists with initial symptom checking and offers guidance for managing minor health issues, serving as a preliminary support tool rather than a replacement for professional medical care.
 
 <p align="center">
-  <img src="resources/patient-AI-doctor.png" width="90%" alt="Pharmacies Around Me">
+  <img src="resources/patient-AI-doctor.png" width="90%" alt="AI Assistent Chat">
 </p>
 
 
 
-## Tech Stack
+## Tech Stack 🚀
 
 ### Client Side
 
@@ -160,7 +160,7 @@ The AI medical assistant provides medical-related advice exclusively to users wi
 
 ---
 
-## Installation & Setup
+## Installation & Setup 💻
 
 To run MedConnect locally, both the **server** and **client** applications must be configured.
 
@@ -225,7 +225,7 @@ docker-compose up -d
 
 ---
 
-## API Key Configuration
+## API Key Configuration 🔑
 
 To enable full functionality, configure the following API keys:
 
@@ -235,7 +235,7 @@ To enable full functionality, configure the following API keys:
 
 ---
 
-## Documentation
+## Documentation 📋
 
 Detailed project documentation is available in the `docs/` directory:
 
