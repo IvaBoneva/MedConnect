@@ -1,14 +1,46 @@
 # MedConnect
 
-MedConnect is an innovative healthcare platform designed to connect **patients**, **doctors**, and **guardians** in one unified system. The application supports appointment scheduling, prescription management, AI-powered medical consultations, and real-time health monitoring.
+MedConnect is a healthcare management project developed for the [Software Technologies] course at [TU - Sofia]. It is a web-based ecosystem designed to bridge the communication gap between patients, and guardians and doctors, ensuring streamlined medical care and real-time health monitoring.
+
+The platform is built using Spring Boot v3.5.7 for a robust and secure backend, and React.js v19.2.0 for a dynamic, responsive frontend. By integrating services like Google Gemini AI for consultations and Stripe for billing, MedConnect transforms the traditional doctor-patient interaction into a modern, digital experience.
+
+In summary, the software simplifies healthcare administration by automating appointment scheduling, digitizing prescription management, and providing AI-driven medical insights.
 
 ---
+![MedConnect HommePage](resources/home-page.png)
 
-##  Features
 
-### Patients
+## Functionalities ⚙️
 
-- **Profile Management** – Manage personal information and medical records
+The following functionalities are supported by the platform:
+
+### 1. User Management
+
+In MedConnect, role-based user profiles can be created for Patients, Doctors, and Guardians. Each user registers according to their role, with doctors providing additional professional information such as specialization and years of experience, and guardians providing information about the patients under their care. Authentication is implemented using JWT-based security, ensuring controlled access to system resources based on assigned roles.
+
+#### Registration
+The registration process captures essential medical and profile data specific to the user's role.
+<p align="center">
+  <img src="resources/user-register.png" width="600" alt="Registration Form">
+</p>
+
+#### Authentication
+Secure login is handled via a dedicated interface, issuing a `JWT` for session management.
+<p align="center">
+  <img src="resources/login.png" width="400" alt="Login Form">
+</p>
+
+#### User Profile & Account Customization
+Once authenticated, every user has access to a dedicated profile tab. Users can manage their personal information, update medical identifiers, and upload a profile photo.
+
+<p align="center">
+  <img src="resources/patient-profile-managment.png" width="90%" alt="User Profile Management">
+</p>
+<p align="center">
+  <img src="resources/doctor-personal-information.png" width="90%" alt="User Profile Management">
+</p>
+
+
 - **Calendar & Appointments** – Book, view, and cancel doctor appointments with Google Calendar integration
 - **AI Doctor (Gemini)** – Symptom checking and AI-based medical consultations
 - **Prescriptions & Medications** – Access prescriptions and medication schedules
