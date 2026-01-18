@@ -2,7 +2,7 @@
 
 MedConnect is a healthcare management project developed for the [Software Technologies] course at [TU - Sofia]. It is a web-based ecosystem designed to bridge the communication gap between patients, and guardians and doctors, ensuring streamlined medical care and real-time health monitoring.
 
-The platform is built using Spring Boot v3.5.7 for a robust and secure backend, and React.js v19.2.0 for a dynamic, responsive frontend. By integrating services like Google Gemini AI for consultations and Stripe for billing, MedConnect transforms the traditional doctor-patient interaction into a modern, digital experience.
+The platform is built using Spring Boot v3.5.7 for the backend, and React.js v19.2.0 for the frontend. By integrating services like Google Gemini AI for consultations and Stripe for billing, MedConnect transforms the traditional doctor-patient interaction into a modern, digital experience.
 
 In summary, the software simplifies healthcare administration by automating appointment scheduling, digitizing prescription management, and providing AI-driven medical insights.
 
@@ -40,27 +40,66 @@ Once authenticated, every user has access to a dedicated profile tab. Users can 
   <img src="resources/doctor-personal-information.png" width="90%" alt="User Profile Management">
 </p>
 
+### 2. Doctor Selection & Scheduling
 
-- **Calendar & Appointments** – Book, view, and cancel doctor appointments with Google Calendar integration
+Patients and Guardians can select from a directory of available Doctors to schedule appointments at mutually convenient times. Following a completed examination, users can provide feedback by leaving a review and rating their experience.
+
+<p align="center">
+  <img src="resources/patint-doctor-details.png" width="90%" alt="User Profile Management">
+</p>
+<p align="center">
+  <img src="resources/doctor-list.png" width="90%" alt="User Profile Management">
+</p>
+
+### 3. Hospiral and Pharmacies around me
+
+Patients and guardians can check nearby hospitals and pharmacies by enabling geolocation.
+
+<p align="center">
+  <img src="resources/patient-pharmacies-around.png" width="90%" alt="Pharmacies Around Me">
+</p>
+
+### 4. File Storage
+
+Patients and guardians can upload medical-related files such as laboratory results, medical reports, imaging summaries, and discharge documents, which are visible to doctors to support accurate diagnosis and treatment.
+
+<p align="center">
+  <img src="resources/patient-storage.png" width="90%" alt="Pharmacies Around Me">
+</p>
+
 - **AI Doctor (Gemini)** – Symptom checking and AI-based medical consultations
-- **Prescriptions & Medications** – Access prescriptions and medication schedules
-- **Map Integration** – Find nearby pharmacies and medical centers using Google Maps
-- **File Storage** – Secure upload and storage of medical documents
-- **Subscriptions** – Manage subscription plans and payments via Stripe
 
-### Doctors
+### 5. User Calendar
 
-- **Dashboard** – View daily schedules and upcoming examinations
-- **Patient Management** – Access patient profiles and medical history
-- **Electronic Prescriptions** – Issue prescriptions digitally
-- **Schedule Configuration** – Define working hours and special exceptions
+All users can access a personal calendar to track upcoming and past activities. Patients and guardians can review previous and scheduled doctor appointments, as well as follow medication reminders. Doctors can manage their timetables by viewing upcoming appointments and adjusting their schedules, either partially by modifying working hours or fully by marking specific days as non-working.
 
-###  Guardians
+<p align="center">
+  <img src="resources/patient-calendar.png" width="90%" alt="Pharmacies Around Me">
+</p>
+<p align="center">
+  <img src="resources/doctor-calendar.png" width="90%" alt="Pharmacies Around Me">
+</p>
 
-- **Patient Monitoring** – Track schedules and health status of entrusted patients
-- **Shared Calendar** – View patient appointments and events
+### 6. Subscriptions
 
----
+Patients and guardians can choose between monthly and annual premium subscription plans, which unlock two premium features: an AI doctor assistant and medication reminders.
+
+<p align="center">
+  <img src="resources/payment-successful-payment.png" width="90%" alt="Pharmacies Around Me">
+</p>
+
+### 7. 
+
+### 8. AI doctor assistent ( Premium feature )
+
+The AI medical assistant provides medical-related advice exclusively to users with an active premium subscription. It assists with initial symptom checking and offers guidance for managing minor health issues, serving as a preliminary support tool rather than a replacement for professional medical care.
+
+<p align="center">
+  <img src="resources/patient-AI-doctor.png" width="90%" alt="Pharmacies Around Me">
+</p>
+
+
+
 
 ## Tech Stack
 
