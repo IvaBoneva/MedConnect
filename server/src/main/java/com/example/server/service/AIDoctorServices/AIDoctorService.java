@@ -20,7 +20,7 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 @Service
 public class AIDoctorService {
 
-        private final String googleCloudToken = "GOOGLE_GEMINI_TEMP_TOKEN";
+        private final String googleCloudToken = "TODO";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
