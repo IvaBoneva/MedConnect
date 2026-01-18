@@ -1,8 +1,8 @@
 # MedConnect 🩺
 
-MedConnect is a healthcare management project developed for the [Software Technologies] course at [TU - Sofia]. It is a web-based ecosystem designed to bridge the communication gap between patients, and guardians and doctors, ensuring streamlined medical care and real-time health monitoring.
+MedConnect is a healthcare management project developed for the **Software Technologies** course at **TU - Sofia**. It is a web-based ecosystem designed to bridge the communication gap between patients, and guardians and doctors, ensuring streamlined medical care and real-time health monitoring.
 
-The platform is built using Spring Boot v3.5.7 for the backend, and React.js v19.2.0 for the frontend. By integrating services like Google Gemini AI for consultations and Stripe for billing, MedConnect transforms the traditional doctor-patient interaction into a modern, digital experience.
+The platform is built using **Spring Boot v3.5.7** for the backend, and **React.js v19.2.0** for the frontend. By integrating services like Google Gemini AI for consultations and Stripe for billing, MedConnect transforms the traditional doctor-patient interaction into a modern, digital experience.
 
 In summary, the software simplifies healthcare administration by automating appointment scheduling, digitizing prescription management, and providing AI-driven medical insights.
 
