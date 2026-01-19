@@ -1,16 +1,17 @@
-# Use the multi-arch Eclipse Temurin JDK 17
-FROM eclipse-temurin:17-jdk-jammy
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+
+WORKDIR /build
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
+COPY --from=builder /build/target/*.jar app.jar
 
-# Copy the compiled JAR from Maven target
-COPY target/*.jar app.jar
-
-# Addedd 5005 port for debug
-EXPOSE 8080 5005
-
-# Enable remote debugging
-ENV JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+EXPOSE 8080
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
