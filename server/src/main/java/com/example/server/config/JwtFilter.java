@@ -123,11 +123,9 @@ public class JwtFilter extends GenericFilterBean {
             User realUser = baseUserService.getUserByEmail(email);
 
 
-            // Create authentication token with the authenticated user and set it in security context
 
 
             if (realUser != null) {
-                // Set the principal as the email (String)
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
 

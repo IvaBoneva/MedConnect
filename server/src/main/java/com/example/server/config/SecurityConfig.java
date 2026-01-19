@@ -29,12 +29,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // disable CSRF since we use fronted (any other port, not server side rendered
-        // app)
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(Customizer.withDefaults());
 
-        // permit specific request, other authenticated (using our JWT filter)
+
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/user/**",
@@ -83,7 +81,6 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest().authenticated());
 
-        // don't use sessions because again we use JWT
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
