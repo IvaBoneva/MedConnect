@@ -1,5 +1,5 @@
 export async function createAppointmentRequest(payload, token) {
-  const res = await fetch("http://localhost:8080/api/appointments", {
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export async function createAppointmentRequest(payload, token) {
 
 export async function fetchDoctorAppointments(doctorId, status, token) {
   const res = await fetch(
-    `http://localhost:8080/api/appointments/doctor?doctorId=${doctorId}&status=${status}`,
+    `${process.env.REACT_APP_API_URL}/api/appointments/doctor?doctorId=${doctorId}&status=${status}`,
     {
       method: "GET",
       headers: {
@@ -41,7 +41,7 @@ export async function fetchPastAppointmentsForReview(
   patientId,
   token
 ) {
-  const url = `http://localhost:8080/api/appointments/pastUserAppointments?doctorId=${doctorId}&patientId=${patientId}&status=Completed`;
+  const url = `${process.env.REACT_APP_API_URL}/api/appointments/pastUserAppointments?doctorId=${doctorId}&patientId=${patientId}&status=Completed`;
 
   const res = await fetch(url, {
     method: "GET",
@@ -57,7 +57,7 @@ export async function fetchPastAppointmentsForReview(
 }
 
 export async function submitFeedback(id, feedback, rating, token) {
-  const res = await fetch(`http://localhost:8080/api/appointments/${id}/feedback`, {
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/${id}/feedback`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export async function submitFeedback(id, feedback, rating, token) {
 export async function fetchAppointmentStatistics(doctorId, token) {
 
   const res = await fetch(
-    `http://localhost:8080/api/appointments/statistics/${doctorId}`,
+    `${process.env.REACT_APP_API_URL}/api/appointments/statistics/${doctorId}`,
     {
       method: "GET",
       headers: {

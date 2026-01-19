@@ -1,4 +1,4 @@
-const DOCTOR_ADVICE_URL = "http://localhost:8080/api/aiDoctor/callGemini";
+const DOCTOR_ADVICE_URL = `${process.env.REACT_APP_API_URL}/api/aiDoctor/callGemini`;
 
 export const callDoctorAdvice = async (token, userInput) => {
   const response = await fetch(`${DOCTOR_ADVICE_URL}`, {

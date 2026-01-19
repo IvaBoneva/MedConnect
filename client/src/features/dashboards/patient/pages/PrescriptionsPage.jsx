@@ -45,7 +45,7 @@ const Prescriptions = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `http://localhost:8080/api/prescriptions/user/${user.id}`,
+        `${process.env.REACT_APP_API_URL}/api/prescriptions/user/${user.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -171,10 +171,10 @@ const Prescriptions = () => {
       let method = "";
 
       if (!editingPrescription) {
-        url = `http://localhost:8080/api/prescriptions/user/${user.id}`;
+        url = `${process.env.REACT_APP_API_URL}/api/prescriptions/user/${user.id}`;
         method = "POST";
       } else {
-        url = `http://localhost:8080/api/prescriptions/${editingPrescription.id}`;
+        url = `${process.env.REACT_APP_API_URL}/api/prescriptions/${editingPrescription.id}`;
         method = "PATCH";
       }
 
@@ -233,7 +233,7 @@ const Prescriptions = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`http://localhost:8080/api/prescriptions/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/prescriptions/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

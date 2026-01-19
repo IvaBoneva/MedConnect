@@ -16,7 +16,9 @@ public class StripeService {
     @Value("${stripe.api.key}")
     private String stripeApiKey;
 
-    // Use @PostConstruct so the API key is set after injection
+    @Value("${frontend.base-url}")
+    private String frontendBaseUrl;
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeApiKey;
@@ -27,8 +29,8 @@ public class StripeService {
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                 .putMetadata("userEmail", userEmail)
                 .putMetadata("planId", priceId)
-                .setSuccessUrl("http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl("http://localhost:3000/dashboard/patient/subscriptions")
+                .setSuccessUrl(frontendBaseUrl + "/payment-success?session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl(frontendBaseUrl + "/dashboard/patient/subscriptions")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setPrice(priceId)

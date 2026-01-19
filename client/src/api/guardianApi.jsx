@@ -4,7 +4,7 @@ export const fetchGuardianAppointments = async (token, guardianId) => {
   }
 
   const response = await fetch(
-    `http://localhost:8080/api/appointments/guardian/${guardianId}`,
+    `${process.env.REACT_APP_API_URL}/api/appointments/guardian/${guardianId}`,
     {
       method: "GET",
       headers: {

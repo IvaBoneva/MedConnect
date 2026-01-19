@@ -3,7 +3,7 @@ export const fetchPatientAppointments = async (token, patientId) => {
     throw new Error("No token found");
   }
 
-  const response = await fetch(`http://localhost:8080/api/appointments/patient/${patientId}`, {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/patient/${patientId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -24,7 +24,7 @@ export const fetchPatientAppointments = async (token, patientId) => {
 };
 
 export const fetchPrescriptionEvents = async (userId, token) => {
-  const url = `http://localhost:8080/api/prescription-events/user/${userId}`;
+  const url = `${process.env.REACT_APP_API_URL}/api/prescription-events/user/${userId}`;
 
   try {
     const response = await fetch(url, {

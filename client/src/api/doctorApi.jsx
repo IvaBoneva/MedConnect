@@ -1,4 +1,6 @@
-const DOCTOR_API_ENPOINT = "http://localhost:8080/api/user/doctors";
+const DOCTOR_API_ENPOINT = `${process.env.REACT_APP_API_URL}/api/user/doctors`;
+// const DOCTOR_API_ENPOINT = "localhost:8080/api/user/doctors";
+
 
 function formatDate(date) {
   return date.toISOString().split("T")[0];
@@ -44,7 +46,7 @@ export const getDoctorBySlug = async (slug) => {
 
 export const getAllWorkDays = async (doctorId, startDate, endDate) => {
   try {
-    const url = `http://localhost:8080/api/calendar/doctor?doctorId=${doctorId}&from=${startDate}&to=${endDate}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/calendar/doctor?doctorId=${doctorId}&from=${startDate}&to=${endDate}`;
 
     const response = await fetch(url); 
     const data = await response.json(); 
@@ -57,7 +59,7 @@ export const getAllWorkDays = async (doctorId, startDate, endDate) => {
 
 export async function setDayOff(doctorId, date) {
   const res = await fetch(
-    `http://localhost:8080/api/calendar/doctor/off?doctorId=${doctorId}&date=${date}`,
+    `${process.env.REACT_APP_API_URL}/api/calendar/doctor/off?doctorId=${doctorId}&date=${date}`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -77,7 +79,7 @@ export async function updateWorkingHours(doctorId, date, startTime, endTime) {
   };
 
   const res = await fetch(
-    `http://localhost:8080/api/calendar/doctor/${doctorId}/exception`,
+    `${process.env.REACT_APP_API_URL}/api/calendar/doctor/${doctorId}/exception`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -90,7 +92,7 @@ export async function updateWorkingHours(doctorId, date, startTime, endTime) {
 }
 
 export const completeAppointment = async (appointmentId) => {
-  const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}/complete`, {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/${appointmentId}/complete`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

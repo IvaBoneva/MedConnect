@@ -30,7 +30,7 @@ const SubscriptionPage = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/patient/subscription?email=${email}`,
+          `${process.env.REACT_APP_API_URL}/api/user/patient/subscription?email=${email}`,
           {
             method: "GET",
             headers: {
@@ -112,7 +112,7 @@ const SubscriptionPage = () => {
               }
 
               const response = await fetch(
-                "http://localhost:8080/api/stripe/create-checkout-session",
+                "${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session",
                 {
                   method: "POST",
                   headers: {
