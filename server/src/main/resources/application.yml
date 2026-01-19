@@ -7,7 +7,7 @@ frontend:
 cors:
   allowed-origins: >
     http://localhost:3000,
-    https://medconnect-frontend.vercel.app
+    https://med-connect-psi-nine.vercel.app
 
 spring:
   application:
