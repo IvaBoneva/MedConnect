@@ -45,7 +45,7 @@ export const DoctorPersonalDetails = () => {
     const fetchCoords = async () => {
       // 1. Prepare URL
       let query = encodeURIComponent(`${doctor.hospital} ${doctor.city}`);
-      let url = `http://localhost:8080/api/utils/geocode?address=${query}`;
+      let url = `${process.env.REACT_APP_API_URL}/api/utils/geocode?address=${query}`;
 
       try {
         const res = await fetch(url, {

@@ -9,7 +9,6 @@ import com.stripe.param.ProductListParams;
 import com.stripe.exception.StripeException;
 
 @Component
-//@Profile("!test")  // ⬅ prevents running during maven tests
 public class StripeTestRunner implements CommandLineRunner {
 
     @Override

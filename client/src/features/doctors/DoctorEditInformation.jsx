@@ -51,7 +51,7 @@ const DoctorEditInformation = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/doctor/${user.id}`,
+          `${process.env.REACT_APP_API_URL}/api/user/doctor/${user.id}`,
           {
             method: "GET",
             headers: {
@@ -179,7 +179,7 @@ const DoctorEditInformation = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:8080/api/user/doctor/update/${user.id}`,
+        `${process.env.REACT_APP_API_URL}/api/user/doctor/update/${user.id}`,
         {
           method: "PUT",
           headers: {

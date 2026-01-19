@@ -22,7 +22,7 @@ const GuardianPersonalInformation = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/guardian/${user.id}`,
+          `${process.env.REACT_APP_API_URL}/api/user/guardian/${user.id}`,
           {
             method: "GET",
             headers: {

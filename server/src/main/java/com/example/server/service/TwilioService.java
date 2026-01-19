@@ -1,6 +1,5 @@
 package com.example.server.service;
 
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,7 @@ import com.twilio.type.PhoneNumber;
 public class TwilioService {
 
     @Value("${twilio.account.phone-number}")
-    public String fromNumber; // This is your Twilio number
+    public String fromNumber;
 
     @Value("${twilio.account.messaging-service-sid}")
     private String messagingServiceSid;

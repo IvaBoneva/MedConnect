@@ -54,7 +54,7 @@ const GuardianEditInformation = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/guardian/${user.id}`,
+          `${process.env.REACT_APP_API_URL}/api/user/guardian/${user.id}`,
           {
             method: "GET",
             headers: {
@@ -216,7 +216,7 @@ const GuardianEditInformation = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:8080/api/user/guardian/update/${user.id}`,
+        `${process.env.REACT_APP_API_URL}/api/user/guardian/update/${user.id}`,
         {
           method: "PUT",
           headers: {

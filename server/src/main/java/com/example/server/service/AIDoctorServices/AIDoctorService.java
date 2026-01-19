@@ -2,6 +2,7 @@ package com.example.server.service.AIDoctorServices;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,8 +21,11 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 @Service
 public class AIDoctorService {
 
-        private final String googleCloudToken = "TODO";
-        private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
+        @Value("${gemini.api-key}")
+        private String googleCloudToken;
+
+        @Value("${gemini.url}")
+        private String geminiUrl;
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
 

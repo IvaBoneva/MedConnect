@@ -21,7 +21,7 @@ const PersonalInformation = ({ user: mockUser, readOnly = false }) => {
       if (!token) return;
 
       try {
-        const response = await fetch(`http://localhost:8080/api/user/patient/${authUser.id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/patient/${authUser.id}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,

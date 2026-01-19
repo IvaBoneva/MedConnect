@@ -1,7 +1,7 @@
 export const fetchFiles = async (userId, token) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/storage/getFiles/${userId}`,
+      `${process.env.REACT_APP_API_URL}/api/storage/getFiles/${userId}`,
       {
         method: "GET",
         headers: {
@@ -24,7 +24,7 @@ export const fetchFiles = async (userId, token) => {
 
 export const saveFileToDatabase = async (file, userId, token) => {
   try {
-    const response = await fetch("http://localhost:8080/api/storage/files", {
+    const response = await fetch("${process.env.REACT_APP_API_URL}/api/storage/files", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const saveFileToDatabase = async (file, userId, token) => {
 
 export const deleteFileFromDatabase = async (fileId, token) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/storage/files/${fileId}`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/storage/files/${fileId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
