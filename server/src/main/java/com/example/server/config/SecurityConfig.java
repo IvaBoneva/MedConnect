@@ -99,7 +99,8 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://med-connect-psi-nine.vercel.app"
+                "https://med-connect-psi-nine.vercel.app",
+                "https://med-connect-b9bmw148l-bobi759s-projects.vercel.app/"
         ));
 
         config.setAllowedMethods(List.of(
