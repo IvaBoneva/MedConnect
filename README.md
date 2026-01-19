@@ -7,7 +7,7 @@ The platform is built using **Spring Boot v3.5.7** for the backend, and **React.
 In summary, the software simplifies healthcare administration by automating appointment scheduling, digitizing prescription management, and providing AI-driven medical insights.
 
 ---
-![MedConnect HommePage](resources/home-page.png)
+![MedConnect HommePage](docs/resources/home-page.png)
 
 ## Table of Contents 📋
 
@@ -21,13 +21,13 @@ In summary, the software simplifies healthcare administration by automating appo
     * [Subscriptions](#7-subscriptions)
     * [Prescription Reminder](#8-prescription-reminder-semi-premium-feature)
     * [AI Doctor Assistant](#9-ai-doctor-assistent-premium-feature)
-* [Technology Stack](#tech-stack)
-* [Installation & Setup](#installation--setup)
+* [Technology Stack](#tech-stack-)
+* [Installation & Setup](#installation--setup-)
     * [Prerequisites](#prerequisites)
     * [Server Setup](#server-setup)
     * [Client Setup](#client-setup)
-* [Application Usage](#api-key-configuration)
-* [Documentation](#documentation)
+* [Application Usage](#api-key-configuration-)
+* [Documentation](#documentation-)
 
 ---
 
@@ -42,23 +42,23 @@ In MedConnect, role-based user profiles can be created for Patients, Doctors, an
 #### Registration
 The registration process captures essential medical and profile data specific to the user's role.
 <p align="center">
-  <img src="resources/user-register.png" width="600" alt="Registration Form">
+  <img src="docs/resources/user-register.png" width="600" alt="Registration Form">
 </p>
 
 #### Authentication
 Secure login is handled via a dedicated interface, issuing a `JWT` for session management.
 <p align="center">
-  <img src="resources/login.png" width="400" alt="Login Form">
+  <img src="docs/resources/login.png" width="400" alt="Login Form">
 </p>
 
 #### User Profile & Account Customization
 Once authenticated, every user has access to a dedicated profile tab. Users can manage their personal information, update medical identifiers, and upload a profile photo.
 
 <p align="center">
-  <img src="resources/patient-profile-managment.png" width="90%" alt="User Profile Management">
+  <img src="docs/resources/patient-profile-managment.png" width="90%" alt="User Profile Management">
 </p>
 <p align="center">
-  <img src="resources/doctor-personal-information.png" width="90%" alt="Doctor Profile Management">
+  <img src="docs/resources/doctor-personal-information.png" width="90%" alt="Doctor Profile Management">
 </p>
 
 ### 2. Doctor Selection & Scheduling
@@ -66,10 +66,10 @@ Once authenticated, every user has access to a dedicated profile tab. Users can 
 Patients and Guardians can select from a directory of available Doctors to schedule appointments at mutually convenient times. Following a completed examination, users can provide feedback by leaving a review and rating their experience.
 
 <p align="center">
-  <img src="resources/doctor-list.png" width="90%" alt="Doctor List">
+  <img src="docs/resources/doctor-list.png" width="90%" alt="Doctor List">
 </p>
 <p align="center">
-  <img src="resources/patint-doctor-details.png" width="90%" alt="Patient Doctor Details">
+  <img src="docs/resources/patint-doctor-details.png" width="90%" alt="Patient Doctor Details">
 </p>
 
 
@@ -78,7 +78,7 @@ Patients and Guardians can select from a directory of available Doctors to sched
 Patients and guardians can check nearby hospitals and pharmacies by enabling geolocation.
 
 <p align="center">
-  <img src="resources/patient-pharmacies-around.png" width="90%" alt="Pharmacies Around Me">
+  <img src="docs/resources/patient-pharmacies-around.png" width="90%" alt="Pharmacies Around Me">
 </p>
 
 ### 4. Vaccines Scheduler
@@ -86,7 +86,7 @@ Patients and guardians can check nearby hospitals and pharmacies by enabling geo
 The Vaccine Scheduler allows patients and guardians to manage vaccination schedules by tracking upcoming and completed vaccines. The feature provides calendar-based reminders to ensure timely vaccinations according to recommended schedules.
 
 <p align="center">
-  <img src="resources/patient-vaccine-scheduler.png" width="90%" alt="Patient Vaccine Scheduler">
+  <img src="docs/resources/patient-vaccine-scheduler.png" width="90%" alt="Patient Vaccine Scheduler">
 </p>
 
 ### 5. File Storage
@@ -94,7 +94,7 @@ The Vaccine Scheduler allows patients and guardians to manage vaccination schedu
 Patients and guardians can upload medical-related files such as laboratory results, medical reports, imaging summaries, and discharge documents, which are visible to doctors to support accurate diagnosis and treatment.
 
 <p align="center">
-  <img src="resources/patient-storage.png" width="90%" alt="Patient Storage">
+  <img src="docs/resources/patient-storage.png" width="90%" alt="Patient Storage">
 </p>
 
 
@@ -103,10 +103,10 @@ Patients and guardians can upload medical-related files such as laboratory resul
 All users can access a personal calendar to track upcoming and past activities. Patients and guardians can review previous and scheduled doctor appointments, as well as follow medication reminders. Doctors can manage their timetables by viewing upcoming appointments and adjusting their schedules, either partially by modifying working hours or fully by marking specific days as non-working.
 
 <p align="center">
-  <img src="resources/patient-calendar.png" width="90%" alt="Patient Calendar">
+  <img src="docs/resources/patient-calendar.png" width="90%" alt="Patient Calendar">
 </p>
 <p align="center">
-  <img src="resources/doctor-calendar.png" width="90%" alt="Doctor Calendar">
+  <img src="docs/resources/doctor-calendar.png" width="90%" alt="Doctor Calendar">
 </p>
 
 ### 7. Subscriptions
@@ -114,7 +114,7 @@ All users can access a personal calendar to track upcoming and past activities. 
 Patients and guardians can choose between monthly and annual premium subscription plans, which unlock two premium features: an AI doctor assistant and medication reminders.
 
 <p align="center">
-  <img src="resources/patient-successful-payment.png" width="90%" alt="Patient Premium Plan Payment">
+  <img src="docs/resources/patient-successful-payment.png" width="90%" alt="Patient Premium Plan Payment">
 </p>
 
 ### 8. Prescription Reminder (Semi-Premium feature)
@@ -122,10 +122,10 @@ Patients and guardians can choose between monthly and annual premium subscriptio
 Medication reminders are displayed as calendar entries based on the medicines provided by the user. Each reminder appears on the calendar at the scheduled time to help users follow their prescribed medication routine. With an active premium subscription, users additionally receive periodic SMS notifications to ensure timely medication intake.
 
 <p align="center">
-  <img src="resources/pills-reminder.png" width="90%" alt="Pills Reminder">
+  <img src="docs/resources/pills-reminder.png" width="90%" alt="Pills Reminder">
 </p>
 <p align="center">
-  <img src="resources/601491747_2334876610322081_2446623063920264800_n.jpg" width="90%" alt="Sent SMS">
+  <img src="docs/resources/601491747_2334876610322081_2446623063920264800_n.jpg" width="90%" alt="Sent SMS">
 </p>
 
 ### 9. AI doctor assistent (Premium feature)
@@ -134,7 +134,7 @@ Medication reminders are displayed as calendar entries based on the medicines pr
 The AI medical assistant provides medical-related advice exclusively to users with an active premium subscription. It assists with initial symptom checking and offers guidance for managing minor health issues, serving as a preliminary support tool rather than a replacement for professional medical care.
 
 <p align="center">
-  <img src="resources/patient-AI-doctor.png" width="90%" alt="AI Assistent Chat">
+  <img src="docs/resources/patient-AI-doctor.png" width="90%" alt="AI Assistent Chat">
 </p>
 
 
