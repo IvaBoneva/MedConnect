@@ -3,5 +3,6 @@
 build-and-up:
 	@echo "Running Maven clean package..."
 	mvn clean package -DskipTests
+	docker-compose build --no-cache
 	@echo "Starting Docker containers..."
 	docker-compose up --build

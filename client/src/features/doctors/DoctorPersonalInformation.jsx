@@ -24,7 +24,7 @@ const DoctorPersonalInformation = ({ user: mockUser, readOnly = false }) => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/doctor/${authUser.id}`,
+          `${process.env.REACT_APP_API_URL}/api/user/doctor/${authUser.id}`,
           {
             method: "GET",
             headers: {

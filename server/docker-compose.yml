@@ -16,20 +16,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/medconnect
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      STRIPE_API_KEY: sk_test_51SQ6KgRTNyC3ef1LCsrHEozs5KNspvoquqkdbdelzul7OaiWuSLkEI60fvSIDjXkrVcnTXHE6fdybLy3Fesumrl800TczDkQ20
-      STRIPE_WEBHOOK_SECRET: whsec_cfbc863d3fcf144520d1bd827463a337a0121a3f13a504875143879b6dff79df
-      JWT_SECRET: "supersecretkeysupersecretkey123456"
-      JWT_MESSAGE: "Login Successful"
     depends_on:
       - db
     ports:  
       - "8080:8080"
       - "5005:5005"
-
 
 volumes:
   db_data:

@@ -50,7 +50,7 @@ const EditPersonalInformation = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:8080/api/user/patient/${user.id}`,
+          `${process.env.REACT_APP_API_URL}/api/user/patient/${user.id}`,
           {
             method: "GET",
             headers: {
@@ -178,7 +178,7 @@ const EditPersonalInformation = () => {
       };
 
       const response = await fetch(
-        `http://localhost:8080/api/user/patient/update/${user.id}`,
+        `${process.env.REACT_APP_API_URL}/api/user/patient/update/${user.id}`,
         {
           method: "PUT",
           headers: {

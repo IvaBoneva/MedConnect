@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080/api/user";
+const API_BASE = `${process.env.REACT_APP_API_URL}/api/user`;
 
 export const logIn = ({ email, password }) => {
   const options = {
