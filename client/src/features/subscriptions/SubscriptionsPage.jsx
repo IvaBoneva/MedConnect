@@ -112,7 +112,7 @@ const SubscriptionPage = () => {
               }
 
               const response = await fetch(
-                "${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session",
+                `${process.env.REACT_APP_API_URL}/api/stripe/create-checkout-session`,
                 {
                   method: "POST",
                   headers: {
