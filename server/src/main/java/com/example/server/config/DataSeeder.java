@@ -491,8 +491,8 @@ public class DataSeeder {
 
 
                 Appointment guardianAppointment = new Appointment();
-                guardianAppointment.setDoctor(doctor1); // Gregory House
-                guardianAppointment.setGuardian(guardian); // Martha Kent
+                guardianAppointment.setDoctor(doctor1);
+                guardianAppointment.setGuardian(guardian);
                 guardianAppointment.setStartingTime(LocalDateTime.of(2025, 12, 29, 10, 0));
                 guardianAppointment.setDurationInMinutes(30L);
                 guardianAppointment.setStatus(Appointment.Status.Booked);

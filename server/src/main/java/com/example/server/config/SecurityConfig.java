@@ -16,6 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
+
 //@EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
@@ -39,6 +41,7 @@ public class SecurityConfig {
 
 
         http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(OPTIONS, "/**").permitAll()
                 .requestMatchers(
                         "/api/user/**",
                         "/api/user/register",
@@ -100,11 +103,11 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "https://med-connect-psi-nine.vercel.app",
-                "https://med-connect-b9bmw148l-bobi759s-projects.vercel.app/"
+                "https://med-connect-b9bmw148l-bobi759s-projects.vercel.app"
         ));
 
         config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ));
 
         config.setAllowedHeaders(List.of("*"));
