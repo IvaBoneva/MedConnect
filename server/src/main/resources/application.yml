@@ -2,7 +2,7 @@ server:
   port: 8080
 
 frontend:
-  base-url: http://localhost:3000
+  base-url: ${FRONTEND_BASE_URL}
 
 cors:
   allowed-origins: >
