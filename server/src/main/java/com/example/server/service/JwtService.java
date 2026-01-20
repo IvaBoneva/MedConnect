@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class JwtService {
 
-    final String secret = "supersecretkeysupersecretkey123456";
+    private final String secret = "supersecretkeysupersecretkey123456";
 
     private final SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 

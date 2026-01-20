@@ -11,6 +11,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +26,8 @@ import java.util.Collections;
 @Component
 public class JwtFilter extends GenericFilterBean {
 
-    private final String secret = "supersecretkeysupersecretkey123456";
+    @Value("${jwt.secret}")
+    private String secret;
 
     private final BaseUserService<User> baseUserService;
 
@@ -33,12 +35,21 @@ public class JwtFilter extends GenericFilterBean {
         this.baseUserService = baseUserService;
     }
 
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        String path = request.getRequestURI();
+
+        if (path.startsWith("/api/stripe")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         String servletPath = request.getServletPath();
 
