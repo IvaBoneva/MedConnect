@@ -24,7 +24,7 @@ export const fetchFiles = async (userId, token) => {
 
 export const saveFileToDatabase = async (file, userId, token) => {
   try {
-    const response = await fetch("${process.env.REACT_APP_API_URL}/api/storage/files", {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/storage/files`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
