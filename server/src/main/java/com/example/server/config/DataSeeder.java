@@ -448,12 +448,13 @@ public class DataSeeder {
                 appointmentRepo.save(a4);
 
                 Appointment a5 = new Appointment();
-                a5.setDoctor(doctor3);
-                a5.setPatient(patient);
+                a5.setDoctor(doctor1);
+                a5.setPatient(patient2);
                 a5.setStartingTime(LocalDateTime.of(2025, 12, 22, 9, 0)); // Set for 14th November, 9:00 AM
                 a5.setDurationInMinutes(30L);
                 a5.setStatus(Appointment.Status.Completed);
                 a5.setComment("Routine checkup and blood test completed.");
+                a5.setFeedback("Wooooo");
                 appointmentRepo.save(a5);
 
                 Appointment a6 = new Appointment();
