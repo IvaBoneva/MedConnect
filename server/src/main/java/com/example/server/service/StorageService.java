@@ -17,10 +17,12 @@ public class StorageService {
 
     private final StorageRepository storageRepository;
     private final UserFileRepository userFileRepository;
+    private final UserRepository userRepository;
 
-    public StorageService(StorageRepository storageRepository, UserFileRepository userFileRepository){
+    public StorageService(StorageRepository storageRepository, UserFileRepository userFileRepository, UserRepository userRepository){
         this.storageRepository = storageRepository;
         this.userFileRepository = userFileRepository;
+        this.userRepository = userRepository;
     }
 
     public Set<UserFile> getFilesByUserId(Long userId) {
@@ -36,7 +38,11 @@ public class StorageService {
         Storage storage = storageRepository.findByUserId(userId);
 
         if (storage == null) {
-            throw new RuntimeException("Storage not found for user ID: " + userId);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+            storage = new Storage();
+            storage.setUser(user);
+            storageRepository.save(storage);
         }
 
         User user = storage.getUser();
