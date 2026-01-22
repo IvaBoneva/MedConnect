@@ -19,4 +19,6 @@ public class Patient extends User {
 
     private String diseases;
 
+    private String disabilities;
+
 }

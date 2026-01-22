@@ -49,6 +49,8 @@ public class PatientService extends BaseUserServiceImpl<Patient> {
 
         existingPatient.setDiseases(patientDTO.getDiseases());
 
+        existingPatient.setDisabilities(patientDTO.getDisabilities());
+
         Patient updatedPatient = patientRepository.save(existingPatient);
         return patientMapper.convertToDTO(updatedPatient);
     }

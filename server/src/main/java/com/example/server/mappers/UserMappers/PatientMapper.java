@@ -25,6 +25,9 @@ public class PatientMapper {
         if (patient.getDiseases() != null) {
             dto.setDiseases(patient.getDiseases());
         }
+        if (patient.getDisabilities() != null) {
+            dto.setDisabilities(patient.getDisabilities());
+        }
 
         return dto;
     }

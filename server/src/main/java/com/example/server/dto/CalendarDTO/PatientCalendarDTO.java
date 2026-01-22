@@ -18,4 +18,5 @@ public class PatientCalendarDTO {
 
     private String allergies;
     private String diseases;
+    private String disabilities;
 }

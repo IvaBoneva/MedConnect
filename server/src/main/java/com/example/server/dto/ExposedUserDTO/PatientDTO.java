@@ -16,4 +16,6 @@ public class PatientDTO extends UserDTO{
 
     private String diseases;
 
+    private String disabilities;
+
 }
