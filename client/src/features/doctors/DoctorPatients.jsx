@@ -3,25 +3,36 @@ import PatientSearch from "../patients/PatientSearch";
 import PatientDetails from "../patients/PatientDetails";
 
 const DoctorPatients = () => {
-  const [selectedPatient, setSelectedPatient] = useState(null);
+    const [selectedPatient, setSelectedPatient] = useState(null);
 
-  const handleSelectPatient = (patient) => {
-    setSelectedPatient(patient);
-  };
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const doctorId = user?.id;
 
-  const handleBack = () => {
-    setSelectedPatient(null);
-  };
+    const handleSelectPatient = (patient) => {
+        setSelectedPatient(patient);
+    };
 
-  return (
-    <div className="container mt-4">
-      {!selectedPatient ? (
-        <PatientSearch onSelectPatient={handleSelectPatient} />
-      ) : (
-        <PatientDetails patient={selectedPatient} onBack={handleBack} />
-      )}
-    </div>
-  );
+    const handleBack = () => {
+        setSelectedPatient(null);
+    };
+
+    console.log("TOKEN:", token);
+    console.log("DOCTOR ID:", doctorId);
+
+    return (
+        <div className="container mt-4">
+            {!selectedPatient ? (
+                <PatientSearch
+                    doctorId={doctorId}
+                    token={token}
+                    onSelectPatient={handleSelectPatient}
+                />
+            ) : (
+                <PatientDetails patient={selectedPatient} onBack={handleBack} />
+            )}
+        </div>
+    );
 };
 
 export default DoctorPatients;

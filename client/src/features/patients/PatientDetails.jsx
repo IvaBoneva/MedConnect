@@ -1,75 +1,81 @@
 import { useEffect, useState } from "react";
 import { PatientDetailsLayout } from "./components/PatientDetailsLayout";
-
-const importAllImages = (r) =>
-  r.keys().map((key, idx) => ({
-    id: idx + 1,
-    name: key.replace("./", ""),
-    type: "image/jpeg",
-    size: 100000, 
-    date: "15.11.2025",
-    content: r(key),
-  }));
+import { fetchFiles } from "../../api/storageApi";
+import { useAuth } from "../../context/AuthContext";
 
 const PatientDetails = ({ patient, onBack }) => {
-  const [files, setFiles] = useState([]);
+    const [files, setFiles] = useState([]);
+    const { token } = useAuth();
 
-  useEffect(() => {
-    try {
-        const imageFiles = importAllImages(
-        require.context("../../images", false, /\.(png|jpe?g|gif)$/)
-        );
-        setFiles(imageFiles);
-    } catch (e) {
-        console.warn("Images could not be loaded via require.context", e);
-    }
+    useEffect(() => {
+        console.log("Current patient object:", patient);
+        console.log("patient.patientId:", patient?.patientId);
+        if (!patient?.id || !token) return;
 
-    const saved = localStorage.getItem("patient_files");
-    if (saved) {
-      const savedFiles = JSON.parse(saved);
-      setFiles((prev) => [...prev, ...savedFiles]);
-    }
-  }, []);
+        const loadFiles = async () => {
+            try {
+                const data = await fetchFiles(patient?.patientId, token);
 
-  const handleDownload = (file) => {
-    if (!file.content) return;
-    const link = document.createElement("a");
-    link.href = file.content;
-    link.download = file.name;
-    link.click();
-  };
+                // Преобразуваме към очаквания формат
+                const mappedFiles = data.map((f) => ({
+                    id: f.id,
+                    name: f.name,
+                    type: f.type,
+                    size: f.size,
+                    date: f.dateOfUpload, // тук dateOfUpload
+                    content: f.fileCloudinaryUrl, // тук fileCloudinaryUrl
+                }));
 
-  const handlePrint = async (file) => {
-    try {
-      let fileURL = file.content;
+                console.log("Mapped files:", mappedFiles);
+                setFiles(mappedFiles);
+            } catch (err) {
+                console.error("Неуспешно зареждане на файловете:", err);
+                setFiles([]);
+            }
+        };
 
-      if (!fileURL && file.rawFile) {
-        fileURL = URL.createObjectURL(file.rawFile);
-      }
+        loadFiles();
+    }, [patient, token]);
 
-      if (!fileURL) return;
+    const handleDownload = (file) => {
+        if (!file.content) return;
+        const link = document.createElement("a");
+        link.href = file.content;
+        link.download = file.name;
+        link.click();
+    };
 
-      const win = window.open(fileURL, "_blank");
-      win?.focus();
-      win?.print();
-    } catch (err) {
-      console.error("Не може да се принтира:", err);
-    }
-  };
+    const handlePrint = async (file) => {
+        try {
+            let fileURL = file.content;
 
-  const isPreviewable = (type) =>
-    type.startsWith("image/") || type === "application/pdf";
+            if (!fileURL && file.rawFile) {
+                fileURL = URL.createObjectURL(file.rawFile);
+            }
 
-  return (
-    <PatientDetailsLayout
-      patient={patient}
-      onBack={onBack}
-      files={files}
-      handleDownload={handleDownload}
-      handlePrint={handlePrint}
-      isPreviewable={isPreviewable}
-    />
-  );
+            if (!fileURL) return;
+
+            const win = window.open(fileURL, "_blank");
+            win?.focus();
+            win?.print();
+        } catch (err) {
+            console.error("Не може да се принтира:", err);
+        }
+    };
+
+    const isPreviewable = (type) =>
+        type.startsWith("image/") || type === "application/pdf";
+
+    return (
+        <PatientDetailsLayout
+            patient={patient}
+            onBack={onBack}
+            files={files}
+            handleDownload={handleDownload}
+            handlePrint={handlePrint}
+            isPreviewable={isPreviewable}
+        />
+    );
 };
 
 export default PatientDetails;
