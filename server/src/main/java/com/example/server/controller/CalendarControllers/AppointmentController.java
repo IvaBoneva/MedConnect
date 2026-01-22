@@ -61,9 +61,12 @@ public class AppointmentController {
                     dto.setRating(appointment.getRating());
 
                     if (appointment.getPatient() != null) {
+                        dto.setPatientId(appointment.getPatient().getId());
                         dto.setPatientName(appointment.getPatient().getFirstName());
                         dto.setPatientSurname(appointment.getPatient().getLastName());
+
                     } else if (appointment.getGuardian() != null) {
+                        dto.setPatientId(appointment.getPatient().getId());
                         dto.setPatientName(appointment.getGuardian().getFirstName());
                         dto.setPatientSurname(appointment.getGuardian().getLastName());
                     }
@@ -138,11 +141,24 @@ public class AppointmentController {
         return ResponseEntity.ok(dtos);
     }
 
+    @GetMapping("/completed/patient/{patientId}")
+    public ResponseEntity<List<PatientAppointmentDTO>> getPatientAppointmentsAndStatsCompleted(
+            @PathVariable Long patientId
+    ) {
+        List<Appointment> appointmentList = service.getPatientAppointmentsAndStatsCompleted(patientId);
+
+        List<PatientAppointmentDTO> dtos = appointmentList.stream()
+                .map(AppointmentMapper::toPatientDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtos);
+    }
+
     @GetMapping("/statistics/{doctorId}")
     public ResponseEntity<?> getAppointmentStatistics(@PathVariable Long doctorId) {
         return ResponseEntity.ok(service.getAppointmentStatistics(doctorId));
     }
-    
+
     @GetMapping("/guardian/{guardianId}")
     public ResponseEntity<List<GuardianAppointmentDTO>> getGuardianAppointments(
             @PathVariable Long guardianId

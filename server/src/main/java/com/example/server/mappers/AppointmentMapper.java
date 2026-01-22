@@ -22,7 +22,8 @@ public class AppointmentMapper {
                 appointment.getPatient().getLastName(),
                 appointment.getPatient().getPhoneNumber(),
                 appointment.getPatient().getAllergies(),
-                appointment.getPatient().getDiseases()
+                appointment.getPatient().getDiseases(),
+                appointment.getPatient().getDisabilities()
         );
 
         LocalDateTime start = appointment.getStartingTime();

@@ -149,6 +149,10 @@ public class AppointmentService {
         return appointmentRepository.findByPatientIdAndStatus(patientId, Appointment.Status.Booked);
     }
 
+    public List<Appointment> getPatientAppointmentsAndStatsCompleted(Long patientId) {
+        return appointmentRepository.findByPatientIdAndStatus(patientId, Appointment.Status.Completed);
+    }
+
     public Map<String, Long> getAppointmentStatistics(Long doctorId) {
         long totalAppointments = appointmentRepository.countByDoctorId(doctorId);
         long completedAppointments = appointmentRepository.countByDoctorIdAndStatus(doctorId,
@@ -164,5 +168,9 @@ public class AppointmentService {
 
     public List<Appointment> getGuardianAppointments(Long guardianId){
         return appointmentRepository.findByGuardianIdAndStatus(guardianId, Appointment.Status.Booked);
+    }
+
+    public List<Appointment> getPatientAppointmentsByDoctor(Long patientId, Long doctorId) {
+        return appointmentRepository.findByPatientIdAndDoctorIdAndStatus(patientId, doctorId, Appointment.Status.Completed);
     }
 }

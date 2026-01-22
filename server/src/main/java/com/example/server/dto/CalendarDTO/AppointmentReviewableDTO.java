@@ -19,4 +19,6 @@ public class AppointmentReviewableDTO {
     private String patientName;
 
     private String patientSurname;
+
+    private Long patientId;
 }
