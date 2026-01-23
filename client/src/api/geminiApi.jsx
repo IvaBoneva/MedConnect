@@ -1,6 +1,6 @@
 const DOCTOR_ADVICE_URL = "http://localhost:8080/api/aiDoctor/callGemini";
 
-export const callDoctorAdvice = async (token, userInput) => {
+export const callDoctorAdvice = async (user, token, userInput) => {
   const response = await fetch(`${DOCTOR_ADVICE_URL}`, {
     method: "POST",
     headers: {
@@ -8,6 +8,7 @@ export const callDoctorAdvice = async (token, userInput) => {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
+      patientId: user.id,
       userInputText: userInput,
     }),
   });

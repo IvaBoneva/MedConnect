@@ -1,7 +1,9 @@
 package com.example.server.service.AIDoctorServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,9 +20,12 @@ import com.example.server.dto.GeminiDTO.PartDTO;
 import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 
 @Service
+@RequiredArgsConstructor
 public class AIDoctorService {
 
-        private final String googleCloudToken = "ya29.a0Aa7pCA8akJlbW3g1mi-PZZsvdh8sk4OXKgyHsQ-KGLpqqToemUN2O-Mz_rmCv8tlpiQfGoEw2BkxYJwBPHHtDu0t6wD0Z1uqDcmFl_iNolwD6qAo71-SxbsmOYIXUdzbB4-tgOJkErZqPPqXD8P8KO39aTPVxa7VdltCr9VbimBxS1tLYVH_ImmV5tcsxTnA9qGfW2jcRoAgbgaCgYKAVISARQSFQHGX2Misoi6OocL_LeyLBpLfyeXCg0213";
+    private final ConversationStore conversationStore;
+
+        private final String googleCloudToken = "ya29.a0AUMWg_IR8HQgCYEUB4h4esymT4CpTA6OcDs2LFYGpBZHIuWZcdS-z_fGwhLtaPSjoq8HzysZ-y_jtnvSTtO4PChmJpVCazX_9r6QLNldSGCM0wu4ds3Mj4BZGDKxyEqayFq8M1UiuB3nXH0txp6KNn5OLF7xZsuodmGnzcL8CwEvh6SywniG4Fcc_j8kjKpYGPywtG3mn2G7aCgYKAb0SARcSFQHGX2Mi_asJOw2ZBfGoy5PbouvhuA0211";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
@@ -60,7 +65,8 @@ public class AIDoctorService {
                 return request;
         }
 
-        private HttpEntity<GeminiRequestDTO> buildHttpEntity(GeminiRequestDTO body) {
+
+        public HttpEntity<GeminiRequestDTO> buildHttpEntity(GeminiRequestDTO body) {
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setBearerAuth(googleCloudToken);
@@ -69,7 +75,7 @@ public class AIDoctorService {
                 return new HttpEntity<>(body, headers);
         }
 
-        private ResponseEntity<GeminiResponseDTO> callGeminiApi(
+        public ResponseEntity<GeminiResponseDTO> callGeminiApi(
                         HttpEntity<GeminiRequestDTO> entity) {
 
                 RestTemplate restTemplate = new RestTemplate();

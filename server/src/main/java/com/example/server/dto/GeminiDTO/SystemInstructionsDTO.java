@@ -9,5 +9,4 @@ import java.util.List;
 @Setter
 public class SystemInstructionsDTO {
     private List<PartDTO> parts;
-
 }

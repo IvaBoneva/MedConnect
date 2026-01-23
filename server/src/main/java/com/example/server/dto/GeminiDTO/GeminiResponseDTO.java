@@ -9,5 +9,4 @@ import java.util.List;
 @Setter
 public class GeminiResponseDTO {
     private List<CandidateDTO> candidates;
-
 }
