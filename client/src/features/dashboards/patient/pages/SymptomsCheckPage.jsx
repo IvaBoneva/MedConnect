@@ -37,11 +37,17 @@ const SymptomCheck = ({ isPremium }) => {
     setUserInput("");
 
     try {
-      const aiReply = await callDoctorAdvice(token, question);
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: aiReply.answer, date: aiReply.date },
-      ]);
+        const aiReply = await callDoctorAdvice(token, question);
+
+        setMessages((prev) => [
+            ...prev,
+            {
+                role: aiReply.role,      // вече идва от ChatMessageDTO
+                text: aiReply.text,      // основното съобщение
+                data: aiReply.data,      // ако има action данни, например списък лекари
+            },
+        ]);
+
     } catch (error) {
       setMessages((prev) => [
         ...prev,
@@ -114,37 +120,47 @@ const SymptomCheck = ({ isPremium }) => {
           </Row>
         </Card.Header>
 
-        <Card.Body className="flex-grow-1 overflow-auto bg-light">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`d-flex mb-3 ${
-                msg.role === "user"
-                  ? "justify-content-end"
-                  : "justify-content-start"
-              }`}
-            >
-              <div
-                className={`p-3 rounded shadow-sm ${
-                  msg.role === "user" ? "text-white" : "bg-white"
-                }`}
-                style={{
-                  background: msg.role === "user" ? "#2e8b57" : "white",
-                  maxWidth: "70%",
-                  whiteSpace: "pre-line",
-                  borderRadius:
-                    msg.role === "user"
-                      ? "12px 12px 0 12px"
-                      : "12px 12px 12px 0",
-                }}
-              >
-                {formatBulletText(msg.text)}
-              </div>
-            </div>
-          ))}
-        </Card.Body>
+          <Card.Body className="flex-grow-1 overflow-auto bg-light">
+              {messages.map((msg, index) => (
+                  <div
+                      key={index}
+                      className={`d-flex mb-3 ${
+                          msg.role === "user" ? "justify-content-end" : "justify-content-start"
+                      }`}
+                  >
+                      <div
+                          className={`p-3 rounded shadow-sm ${
+                              msg.role === "user" ? "text-white" : "bg-white"
+                          }`}
+                          style={{
+                              background: msg.role === "user" ? "#2e8b57" : "white",
+                              maxWidth: "70%",
+                              whiteSpace: "pre-line",
+                              borderRadius:
+                                  msg.role === "user" ? "12px 12px 0 12px" : "12px 12px 12px 0",
+                          }}
+                      >
+                          {/* Основният текст */}
+                          {msg.text && msg.text.trim() !== "" ? formatBulletText(msg.text) : "—"}
 
-        <Card.Footer className="bg-white">
+                          {/* Ако AI има данни (например списък лекари), ги показваме под текста */}
+                          {msg.role === "ai" && msg.data && Array.isArray(msg.data) && msg.data.length > 0 && (
+                              <ul className="mt-2">
+                                  {msg.data.map((doc, idx) => (
+                                      <li key={idx}>
+                                          {doc.firstName} {doc.lastName} — {doc.specialization}, {doc.city}
+                                      </li>
+                                  ))}
+                              </ul>
+                          )}
+                      </div>
+                  </div>
+              ))}
+          </Card.Body>
+
+
+
+          <Card.Footer className="bg-white">
           <Form
             onSubmit={(e) => {
               e.preventDefault();
