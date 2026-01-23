@@ -20,7 +20,7 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 @Service
 public class AIDoctorService {
 
-        private final String googleCloudToken = "ya29.a0Aa7pCA8akJlbW3g1mi-PZZsvdh8sk4OXKgyHsQ-KGLpqqToemUN2O-Mz_rmCv8tlpiQfGoEw2BkxYJwBPHHtDu0t6wD0Z1uqDcmFl_iNolwD6qAo71-SxbsmOYIXUdzbB4-tgOJkErZqPPqXD8P8KO39aTPVxa7VdltCr9VbimBxS1tLYVH_ImmV5tcsxTnA9qGfW2jcRoAgbgaCgYKAVISARQSFQHGX2Misoi6OocL_LeyLBpLfyeXCg0213";
+        private final String googleCloudToken = "ya29.a0AUMWg_IUWVlfJMDk531u049o54nLPrrGSxcGP_mtBu1xS974rP31xuG6HMX0T5nVaMMZ4gQv4QaOnUuqkBDCvFnLOBks_gqeW76zbSbYlK9Ue4LNaE7Buxg-ydnxnGdBfQFHcfWidOwKcaV7tk1kbkChd-y4PR1FIJftq-eLFuaRTqj0Fs6iLXmAoJW23q4rXZbcrOGAT7oDfwaCgYKAY4SARcSFQHGX2Mikqt1NchQp3umobLLPtqkoA0213";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
@@ -40,8 +40,21 @@ public class AIDoctorService {
         private GeminiRequestDTO buildRequestBody(String userInputText) {
 
                 PartDTO systemPart = new PartDTO();
-                systemPart.setText(
-                                "You are a medical assistant chatbot. Your purpose is to provide information related to health, symptoms, conditions, and general medical advice. You must not answer any questions that are non-medical. If a user asks a question that is not health-related, provide a response like \"I can only provide medical advice. Please ask a health-related question.");
+
+            systemPart.setText("""
+You are a medical assistant agent.
+Always respond in valid JSON.
+Use only these actions:
+NONE, SUGGEST_DOCTORS, SHOW_CALENDAR, CREATE_APPOINTMENT
+
+Response format:
+{
+  "message": "...",
+  "action": "NONE",
+  "data": {}
+}
+Never return text outside JSON.
+""");
 
                 SystemInstructionsDTO systemInstruction = new SystemInstructionsDTO();
                 systemInstruction.setParts(List.of(systemPart));
