@@ -91,6 +91,9 @@ public class DataSeeder {
                 patient.setAge(22);
                 patient.setPhoneNumber("111222333");
                 patient.setRole("patient");
+                patient.setSubscription("premium");
+                patient.setSubscriptionType("premium");
+                patient.setSubscriptionExpiry(LocalDate.of(2026, 2, 3));
                 patientRepository.save(patient);
 
                 Storage storage = new Storage();
