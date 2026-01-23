@@ -41,6 +41,13 @@ public class DoctorService extends BaseUserServiceImpl<Doctor> {
                 .map(doctorMapper::convertToDTO)
                 .toList();
     }
+    public List<DoctorDTO> getDoctorsBySpecialization(String specialization) {
+        return doctorRepository.findBySpecializationIgnoreCase(specialization)
+                .stream()
+                .map(doctorMapper::convertToDTO)
+                .toList();
+    }
+
 
     public Doctor findById(Long id) {
         Optional<Doctor> doctor = doctorRepository.findById(id);
