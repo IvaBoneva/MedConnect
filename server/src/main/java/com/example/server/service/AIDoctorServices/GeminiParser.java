@@ -33,7 +33,9 @@ public class GeminiParser {
 
             return dto;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse Gemini response to DTO: " + rawResponse, e);
+            AIDoctorAgentResponseDTO dto = new AIDoctorAgentResponseDTO();
+            dto.setMessage(rawResponse);
+            return dto;
         }
     }
 }

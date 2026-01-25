@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class AIDoctorRequestDTO {
     private String userInputText;
-    private Long patientId;
 }

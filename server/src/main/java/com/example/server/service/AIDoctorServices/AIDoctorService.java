@@ -25,7 +25,7 @@ public class AIDoctorService {
 
     private final ConversationStore conversationStore;
 
-        private final String googleCloudToken = "";
+        private final String googleCloudToken = "ya29.a0AUMWg_J9KvIiYa5Xk5g01AEiAUUPxdmxwARN5kSPS7acCw1vUDJckCAV-z1LF87j2kM4o_U7-4gzbVwpj4q2lvdaheJ_At3JVrMNcukZ83Sf3roY96EyuWFVpLPU-SQ3v-px4Zv9wfpJqGwjYOsDyLVqBzxVKrTQTJXPTuZvXXgNK_NzxDHDRX5vdgs0rhgTkLHniZSN7ew2qQaCgYKAfMSARcSFQHGX2MioOZm-TmqJfwM9G02N3Nl5A0213";
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
         public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {

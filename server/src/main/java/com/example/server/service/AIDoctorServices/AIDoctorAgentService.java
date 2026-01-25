@@ -1,10 +1,14 @@
 package com.example.server.service.AIDoctorServices;
 
+import com.example.server.config.SecurityUtils;
 import com.example.server.dto.CalendarDTO.AppointmentCreateDTO;
 import com.example.server.dto.ExposedUserDTO.DoctorDTO;
 import com.example.server.dto.GeminiDTO.*;
 import com.example.server.models.CalendarModels.Appointment;
+import com.example.server.models.UserModels.Doctor;
 import com.example.server.models.UserModels.Patient;
+import com.example.server.models.UserModels.User;
+import com.example.server.repository.CalendarRepositories.AppointmentRepository;
 import com.example.server.service.CalendarServices.AppointmentService;
 import com.example.server.service.UserServices.DoctorService;
 import com.example.server.service.UserServices.PatientService;
@@ -15,17 +19,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AIDoctorAgentService {
 
+    private final SecurityUtils securityUtils;
     private final DoctorService doctorService;
     private final AppointmentService appointmentService;
     private final ConversationStore conversationStore;
@@ -33,12 +39,22 @@ public class AIDoctorAgentService {
     private final PatientService patientService;
 
     public ResponseEntity<AIDoctorResponseDTO> handleUserMessage(AIDoctorRequestDTO requestDTO) {
-        Patient patient = patientService.findById(requestDTO.getPatientId());
+        User user = securityUtils.getCurrentUser();
+        Patient patient = patientService.findById(user.getId());
         String sessionId = patient.getEmail();
         String userMessage = requestDTO.getUserInputText();
 
+        PartDTO userPart = new PartDTO();
+        userPart.setText(userMessage);
+
+        ContentDTO userContent = new ContentDTO();
+        userContent.setRole("user");
+        userContent.setParts(List.of(userPart));
+
+        conversationStore.addMessage(sessionId, userContent);
+
         List<DoctorDTO> allDoctors = doctorService.getAllDoctorsDTO();
-        conversationStore.addDoctorsList(sessionId, allDoctors);
+//        conversationStore.addDoctorsList(sessionId, allDoctors);
 
         GeminiRequestDTO request = buildRequestBody(userMessage, sessionId, allDoctors);
         ResponseEntity<GeminiResponseDTO> response = aiDoctorService.callGeminiApi(
@@ -65,54 +81,95 @@ public class AIDoctorAgentService {
             String functionName = functionCall.getName();
             Map<String, Object> args = functionCall.getArguments();
             System.out.println(functionName + args);
-            Object result;
+            String result = "";
 
             switch (functionName) {
                 case "findDoctors":
                     List<DoctorDTO> doctors = findDoctors(args.get("specialty"));
 
-                    List<Map<String, Object>> formattedDoctors = doctors.stream()
-                            .map(d -> {
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("id", d.getId());
-                                map.put("name", d.getFirstName() + " " + d.getLastName());
-                                map.put("specialization", d.getSpecialization());
-                                map.put("slug", d.getSlug());
-                                return map;
+                    List<String> formattedDoctors = doctors.stream()
+                            .map(doctor -> {
+                                StringBuilder stringBuilder = new StringBuilder();
+
+                                stringBuilder
+                                        .append("д-р ").append(doctor.getFirstName()).append(" ").append(doctor.getLastName())
+                                        .append("\n")
+                                        .append(doctor.getSpecialization())
+                                        .append("\n")
+                                        .append(doctor.getYearsOfExperience()).append(" години опит")
+                                        .append("\n")
+                                        .append(doctor.getHospital()).append(", ").append(doctor.getCity());
+
+                                return stringBuilder.toString();
                             })
                             .toList();
 
-                    result = formattedDoctors;
+                    result = String.join("\n\n", formattedDoctors);
 
                     break;
                 case "getDoctorDetails":
-                    DoctorDTO doctor = getDoctorDetails(Long.valueOf(args.get("doctorId").toString()));
+                    DoctorDTO doctorDTO = getDoctorDetails(Long.valueOf(args.get("doctorId").toString()));
 
-                    result = Map.of(
-                            "id", doctor.getId(),
-                            "name", doctor.getFirstName() + " " + doctor.getLastName(),
-                            "specialization", doctor.getSpecialization(),
-                            "slug", doctor.getSlug()
-                    );
+                    StringBuilder formattedDoctor = new StringBuilder();
+
+                    formattedDoctor
+                            .append("д-р ").append(doctorDTO.getFirstName()).append(" ").append(doctorDTO.getLastName())
+                            .append("\n")
+                            .append(doctorDTO.getSpecialization())
+                            .append("\n")
+                            .append(doctorDTO.getYearsOfExperience()).append(" години опит")
+                            .append("\n")
+                            .append(doctorDTO.getHospital()).append(", ").append(doctorDTO.getCity());
+
+                    result = formattedDoctor.toString();
 
                     break;
                 case "bookAppointment":
-                    Appointment appt = bookAppointment(args, patient);
+                    AppointmentCreateDTO appointmentDTO = getAppointmentDTO(args, patient);
 
-                    result = Map.of(
-                            "appointmentId", appt.getId(),
-                            "doctorId", appt.getDoctor().getId(),
-                            "patientId", appt.getPatient().getId(),
-                            "date", appt.getStartingTime().toLocalDate().toString(),
-                            "time", appt.getStartingTime().toLocalTime().toString()
-                    );
+                    boolean appointmentExists = appointmentService.appointmentExists(appointmentDTO);
+
+                    if (appointmentExists) {
+                        answer = "Вече има записан час по това време. Моля, изберете друг ден или час.";
+                        break;
+                    }
+
+                    boolean appointmentInRange = appointmentService.isAppointmentInRange(appointmentDTO);
+
+                    if (!appointmentInRange) {
+                        answer = "Посоченият час е в извънработно време. Моля, изберете друг ден или час.";
+                        break;
+                    }
+
+                    Appointment appointment = appointmentService.createAppointment(appointmentDTO);
+                    Doctor doctor = appointment.getDoctor();
+
+                    StringBuilder formattedAppointment = new StringBuilder();
+
+                    formattedAppointment
+                            .append("Информация за записан час:")
+                            .append("\n")
+                            .append("д-р ").append(doctor.getFirstName()).append(" ").append(doctor.getLastName())
+                            .append("\n")
+                            .append("Дата: ").append(appointment.getStartingTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy 'г. в' HH:mm 'ч.'")));
+
+                    if (appointment.getComment() != null && !appointment.getComment().isEmpty()) {
+                        formattedAppointment
+                                .append("\n")
+                                .append("Коментар: ").append(appointment.getComment());
+                    }
+
+                    answer = "Часът беше успешно записан!";
+                    result = formattedAppointment.toString();
 
                     break;
                 default:
                     throw new RuntimeException("Unknown function: " + functionName);
             }
 
-            answer += "\n\n" + prettyPrint(result);
+            if (!result.isEmpty()) {
+                answer += "\n\n" + result;
+            }
         }
 
         ContentDTO assistantContent = new ContentDTO();
@@ -140,18 +197,28 @@ public class AIDoctorAgentService {
     private GeminiRequestDTO buildRequestBody(String userInputText, String sessionId, List<DoctorDTO> doctors) {
         List<ContentDTO> history = conversationStore.getConversation(sessionId);
 
-        List<Map<String, Object>> doctorsData = doctors.stream()
-                .map(d -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", d.getId());
-                    map.put("firstName", d.getFirstName());
-                    map.put("lastName", d.getLastName());
-                    map.put("fullName", d.getFirstName() + " " + d.getLastName());
-                    map.put("specialization", d.getSpecialization());
-                    map.put("email", d.getEmail());
-                    map.put("slug", d.getSlug());
-                    map.put("phone", d.getPhoneNumber());
-                    return map;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        List<String> doctorsData = doctors.stream()
+                .map(doctor -> {
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    stringBuilder
+                            .append("Doctor ID (for internal use): ").append(doctor.getId())
+                            .append("\n")
+                            .append("First and last names: ").append(doctor.getFirstName()).append(" ").append(doctor.getLastName())
+                            .append("\n")
+                            .append("Email: ").append(doctor.getEmail())
+                            .append("\n")
+                            .append("Phone number: ").append(doctor.getPhoneNumber())
+                            .append("\n")
+                            .append("Specialisation: ").append(doctor.getSpecialization())
+                            .append("\n")
+                            .append("Years of experience: ").append(doctor.getYearsOfExperience())
+                            .append("\n")
+                            .append("Hospital and city: ").append(doctor.getHospital()).append(", ").append(doctor.getCity());
+
+                    return stringBuilder.toString();
                 })
                 .toList();
 
@@ -166,12 +233,26 @@ public class AIDoctorAgentService {
             - Suggest doctors
             - Help users book appointments
             
+            Current date and time: %s
+            
             Rules:
+            - Always reply in JSON format, read below for details.
             - Never book without explicit confirmation
             - Ask for missing info (specialty, date, time, location)
             - Account for minor user spelling mistakes in specialties
+            - Always format dates in the format "dd.MM.yyyy" and times in the format "HH:mm". If date doesnt provide year, then use the year from the aforementioned current date. If time does not have minutes, then assume 00. E.g. if a user says "11" then assume "11:00".
+            - Accept dates with day and month - do not accept weekdays.
+            - Never have more than 1 question in a message at a time. Always separate questions in multiple messages and never repeat them.
+            - Never ask the user for internal IDs of doctors and always tell the user which doctor you found for them before you book the appointment.
+            - If the user previously mentioned date and/or time for appointment, use that and do not ask the user again the same question a thousand times.
+            - If the user wants an appointment, first ask for the doctor and specialty, if not already provided in the original message.
+            - Always ask the user if they want to add a comment to their appointment.
+            - If a user asks about doctors, use the list below.
             
-            The current available doctors are: %s
+            ---
+            The current list of doctors is:
+            %s
+            ---
             
             Format your response as JSON:
             {
@@ -184,12 +265,16 @@ public class AIDoctorAgentService {
             
             Do not wrap your output in Markdown, code blocks, or ```json``` tags.
             When returning JSON, return raw JSON only, no formatting.
+            NEVER SEND TEXT OUTSIDE OF THE JSON.
 
             Only use the functions:
-            - findDoctors - requires arguments: specialty: string. Specialty is ONLY in English, so translate if needed
+            - findDoctors - requires arguments: specialty: string. Specialty is ONLY in English, so translate if needed. User may want all specialties, so in that case do not provide any argument.
             - getDoctorDetails - requires arguments: doctorId: integer
-            - bookAppointment - requires arguments: doctorId: integer, date: yyyy-MM-dd, start: HH:mm, comment: string
-            """.formatted(doctorsData));
+            - bookAppointment - requires arguments: doctorId: integer, date: yyyy-MM-dd, start: HH:mm, comment: string. Make sure to always put this function in the response if you are making an appointment, otherwise no appointment will be actually created. If the user does not provide a doctor, then give a list of the doctors with the specialty the user wants. If the user does not provide year, then take the year from the current date provided in this prompt. Accept times in 24 hour clock format, and also accept times that are not HH:mm. If minutes do not exist, then assume 0 for them. If the user responds with just a number, then that is the clock hour.
+            """.formatted(
+                currentDateTime.toString(),
+                String.join("\n\n", doctorsData))
+            );
 
         SystemInstructionsDTO systemInstruction = new SystemInstructionsDTO();
         systemInstruction.setParts(List.of(systemPart));
@@ -226,7 +311,7 @@ public class AIDoctorAgentService {
         return doctorService.getDoctorBySlug(doctor.getSlug());
     }
 
-    private Appointment bookAppointment(Map<String, Object> args, Patient patient) {
+    private AppointmentCreateDTO getAppointmentDTO(Map<String, Object> args, Patient patient) {
         AppointmentCreateDTO dto = new AppointmentCreateDTO();
 
         dto.setDoctorId(Long.valueOf(args.get("doctorId").toString()));
@@ -235,7 +320,7 @@ public class AIDoctorAgentService {
         dto.setStart(LocalTime.parse(args.get("start").toString()));
         dto.setComment(args.get("comment").toString());
 
-        return appointmentService.createAppointment(dto);
+        return dto;
     }
 
 }
