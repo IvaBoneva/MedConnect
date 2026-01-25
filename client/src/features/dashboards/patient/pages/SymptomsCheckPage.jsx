@@ -37,7 +37,7 @@ const SymptomCheck = ({ isPremium }) => {
     setUserInput("");
 
     try {
-      const aiReply = await callDoctorAdvice(user, token, question);
+      const aiReply = await callDoctorAdvice(token, question);
       setMessages((prev) => [
         ...prev,
         { role: "ai", text: aiReply.answer, date: aiReply.date },

@@ -34,7 +34,8 @@ public class JwtGeneratorInterfaceImpl implements JwtGeneratorInterface{
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
 //                24 minutes xD
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+//                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .and()
 //                end of jwt builder back to main one
                 .signWith(getSignInKey())

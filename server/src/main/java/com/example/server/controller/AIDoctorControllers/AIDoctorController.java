@@ -6,6 +6,7 @@ import com.example.server.service.AIDoctorServices.AIDoctorAgentService;
 import com.example.server.service.AIDoctorServices.AIDoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class AIDoctorController {
 //        return aiDoctorService.callGeminiDoctor(userInputText);
 //    }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/callGemini")
     public ResponseEntity<?> callGemini(@RequestBody AIDoctorRequestDTO requestDTO) {
         return aiDoctorAgentService.handleUserMessage(requestDTO);
