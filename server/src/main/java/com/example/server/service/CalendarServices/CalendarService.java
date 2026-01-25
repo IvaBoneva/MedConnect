@@ -218,7 +218,7 @@ public class CalendarService {
         }
     }
 
-    private boolean isAppointmentInRange(Long doctorId, LocalDateTime start, LocalDateTime end) {
+    public boolean isAppointmentInRange(Long doctorId, LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return false;
         }
@@ -232,6 +232,52 @@ public class CalendarService {
                 endOfDay);
 
         return appointments.size() == allDayAppointments.size();
+    }
+
+    public boolean isAppointmentDuringWorkingHours(Long doctorId, LocalDateTime start, LocalDateTime end) {
+        if (start == null || end == null || start.isAfter(end)) {
+            return false;
+        }
+
+        LocalDate date = start.toLocalDate();
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        WeeklyScheduleTemplate baseTemplate = weeklyRepo.findByDoctorId(doctorId).stream()
+                .filter(t -> t.getDayOfWeek() == dayOfWeek)
+                .findFirst()
+                .orElse(null);
+
+        if (baseTemplate == null || !baseTemplate.isWorking()) {
+            return false;
+        }
+
+        WorkDayException exception = exceptionRepo.findByDoctorIdAndDate(doctorId, date);
+
+        LocalTime workStart;
+        LocalTime workEnd;
+
+        if (exception != null) {
+            if (Boolean.FALSE.equals(exception.getWorking())) {
+                return false;
+            }
+
+            workStart = exception.getOverrideStartTime() != null
+                    ? exception.getOverrideStartTime()
+                    : baseTemplate.getStartTime();
+
+            workEnd = exception.getOverrideEndTime() != null
+                    ? exception.getOverrideEndTime()
+                    : baseTemplate.getEndTime();
+
+        } else {
+            workStart = baseTemplate.getStartTime();
+            workEnd = baseTemplate.getEndTime();
+        }
+
+        LocalTime appointmentStart = start.toLocalTime();
+        LocalTime appointmentEnd = end.toLocalTime();
+
+        return !appointmentStart.isBefore(workStart) && !appointmentEnd.isAfter(workEnd);
     }
 
 }

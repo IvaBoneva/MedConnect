@@ -30,16 +30,18 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final GuardianRepository guardianRepository;
+    private final CalendarService calendarService;
 
     public AppointmentService(
             AppointmentRepository appointmentRepository,
             DoctorRepository doctorRepository,
-            PatientRepository patientRepository, GuardianRepository guardianRepository) {
+            PatientRepository patientRepository, GuardianRepository guardianRepository, CalendarService calendarService) {
 
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.guardianRepository = guardianRepository;
+        this.calendarService = calendarService;
     }
 
     public Appointment createAppointment(AppointmentCreateDTO dto) {
@@ -172,5 +174,15 @@ public class AppointmentService {
 
     public List<Appointment> getPatientAppointmentsByDoctor(Long patientId, Long doctorId) {
         return appointmentRepository.findByPatientIdAndDoctorIdAndStatus(patientId, doctorId, Appointment.Status.Completed);
+    }
+
+    public boolean appointmentExists(AppointmentCreateDTO appointmentCreateDTO) {
+        LocalDateTime startingTime = LocalDateTime.of(appointmentCreateDTO.getDate(), appointmentCreateDTO.getStart());
+        return appointmentRepository.existsByDoctorIdAndStartingTime(appointmentCreateDTO.getDoctorId(), startingTime);
+    }
+
+    public boolean isAppointmentInRange(AppointmentCreateDTO appointmentCreateDTO) {
+        LocalDateTime startingTime = LocalDateTime.of(appointmentCreateDTO.getDate(), appointmentCreateDTO.getStart());
+        return calendarService.isAppointmentDuringWorkingHours(appointmentCreateDTO.getDoctorId(), startingTime, startingTime.plusMinutes(30));
     }
 }
