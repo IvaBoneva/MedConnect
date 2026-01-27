@@ -2,6 +2,7 @@ package com.example.server.service.AIDoctorServices;
 
 import com.example.server.config.SecurityUtils;
 import com.example.server.dto.CalendarDTO.AppointmentCreateDTO;
+import com.example.server.dto.CalendarDTO.DoctorWorkingTime;
 import com.example.server.dto.ExposedUserDTO.DoctorDTO;
 import com.example.server.dto.GeminiDTO.*;
 import com.example.server.models.CalendarModels.Appointment;
@@ -14,6 +15,7 @@ import com.example.server.service.UserServices.DoctorService;
 import com.example.server.service.UserServices.PatientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.DateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +86,7 @@ public class AIDoctorAgentService {
             String result = "";
 
             switch (functionName) {
-                case "findDoctors":
+                case "findDoctors": {
                     List<DoctorDTO> doctors = findDoctors(args.get("specialty"));
 
                     List<String> formattedDoctors = doctors.stream()
@@ -107,7 +109,8 @@ public class AIDoctorAgentService {
                     result = String.join("\n\n", formattedDoctors);
 
                     break;
-                case "getDoctorDetails":
+                }
+                case "getDoctorDetails": {
                     DoctorDTO doctorDTO = getDoctorDetails(Long.valueOf(args.get("doctorId").toString()));
 
                     StringBuilder formattedDoctor = new StringBuilder();
@@ -124,20 +127,80 @@ public class AIDoctorAgentService {
                     result = formattedDoctor.toString();
 
                     break;
-                case "bookAppointment":
+                }
+                case "getDoctorAvailableTimes": {
+                    DoctorDTO doctorDTO = getDoctorDetails(Long.valueOf(args.get("doctorId").toString()));
+                    LocalDate availableTimesDate = args.get("date") != null ? LocalDate.parse(args.get("date").toString()) : LocalDate.now();
+
+                    result = getAvailableAppointmentTimesFormatted(doctorDTO.getId(), availableTimesDate);
+
+                    break;
+                }
+                case "bookAppointment": {
                     AppointmentCreateDTO appointmentDTO = getAppointmentDTO(args, patient);
+
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy 'г.'");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm 'ч.'");
+
+                    String appointmentFormattedDate = appointmentDTO.getDate().format(dateFormatter);
 
                     boolean appointmentExists = appointmentService.appointmentExists(appointmentDTO);
 
                     if (appointmentExists) {
-                        answer = "Вече има записан час по това време. Моля, изберете друг ден или час.";
+                        String availableTimes = getAvailableAppointmentTimesFormatted(appointmentDTO.getDoctorId(), appointmentDTO.getDate());
+
+                        StringBuilder formatted = new StringBuilder();
+
+                        formatted
+                                .append("Вече има записан час по това време. Налични часове на ")
+                                .append(appointmentFormattedDate).append(":")
+                                .append("\n\n")
+                                .append(availableTimes);
+
+                        answer = formatted.toString();
+
                         break;
                     }
 
                     boolean appointmentInRange = appointmentService.isAppointmentInRange(appointmentDTO);
 
                     if (!appointmentInRange) {
-                        answer = "Посоченият час е в извънработно време. Моля, изберете друг ден или час.";
+                        DoctorWorkingTime workingTime = appointmentService.getDoctorWorkingTime(appointmentDTO.getDoctorId(), appointmentDTO.getDate());
+
+                        StringBuilder formatted = new StringBuilder();
+
+                        formatted
+                                .append("Посоченият час е в извънработно време. Работното време на доктора на ")
+                                .append(appointmentFormattedDate).append(" е от ")
+                                .append(workingTime.start().format(timeFormatter)).append(" до ").append(workingTime.end().format(timeFormatter));
+
+                        answer = formatted.toString();
+
+                        break;
+                    }
+
+                    boolean startTimeValid = appointmentService.isStartTimeValid(appointmentDTO);
+
+                    if (!startTimeValid) {
+                        String availableTimes = getAvailableAppointmentTimesFormatted(appointmentDTO.getDoctorId(), appointmentDTO.getDate());
+
+                        StringBuilder formatted = new StringBuilder();
+
+                        formatted
+                                .append("Посоченият час е невалиден. Налични часове на ")
+                                .append(appointmentFormattedDate).append(":")
+                                .append("\n")
+                                .append(availableTimes);
+
+                        answer = formatted.toString();
+
+                        break;
+                    }
+
+                    boolean appointmentInThePast = appointmentService.isAppointmentInThePast(appointmentDTO);
+
+                    if (appointmentInThePast) {
+                        answer = "Не може да записвате часове в миналото. Моля, изберете друг ден или час.";
                         break;
                     }
 
@@ -163,6 +226,7 @@ public class AIDoctorAgentService {
                     result = formattedAppointment.toString();
 
                     break;
+                }
                 default:
                     throw new RuntimeException("Unknown function: " + functionName);
             }
@@ -182,16 +246,6 @@ public class AIDoctorAgentService {
         dto.setAnswer(answer);
 
         return ResponseEntity.ok(dto);
-    }
-
-    private String prettyPrint(Object obj) {
-        try {
-            return new ObjectMapper()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(obj);
-        } catch (Exception e) {
-            return obj.toString();
-        }
     }
 
     private GeminiRequestDTO buildRequestBody(String userInputText, String sessionId, List<DoctorDTO> doctors) {
@@ -248,6 +302,10 @@ public class AIDoctorAgentService {
             - If the user wants an appointment, first ask for the doctor and specialty, if not already provided in the original message.
             - Always ask the user if they want to add a comment to their appointment.
             - If a user asks about doctors, use the list below.
+            - If the appointment start time is in the past according to the aforementioned current date, then tell the user that the appointment time is in the past and cannot be booked.
+            - Handle user responses with relative date like "today", "tomorrow" etc. according to the aforementioned current date.
+            - Never re-use appointment times from previous responses because there could have been a booking in the meantime. Always use the getDoctorAvailableTimes function when the user wants to see appointment times.
+            - If the user specifies hour like clock hour directly (just the number) then handle that correctly.
             
             ---
             The current list of doctors is:
@@ -270,6 +328,7 @@ public class AIDoctorAgentService {
             Only use the functions:
             - findDoctors - requires arguments: specialty: string. Specialty is ONLY in English, so translate if needed. User may want all specialties, so in that case do not provide any argument.
             - getDoctorDetails - requires arguments: doctorId: integer
+            - getDoctorAvailableTimes - requires arguments: doctorId: integer, date: yyyy-MM-dd. Returns the available (non-booked) appointment times for the doctor for the date. The date CAN be null - in such case it returns the times for TODAY. Use this if the user wants to know the available times for a doctor.
             - bookAppointment - requires arguments: doctorId: integer, date: yyyy-MM-dd, start: HH:mm, comment: string. Make sure to always put this function in the response if you are making an appointment, otherwise no appointment will be actually created. If the user does not provide a doctor, then give a list of the doctors with the specialty the user wants. If the user does not provide year, then take the year from the current date provided in this prompt. Accept times in 24 hour clock format, and also accept times that are not HH:mm. If minutes do not exist, then assume 0 for them. If the user responds with just a number, then that is the clock hour.
             """.formatted(
                 currentDateTime.toString(),
@@ -309,6 +368,28 @@ public class AIDoctorAgentService {
     public DoctorDTO getDoctorDetails(Long doctorId) {
         var doctor = doctorService.findById(doctorId);
         return doctorService.getDoctorBySlug(doctor.getSlug());
+    }
+
+    public String getAvailableAppointmentTimesFormatted(Long doctorId) {
+        DoctorDTO doctorDTO = getDoctorDetails(doctorId);
+        List<LocalTime> availableTimes = appointmentService.getAvailableAppointmentTimes(doctorDTO.getId());
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        return String.join("\n", availableTimes.stream()
+                .map(t -> t.format(timeFormatter))
+                .toList()
+        );
+    }
+
+    public String getAvailableAppointmentTimesFormatted(Long doctorId, LocalDate date) {
+        DoctorDTO doctorDTO = getDoctorDetails(doctorId);
+        List<LocalTime> availableTimes = appointmentService.getAvailableAppointmentTimes(doctorDTO.getId(), date);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        return String.join("\n", availableTimes.stream()
+                .map(t -> t.format(timeFormatter))
+                .toList()
+        );
     }
 
     private AppointmentCreateDTO getAppointmentDTO(Map<String, Object> args, Patient patient) {
