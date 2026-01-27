@@ -318,7 +318,10 @@ public class AIDoctorAgentService {
         dto.setPatientId(patient.getId());
         dto.setDate(LocalDate.parse(args.get("date").toString()));
         dto.setStart(LocalTime.parse(args.get("start").toString()));
-        dto.setComment(args.get("comment").toString());
+
+        if (args.get("comment") != null) {
+            dto.setComment(args.get("comment").toString());
+        }
 
         return dto;
     }
