@@ -1,6 +1,7 @@
 package com.example.server.service.CalendarServices;
 
 import com.example.server.dto.CalendarDTO.AppointmentCreateDTO;
+import com.example.server.dto.CalendarDTO.DoctorWorkingTime;
 import com.example.server.models.CalendarModels.Appointment;
 import com.example.server.models.UserModels.Doctor;
 import com.example.server.models.UserModels.Guardian;
@@ -10,12 +11,12 @@ import com.example.server.repository.UserRepositories.DoctorRepository;
 import com.example.server.repository.UserRepositories.GuardianRepository;
 import com.example.server.repository.UserRepositories.PatientRepository;
 import lombok.extern.slf4j.Slf4j;
-import com.twilio.type.App;
 
 import org.springframework.stereotype.Service;
 
-import java.security.Guard;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -184,5 +185,33 @@ public class AppointmentService {
     public boolean isAppointmentInRange(AppointmentCreateDTO appointmentCreateDTO) {
         LocalDateTime startingTime = LocalDateTime.of(appointmentCreateDTO.getDate(), appointmentCreateDTO.getStart());
         return calendarService.isAppointmentDuringWorkingHours(appointmentCreateDTO.getDoctorId(), startingTime, startingTime.plusMinutes(30));
+    }
+
+    public boolean isAppointmentInThePast(AppointmentCreateDTO appointmentCreateDTO) {
+        LocalDateTime startingTime = LocalDateTime.of(appointmentCreateDTO.getDate(), appointmentCreateDTO.getStart());
+        return startingTime.isBefore(LocalDateTime.now());
+    }
+
+    public List<LocalTime> getAvailableAppointmentTimes(Long doctorId) {
+        LocalDate date = LocalDate.now();
+        return calendarService.getAvailableAppointmentTimes(doctorId, date);
+    }
+
+    public List<LocalTime> getAvailableAppointmentTimes(Long doctorId, LocalDate date) {
+        return calendarService.getAvailableAppointmentTimes(doctorId, date);
+    }
+
+    public DoctorWorkingTime getDoctorWorkingTime(Long doctorId) {
+        LocalDate date = LocalDate.now();
+        return calendarService.getDoctorWorkingTime(doctorId, date);
+    }
+
+    public DoctorWorkingTime getDoctorWorkingTime(Long doctorId, LocalDate date) {
+        return calendarService.getDoctorWorkingTime(doctorId, date);
+    }
+
+    public boolean isStartTimeValid(AppointmentCreateDTO appointmentCreateDTO) {
+        int minute = appointmentCreateDTO.getStart().getMinute();
+        return minute == 0 || minute == 30;
     }
 }

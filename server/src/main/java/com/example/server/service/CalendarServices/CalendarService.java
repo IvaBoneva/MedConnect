@@ -1,9 +1,6 @@
 package com.example.server.service.CalendarServices;
 
-import com.example.server.dto.CalendarDTO.AppointmentDTO;
-import com.example.server.dto.CalendarDTO.CalendarDayDTO;
-import com.example.server.dto.CalendarDTO.PatientCalendarDTO;
-import com.example.server.dto.CalendarDTO.WorkDayExceptionDTO;
+import com.example.server.dto.CalendarDTO.*;
 import com.example.server.models.CalendarModels.Appointment;
 import com.example.server.models.CalendarModels.WeeklyScheduleTemplate;
 import com.example.server.models.CalendarModels.WorkDayException;
@@ -278,6 +275,86 @@ public class CalendarService {
         LocalTime appointmentEnd = end.toLocalTime();
 
         return !appointmentStart.isBefore(workStart) && !appointmentEnd.isAfter(workEnd);
+    }
+
+    public List<LocalTime> getAvailableAppointmentTimes(Long doctorId, LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        WeeklyScheduleTemplate baseTemplate = weeklyRepo.findByDoctorId(doctorId).stream()
+                .filter(t -> t.getDayOfWeek() == dayOfWeek)
+                .findFirst()
+                .orElse(null);
+
+        if (baseTemplate == null || !baseTemplate.isWorking()) {
+            return List.of();
+        }
+
+        WorkDayException exception = exceptionRepo.findByDoctorIdAndDate(doctorId, date);
+
+        if (exception != null && Boolean.FALSE.equals(exception.getWorking())) {
+            return List.of();
+        }
+
+        LocalTime workStart = exception != null && exception.getOverrideStartTime() != null
+                ? exception.getOverrideStartTime()
+                : baseTemplate.getStartTime();
+
+        LocalTime workEnd = exception != null && exception.getOverrideEndTime() != null
+                ? exception.getOverrideEndTime()
+                : baseTemplate.getEndTime();
+
+        List<Appointment> appointments = appointmentRepo.findByDoctorIdAndStartingTimeBetween(
+                doctorId,
+                date.atStartOfDay(),
+                date.plusDays(1).atStartOfDay()
+        );
+
+        List<LocalTime> occupiedSlots = appointments.stream()
+                .map(a -> a.getStartingTime().toLocalTime())
+                .toList();
+
+        List<LocalTime> availableSlots = new ArrayList<>();
+
+        LocalTime slot = workStart;
+
+        while (!slot.plusMinutes(30).isAfter(workEnd)) {
+            if (!occupiedSlots.contains(slot)) {
+                availableSlots.add(slot);
+            }
+
+            slot = slot.plusMinutes(30);
+        }
+
+        return availableSlots;
+    }
+
+    public DoctorWorkingTime getDoctorWorkingTime(Long doctorId, LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        WeeklyScheduleTemplate baseTemplate = weeklyRepo.findByDoctorId(doctorId).stream()
+                .filter(t -> t.getDayOfWeek() == dayOfWeek)
+                .findFirst()
+                .orElse(null);
+
+        if (baseTemplate == null || !baseTemplate.isWorking()) {
+            return null;
+        }
+
+        WorkDayException exception = exceptionRepo.findByDoctorIdAndDate(doctorId, date);
+
+        if (exception != null && Boolean.FALSE.equals(exception.getWorking())) {
+            return null;
+        }
+
+        LocalTime start = exception != null && exception.getOverrideStartTime() != null
+                ? exception.getOverrideStartTime()
+                : baseTemplate.getStartTime();
+
+        LocalTime end = exception != null && exception.getOverrideEndTime() != null
+                ? exception.getOverrideEndTime()
+                : baseTemplate.getEndTime();
+
+        return new DoctorWorkingTime(start, end);
     }
 
 }
