@@ -10,10 +10,7 @@ public class GeminiParser {
 
     public static AIDoctorAgentResponseDTO parse(String rawResponse) {
         try {
-            String cleaned = rawResponse
-                    .replaceAll("(?s)```json\\s*", "")
-                    .replaceAll("(?s)```", "")
-                    .trim();
+            String cleaned = extractJson(rawResponse);
 
             Map<String, Object> map = objectMapper.readValue(cleaned, Map.class);
 
@@ -37,5 +34,19 @@ public class GeminiParser {
             dto.setMessage(rawResponse);
             return dto;
         }
+    }
+
+    private static String extractJson(String raw) {
+        raw = raw.replaceAll("(?s)```json\\s*", "")
+                .replaceAll("(?s)```", "");
+
+        int start = raw.indexOf("{");
+        int end = raw.lastIndexOf("}");
+
+        if (start == -1 || end == -1 || start > end) {
+            throw new IllegalArgumentException("No JSON object found in response");
+        }
+
+        return raw.substring(start, end + 1).trim();
     }
 }
