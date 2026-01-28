@@ -2,6 +2,7 @@ package com.example.server.controller.AIDoctorControllers;
 
 
 import com.example.server.dto.GeminiDTO.AIChatRequestDTO;
+import com.example.server.dto.GeminiDTO.ChatMessageDTO;
 import com.example.server.service.AIDoctorServices.AIDoctorOrchestratorService;
 import com.example.server.service.AIDoctorServices.AIDoctorService;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +21,16 @@ public class AIDoctorController {
     private final AIDoctorOrchestratorService orchestrator;
 
     @PostMapping("/callGemini")
-    public ResponseEntity<?> callGemini(@RequestBody String userInputText) {
+    public ResponseEntity<ChatMessageDTO> callGemini(
+            @RequestBody AIChatRequestDTO dto
+    ) {
+        System.out.println(" ORCHESTRATOR HIT ");
 
-        return aiDoctorService.callGeminiDoctor(userInputText);
-    }
-
-    @PostMapping("/chat")
-    public ResponseEntity<?> chat(@RequestBody AIChatRequestDTO request) {
-
-        Object response = orchestrator.handleUserMessage(
-                request.getConversationId(),
-                request.getMessage()
-        );
+        ChatMessageDTO response =
+                orchestrator.handleUserMessage(
+                        dto.getConversationId(),
+                        dto.getUserInputText()
+                );
 
         return ResponseEntity.ok(response);
     }
