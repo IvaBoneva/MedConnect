@@ -27,8 +27,8 @@ public class AIDoctorOrchestratorService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // прост in-memory state
     private final Map<String, ConversationContext> conversations = new ConcurrentHashMap<>();
+
 
     public ChatMessageDTO handleUserMessage(String conversationId, String message) {
         ConversationContext context = conversations.computeIfAbsent(
@@ -48,8 +48,11 @@ public class AIDoctorOrchestratorService {
 
         switch (aiResponse.getAction()) {
             case SUGGEST_DOCTORS:
-                chatMessage.setText("Намерих следните лекари:"); // добави текст
-                // взимаме списък лекари от DoctorService
+                chatMessage.setText(
+                        aiResponse.getMessage() != null
+                                ? aiResponse.getMessage()
+                                : "Ето подходящи лекари:"
+                );
                 chatMessage.setData(
                         doctorService.getDoctorsBySpecialization(
                                 (String) aiResponse.getData().get("specialty")
@@ -58,20 +61,23 @@ public class AIDoctorOrchestratorService {
                 break;
 
             case CREATE_APPOINTMENT:
-                AppointmentCreateDTO dto = buildAppointmentDTO(aiResponse.getData(), context);
-                chatMessage.setText("Вашият час е запазен успешно.");
+                AppointmentCreateDTO dto =
+                        buildAppointmentDTO(aiResponse.getData(), context);
+
+                chatMessage.setText(
+                        aiResponse.getMessage() != null
+                                ? aiResponse.getMessage()
+                                : "Вашият час е запазен успешно."
+                );
                 chatMessage.setData(appointmentService.createAppointment(dto));
                 break;
 
-            case NONE:
             default:
                 chatMessage.setText(
-                        aiResponse.getMessage() != null && !aiResponse.getMessage().isBlank() ?
-                                aiResponse.getMessage() :
-                                "—"
+                        aiResponse.getMessage() != null && !aiResponse.getMessage().isBlank()
+                                ? aiResponse.getMessage()
+                                : "Може ли малко повече информация?"
                 );
-                chatMessage.setData(null);
-                break;
         }
 
         return chatMessage;
@@ -81,11 +87,17 @@ public class AIDoctorOrchestratorService {
 
     private AIActionResponseDTO parseAIResponse(String raw) {
         try {
-            return objectMapper.readValue(raw, AIActionResponseDTO.class);
+            String cleaned = raw
+                    .replaceAll("(?s)```json", "")
+                    .replaceAll("```", "")
+                    .trim();
+
+            return objectMapper.readValue(cleaned, AIActionResponseDTO.class);
+
         } catch (Exception e) {
             AIActionResponseDTO fallback = new AIActionResponseDTO();
             fallback.setAction(Action.NONE);
-            fallback.setMessage(raw);
+            fallback.setMessage(raw); // показвай суровия текст
             return fallback;
         }
     }
