@@ -1,6 +1,10 @@
 package com.example.server.service.AIDoctorServices;
 
 import java.util.List;
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,21 +23,21 @@ import com.example.server.dto.GeminiDTO.SystemInstructionsDTO;
 
 @Service
 public class AIDoctorService {
-
-        private final String googleCloudToken = "ya29.a0AUMWg_IUWVlfJMDk531u049o54nLPrrGSxcGP_mtBu1xS974rP31xuG6HMX0T5nVaMMZ4gQv4QaOnUuqkBDCvFnLOBks_gqeW76zbSbYlK9Ue4LNaE7Buxg-ydnxnGdBfQFHcfWidOwKcaV7tk1kbkChd-y4PR1FIJftq-eLFuaRTqj0Fs6iLXmAoJW23q4rXZbcrOGAT7oDfwaCgYKAY4SARcSFQHGX2Mikqt1NchQp3umobLLPtqkoA0213";
+    @Value("${gemini.token}")
+        private  String googleCloudToken;
         private final String geminiUrl = "https://aiplatform.googleapis.com/v1/projects/gen-lang-client-0975020993/locations/us-central1/publishers/google/models/gemini-2.0-flash-001:generateContent";
 
-        public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
-
-                GeminiRequestDTO requestBody = buildRequestBody(userInputText);
-                HttpEntity<GeminiRequestDTO> entity = buildHttpEntity(requestBody);
-
-                ResponseEntity<GeminiResponseDTO> response = callGeminiApi(entity);
-
-                AIDoctorResponseDTO result = mapToAIDoctorResponse(response);
-
-                return ResponseEntity.ok(result);
+    public ResponseEntity<AIDoctorResponseDTO> callGeminiDoctor(String userInputText) {
+        try {
+            GeminiRequestDTO requestBody = buildRequestBody(userInputText);
+            HttpEntity<GeminiRequestDTO> entity = buildHttpEntity(requestBody);
+            ResponseEntity<GeminiResponseDTO> response = callGeminiApi(entity);
+            return ResponseEntity.ok(mapToAIDoctorResponse(response));
+        } catch (Exception e) {
+            e.printStackTrace(); // ⬅️ ЗАДЪЛЖИТЕЛНО
+            throw e;
         }
+    }
 
         // ---------------- HELPERS ---------------- //
 
@@ -54,6 +58,12 @@ Response format:
   "data": {}
 }
 Never return text outside JSON.
+When creating an appointment:
+- doctorId must be a number
+- date must be ISO format yyyy-MM-dd
+- time must be HH:mm
+If information is missing, ask the user.
+
 """);
 
                 SystemInstructionsDTO systemInstruction = new SystemInstructionsDTO();
@@ -69,6 +79,10 @@ Never return text outside JSON.
                 GeminiRequestDTO request = new GeminiRequestDTO();
                 request.setSystemInstruction(systemInstruction);
                 request.setContents(List.of(userContent));
+
+            request.setGenerationConfig(
+                    Map.of("responseMimeType", "application/json")
+            );
 
                 return request;
         }
