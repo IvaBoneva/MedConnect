@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class AIChatRequestDTO {
     private String conversationId;
-    private String message;
+    private String userInputText;
 }
