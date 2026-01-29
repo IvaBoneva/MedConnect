@@ -198,7 +198,17 @@ public class AppointmentService {
     }
 
     public List<LocalTime> getAvailableAppointmentTimes(Long doctorId, LocalDate date) {
-        return calendarService.getAvailableAppointmentTimes(doctorId, date);
+        List<LocalTime> availableTimes = calendarService.getAvailableAppointmentTimes(doctorId, date);
+
+        if (date.equals(LocalDate.now())) {
+            LocalTime now = LocalTime.now();
+
+            availableTimes = availableTimes.stream()
+                    .filter(time -> time.isAfter(now))
+                    .toList();
+        }
+
+        return availableTimes;
     }
 
     public DoctorWorkingTime getDoctorWorkingTime(Long doctorId) {

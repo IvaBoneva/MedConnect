@@ -291,7 +291,7 @@ public class AIDoctorAgentService {
             
             Rules:
             - Always reply in JSON format, read below for details.
-            - Never book without explicit confirmation
+            - Never book without explicit confirmation. For other actions you do not need explicit permission to avoid asking the user a thousand times for a simple action.
             - Ask for missing info (specialty, date, time, location)
             - Account for minor user spelling mistakes in specialties
             - Always format dates in the format "dd.MM.yyyy" and times in the format "HH:mm". If date doesnt provide year, then use the year from the aforementioned current date. If time does not have minutes, then assume 00. E.g. if a user says "11" then assume "11:00".
